@@ -19,12 +19,12 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg-light); color: var(--text-primary); }
 
-    /* Encabezado Arreglado */
+    /* Encabezado Principal */
     .navbar { 
       display: flex; 
       justify-content: space-between; 
       align-items: center; 
-      padding: 0.8rem 2rem; 
+      padding: 0.6rem 2rem; 
       background: #fff; 
       border-bottom: 1px solid var(--border-color); 
       gap: 1.5rem; 
@@ -36,9 +36,10 @@
       flex-shrink: 0; 
     }
     .logo img { 
-      height: 45px; 
+      height: 70px; /* Tamaño del logo mas grande */
       width: auto; 
       object-fit: contain; 
+      mix-blend-mode: multiply; /* Elimina el fondo blanco de la imagen */
     }
     .nav-links { 
       display: flex; 
@@ -156,7 +157,7 @@
       <a href="#clasificados">Clasificados</a>
       <a href="#empleos">Empleos</a>
       <a href="#agricola">Agrícola Local</a>
-      <a href="#mascotas">Mascotas</a>
+      <a href="#mascotas">Mascotas en Adopción</a>
     </nav>
     <div class="nav-actions">
       <button class="btn-secondary">Iniciar Sesión</button>
