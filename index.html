@@ -27,7 +27,8 @@
     .nav-links a:hover { color: var(--brand-green-coqui); }
     
     /* Botones */
-    .btn-primary { background: var(--brand-green-coqui); color: #fff; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 600; cursor: pointer; }
+    .btn-primary { background: var(--brand-green-coqui); color: #fff; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+    .btn-primary:hover { background: var(--brand-green-light); }
     .btn-secondary { background: transparent; border: 1px solid var(--border-color); padding: 0.6rem 1.2rem; border-radius: 8px; margin-right: 0.5rem; cursor: pointer; }
 
     /* Hero Search */
@@ -65,6 +66,48 @@
     .card-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 0.4rem; }
     .card-price { font-size: 1.2rem; font-weight: bold; color: var(--brand-terracotta); margin-bottom: 0.4rem; }
     .card-location { font-size: 0.85rem; color: var(--text-muted); }
+
+    /* Modal Flotante (Publicar Anuncio) */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 1rem;
+    }
+    .modal-overlay.active { display: flex; }
+    
+    .modal-content {
+      background: #fff;
+      width: 100%;
+      max-width: 500px;
+      border-radius: 16px;
+      padding: 2rem;
+      position: relative;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .modal-header h3 { color: var(--brand-green-coqui); font-size: 1.4rem; }
+    .close-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); }
+    
+    .form-group { margin-bottom: 1.2rem; }
+    .form-group label { display: block; font-weight: 600; margin-bottom: 0.4rem; font-size: 0.9rem; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      padding: 0.8rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      outline: none;
+      font-family: inherit;
+    }
+    .form-group textarea { resize: vertical; min-height: 80px; }
+    .btn-submit { width: 100%; background: var(--brand-green-coqui); color: #fff; border: none; padding: 0.9rem; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; margin-top: 0.5rem; }
+    .btn-submit:hover { background: var(--brand-green-light); }
   </style>
 </head>
 <body>
@@ -79,7 +122,7 @@
     </nav>
     <div>
       <button class="btn-secondary">Iniciar Sesión</button>
-      <button class="btn-primary">+ Publicar Anuncio</button>
+      <button class="btn-primary" id="btnOpenModal">+ Publicar Anuncio</button>
     </div>
   </header>
 
@@ -112,7 +155,6 @@
     <h2 class="section-title">Publicaciones Recientes</h2>
     
     <section class="listings-grid">
-      <!-- Ejemplo Agrícola -->
       <article class="card-item">
         <div class="card-img">🍌</div>
         <div class="card-body">
@@ -125,7 +167,6 @@
         </div>
       </article>
 
-      <!-- Ejemplo Mascota -->
       <article class="card-item">
         <div class="card-img">🐶</div>
         <div class="card-body">
@@ -138,7 +179,6 @@
         </div>
       </article>
 
-      <!-- Ejemplo Empleo -->
       <article class="card-item">
         <div class="card-img">💼</div>
         <div class="card-body">
@@ -151,9 +191,8 @@
         </div>
       </article>
 
-      <!-- Ejemplo Clasificado -->
       <article class="card-item">
-        <div class="card-img">Generator</div>
+        <div class="card-img">⚡</div>
         <div class="card-body">
           <div>
             <span class="badge badge-clasificado">Clasificados</span>
@@ -165,6 +204,89 @@
       </article>
     </section>
   </main>
+
+  <!-- Modal para Publicar -->
+  <div class="modal-overlay" id="modalPublish">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Publicar Nuevo Anuncio</h3>
+        <button class="close-btn" id="btnCloseModal">&times;</button>
+      </div>
+      <form id="publishForm">
+        <div class="form-group">
+          <label for="category">Categoría</label>
+          <select id="category" required>
+            <option value="">Selecciona una categoría</option>
+            <option value="agricola">🌾 Mercado Agrícola</option>
+            <option value="mascotas">🐾 Mascotas en Adopción (Gratis)</option>
+            <option value="empleos">💼 Empleo / Trabajo</option>
+            <option value="clasificados">📦 Clasificados Generales</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="title">Título del Anuncio</label>
+          <input type="text" id="title" placeholder="Ej. Plátanos verdes, Oferta de empleo..." required />
+        </div>
+
+        <div class="form-group">
+          <label for="price">Precio ($) o Salario / Estado</label>
+          <input type="text" id="price" placeholder="Ej. 25.00, Gratis, $18/hr" required />
+        </div>
+
+        <div class="form-group">
+          <label for="town">Pueblo</label>
+          <select id="town" required>
+            <option value="">Selecciona tu pueblo</option>
+            <option value="Arecibo">Arecibo</option>
+            <option value="Caguas">Caguas</option>
+            <option value="Mayagüez">Mayagüez</option>
+            <option value="Ponce">Ponce</option>
+            <option value="San Juan">San Juan</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="description">Descripción</label>
+          <textarea id="description" placeholder="Escribe los detalles de tu anuncio o información de contacto..."></textarea>
+        </div>
+
+        <button type="submit" class="btn-submit">Publicar Anuncio</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const modal = document.getElementById('modalPublish');
+    const btnOpen = document.getElementById('btnOpenModal');
+    const btnClose = document.getElementById('btnCloseModal');
+    const form = document.getElementById('publishForm');
+
+    // Abrir modal
+    btnOpen.addEventListener('click', () => {
+      modal.classList.add('active');
+    });
+
+    // Cerrar modal
+    btnClose.addEventListener('click', () => {
+      modal.classList.remove('active');
+    });
+
+    // Cerrar si hace clic fuera del cuadro
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.classList.remove('active');
+      }
+    });
+
+    // Evento al enviar formulario
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('¡Anuncio enviado con éxito!');
+      modal.classList.remove('active');
+      form.reset();
+    });
+  </script>
 
 </body>
 </html>
