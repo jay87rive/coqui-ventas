@@ -52,9 +52,12 @@
       color: var(--text-muted); 
       font-weight: 500; 
       white-space: nowrap; 
+      cursor: pointer;
+      transition: color 0.2s;
     }
-    .nav-links a:hover { 
+    .nav-links a:hover, .nav-links a.active { 
       color: var(--brand-green-coqui); 
+      font-weight: 600;
     }
     .nav-actions { 
       display: flex; 
@@ -84,11 +87,39 @@
 
     /* Categorías */
     .categories-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 3rem; }
-    .card-cat { background: #fff; padding: 1.2rem; border-radius: 12px; border: 1px solid var(--border-color); text-align: center; font-weight: 600; cursor: pointer; transition: transform 0.2s; }
-    .card-cat:hover { transform: translateY(-3px); border-color: var(--brand-green-light); }
+    .card-cat { 
+      background: #fff; 
+      padding: 1.2rem; 
+      border-radius: 12px; 
+      border: 1px solid var(--border-color); 
+      text-align: center; 
+      font-weight: 600; 
+      cursor: pointer; 
+      transition: all 0.2s; 
+    }
+    .card-cat:hover, .card-cat.active { 
+      transform: translateY(-3px); 
+      border-color: var(--brand-green-light); 
+      background-color: #F4F9F4;
+    }
 
     /* Anuncios Destacados */
-    .section-title { font-size: 1.5rem; margin-bottom: 1.5rem; color: var(--brand-green-coqui); }
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    .section-title { font-size: 1.5rem; color: var(--brand-green-coqui); }
+    .btn-reset-filter {
+      background: none;
+      border: none;
+      color: var(--brand-terracotta);
+      font-weight: 600;
+      cursor: pointer;
+      display: none;
+    }
+
     .listings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
     
     .card-item { background: #fff; border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden; display: flex; flex-direction: column; }
@@ -162,10 +193,10 @@
       <img src="logo.png" alt="Coquí Ventas Logo">
     </div>
     <nav class="nav-links">
-      <a href="#clasificados">Clasificados</a>
-      <a href="#empleos">Empleos</a>
-      <a href="#agricola">Agrícola Local</a>
-      <a href="#mascotas">Mascotas en Adopción</a>
+      <a data-category="clasificados">Clasificados</a>
+      <a data-category="empleos">Empleos</a>
+      <a data-category="agricola">Agrícola Local</a>
+      <a data-category="mascotas">Mascotas en Adopción</a>
     </nav>
     <div class="nav-actions">
       <button class="btn-secondary">Iniciar Sesión</button>
@@ -193,16 +224,19 @@
 
   <main class="container">
     <section class="categories-grid">
-      <div class="card-cat">📦 Clasificados</div>
-      <div class="card-cat">💼 Empleos</div>
-      <div class="card-cat">🌾 Mercado Agrícola</div>
-      <div class="card-cat">🐾 Adopción Responsable</div>
+      <div class="card-cat" data-category="clasificados">📦 Clasificados</div>
+      <div class="card-cat" data-category="empleos">💼 Empleos</div>
+      <div class="card-cat" data-category="agricola">🌾 Mercado Agrícola</div>
+      <div class="card-cat" data-category="mascotas">🐾 Adopción Responsable</div>
     </section>
 
-    <h2 class="section-title">Publicaciones Recientes</h2>
+    <div class="section-header">
+      <h2 class="section-title" id="sectionTitle">Publicaciones Recientes</h2>
+      <button class="btn-reset-filter" id="btnResetFilter"> Ver todas las publicaciones</button>
+    </div>
     
     <section class="listings-grid" id="listingsContainer">
-      <article class="card-item" data-town="Arecibo">
+      <article class="card-item" data-town="Arecibo" data-category="agricola">
         <div class="card-img">🍌</div>
         <div class="card-body">
           <div>
@@ -214,7 +248,7 @@
         </div>
       </article>
 
-      <article class="card-item" data-town="Ponce">
+      <article class="card-item" data-town="Ponce" data-category="mascotas">
         <div class="card-img">🐶</div>
         <div class="card-body">
           <div>
@@ -226,7 +260,7 @@
         </div>
       </article>
 
-      <article class="card-item" data-town="San Juan">
+      <article class="card-item" data-town="San Juan" data-category="empleos">
         <div class="card-img">💼</div>
         <div class="card-body">
           <div>
@@ -238,7 +272,7 @@
         </div>
       </article>
 
-      <article class="card-item" data-town="Caguas">
+      <article class="card-item" data-town="Caguas" data-category="clasificados">
         <div class="card-img">⚡</div>
         <div class="card-body">
           <div>
@@ -306,25 +340,28 @@
   </div>
 
   <script>
-    // Modal Script
+    // Variables de UI
     const modal = document.getElementById('modalPublish');
     const btnOpen = document.getElementById('btnOpenModal');
     const btnClose = document.getElementById('btnCloseModal');
     const form = document.getElementById('publishForm');
 
-    btnOpen.addEventListener('click', () => {
-      modal.classList.add('active');
-    });
+    const searchInput = document.getElementById('searchInput');
+    const townSelect = document.getElementById('townSelect');
+    const btnSearch = document.getElementById('btnSearch');
+    const cards = document.querySelectorAll('.card-item');
+    const noResults = document.getElementById('noResults');
+    
+    const categoryLinks = document.querySelectorAll('[data-category]');
+    const sectionTitle = document.getElementById('sectionTitle');
+    const btnResetFilter = document.getElementById('btnResetFilter');
 
-    btnClose.addEventListener('click', () => {
-      modal.classList.remove('active');
-    });
+    let activeCategory = '';
 
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        modal.classList.remove('active');
-      }
-    });
+    // Modal Events
+    btnOpen.addEventListener('click', () => modal.classList.add('active'));
+    btnClose.addEventListener('click', () => modal.classList.remove('active'));
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
 
     form.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -333,13 +370,7 @@
       form.reset();
     });
 
-    // Lógica del Buscador
-    const searchInput = document.getElementById('searchInput');
-    const townSelect = document.getElementById('townSelect');
-    const btnSearch = document.getElementById('btnSearch');
-    const cards = document.querySelectorAll('.card-item');
-    const noResults = document.getElementById('noResults');
-
+    // Filtro Principal
     function filterListings() {
       const query = searchInput.value.toLowerCase().trim();
       const selectedTown = townSelect.value.toLowerCase();
@@ -348,11 +379,13 @@
       cards.forEach(card => {
         const title = card.querySelector('.card-title').textContent.toLowerCase();
         const town = card.getAttribute('data-town').toLowerCase();
+        const category = card.getAttribute('data-category');
 
         const matchesText = title.includes(query);
         const matchesTown = selectedTown === '' || town === selectedTown;
+        const matchesCategory = activeCategory === '' || category === activeCategory;
 
-        if (matchesText && matchesTown) {
+        if (matchesText && matchesTown && matchesCategory) {
           card.style.display = 'flex';
           visibleCount++;
         } else {
@@ -360,14 +393,39 @@
         }
       });
 
-      if (visibleCount === 0) {
-        noResults.style.display = 'block';
-      } else {
-        noResults.style.display = 'none';
-      }
+      noResults.style.display = visibleCount === 0 ? 'block' : 'none';
     }
 
-    // Filtrar al hacer clic en Buscar o al escribir/seleccionar pueblo
+    // Filtrado por Categorías
+    categoryLinks.forEach(elem => {
+      elem.addEventListener('click', () => {
+        const cat = elem.getAttribute('data-category');
+        activeCategory = cat;
+
+        // Actualizar título de sección y botón de limpiar
+        btnResetFilter.style.display = 'inline-block';
+        
+        const catNames = {
+          'clasificados': 'Clasificados Generales',
+          'empleos': 'Ofertas de Empleo',
+          'agricola': 'Mercado Agrícola Local',
+          'mascotas': 'Mascotas en Adopción'
+        };
+        sectionTitle.textContent = catNames[cat] || 'Publicaciones Recientes';
+
+        filterListings();
+      });
+    });
+
+    // Limpiar Filtro de Categoría
+    btnResetFilter.addEventListener('click', () => {
+      activeCategory = '';
+      sectionTitle.textContent = 'Publicaciones Recientes';
+      btnResetFilter.style.display = 'none';
+      filterListings();
+    });
+
+    // Eventos de Búsqueda
     btnSearch.addEventListener('click', filterListings);
     searchInput.addEventListener('input', filterListings);
     townSelect.addEventListener('change', filterListings);
