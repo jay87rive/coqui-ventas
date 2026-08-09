@@ -51,37 +51,44 @@
     .logo { font-size: 1.5rem; font-weight: bold; color: var(--brand-green-coqui); text-decoration: none; }
     .nav-actions { display: flex; align-items: center; gap: 0.8rem; }
 
-    .btn-primary { background: var(--brand-green-coqui); color: #fff; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 600; cursor: pointer; }
+    .btn-primary { background: var(--brand-green-coqui); color: #fff; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+    .btn-primary:hover { background: var(--brand-green-light); }
     .btn-secondary { background: transparent; border: 1px solid var(--border-color); padding: 0.6rem 1.2rem; border-radius: 8px; cursor: pointer; }
     .btn-google { background: #4285F4; color: white; border: none; padding: 0.8rem; border-radius: 8px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 0.5rem; }
 
     .container { max-width: 1100px; margin: 2rem auto; padding: 0 1rem; }
     .hero { text-align: center; padding: 2.5rem 1rem; background: #fff; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 2rem; }
     
-    .categories {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-    .card {
-      background: white;
+    .section-title { font-size: 1.4rem; color: var(--brand-green-coqui); margin-bottom: 1rem; }
+    .listings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
+    
+    .card-item { 
+      background: #fff; 
+      border-radius: 12px; 
+      border: 1px solid var(--border-color); 
+      overflow: hidden; 
+      display: flex; 
+      flex-direction: column; 
       padding: 1.2rem;
-      border-radius: 8px;
-      border: 1px solid var(--border-color);
-      text-align: center;
+      transition: transform 0.2s, box-shadow 0.2s;
     }
-    .card h3 { color: var(--brand-green-coqui); margin-bottom: 0.5rem; font-size: 1.1rem; }
+    .card-item:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
+    .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.75rem; font-weight: bold; margin-bottom: 0.5rem; background: #E8F5E9; color: var(--brand-green-coqui); width: fit-content; }
+    .card-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 0.4rem; }
+    .card-price { font-size: 1.2rem; font-weight: bold; color: var(--brand-terracotta); margin-bottom: 0.4rem; }
+    .card-location { font-size: 0.85rem; color: var(--text-muted); }
+    .card-user { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem; font-style: italic; }
 
     /* Modales */
-    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; z-index: 1000; }
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; z-index: 1000; padding: 1rem; }
     .modal-overlay.active { display: flex; }
-    .modal-content { background: #fff; width: 100%; max-width: 400px; border-radius: 16px; padding: 2rem; position: relative; }
+    .modal-content { background: #fff; width: 100%; max-width: 450px; border-radius: 16px; padding: 2rem; position: relative; max-height: 90vh; overflow-y: auto; }
     .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
     .close-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; }
     .form-group { margin-bottom: 1rem; }
     .form-group label { display: block; margin-bottom: 0.4rem; font-size: 0.9rem; font-weight: 600; }
-    .form-group input { width: 100%; padding: 0.8rem; border: 1px solid var(--border-color); border-radius: 8px; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.8rem; border: 1px solid var(--border-color); border-radius: 8px; font-family: inherit; }
+    .form-group textarea { resize: vertical; min-height: 80px; }
   </style>
 </head>
 <body>
@@ -102,28 +109,10 @@
       <p style="color: var(--text-muted); margin-top: 0.5rem;">Conéctate con compradores y vendedores locales en los 78 municipios.</p>
     </div>
 
-    <div class="categories">
-      <div class="card">
-        <h3>🚗 Vehículos & Piezas</h3>
-        <p style="font-size: 0.85rem; color: var(--text-muted);">Autos, piezas y accesorios.</p>
-      </div>
-      <div class="card">
-        <h3>🏠 Bienes Raíces</h3>
-        <p style="font-size: 0.85rem; color: var(--text-muted);">Ventas y alquileres.</p>
-      </div>
-      <div class="card">
-        <h3>💼 Empleos</h3>
-        <p style="font-size: 0.85rem; color: var(--text-muted);">Oportunidades laborales.</p>
-      </div>
-      <div class="card">
-        <h3>🌱 Agrícola</h3>
-        <p style="font-size: 0.85rem; color: var(--text-muted);">Productos e insumos del campo.</p>
-      </div>
-      <div class="card">
-        <h3>🐾 Mascotas</h3>
-        <p style="font-size: 0.85rem; color: var(--text-muted);">Adopciones gratuitas.</p>
-      </div>
-    </div>
+    <h2 class="section-title">Anuncios Recientes</h2>
+    <section class="listings-grid" id="listingsContainer">
+      <p id="loadingMsg" style="color: var(--text-muted);">Cargando publicaciones...</p>
+    </section>
   </main>
 
   <!-- Modal Auth -->
@@ -149,15 +138,94 @@
     </div>
   </div>
 
+  <!-- Modal Publicar Anuncio -->
+  <div class="modal-overlay" id="modalPublish">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Publicar Nuevo Anuncio</h3>
+        <button class="close-btn" id="btnClosePublish">&times;</button>
+      </div>
+      <form id="publishForm">
+        <div class="form-group">
+          <label for="category">Categoría</label>
+          <select id="category" required>
+            <option value="">Selecciona una categoría</option>
+            <option value="Agro">🌾 Mercado Agrícola</option>
+            <option value="Mascotas">🐾 Mascotas en Adopción (Gratis)</option>
+            <option value="Empleos">💼 Empleo / Trabajo</option>
+            <option value="Clasificados">📦 Clasificados Generales</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="title">Título del Anuncio</label>
+          <input type="text" id="title" placeholder="Ej. Plátanos verdes, Oferta de trabajo..." required />
+        </div>
+        <div class="form-group">
+          <label for="price">Precio ($) o Salario / Estado</label>
+          <input type="text" id="price" placeholder="Ej. 25.00, Gratis, $15/hr" required />
+        </div>
+        <div class="form-group">
+          <label for="town">Pueblo</label>
+          <select id="town" required>
+            <option value="">Selecciona tu pueblo</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="phone">Teléfono / WhatsApp de contacto</label>
+          <input type="tel" id="phone" placeholder="Ej. 7875551234" required />
+        </div>
+        <div class="form-group">
+          <label for="description">Descripción</label>
+          <textarea id="description" placeholder="Escribe los detalles de tu anuncio..."></textarea>
+        </div>
+        <button type="submit" class="btn-primary" style="width:100%;" id="btnSubmitForm">Publicar Anuncio</button>
+      </form>
+    </div>
+  </div>
+
   <script>
+    const municipiosPR = [
+      "Adjuntas", "Aguada", "Aguadilla", "Aguas Buenas", "Aibonito", "Añasco", "Arecibo", "Arroyo",
+      "Barceloneta", "Barranquitas", "Bayamón", "Cabo Rojo", "Caguas", "Camuy", "Canóvanas", "Carolina",
+      "Cataño", "Cayey", "Ceiba", "Ciales", "Cidra", "Coamo", "Comerío", "Corozal", "Culebra", "Dorado",
+      "Fajardo", "Florida", "Guánica", "Guayama", "Guayanilla", "Guaynabo", "Gurabo", "Hatillo", "Hormigueros",
+      "Humacao", "Isabela", "Jayuya", "Juana Díaz", "Juncos", "Lajas", "Lares", "Las Marías", "Las Piedras",
+      "Loíza", "Luquillo", "Manatí", "Maricao", "Maunabo", "Mayagüez", "Moca", "Morovis", "Naguabo", "Naranjito",
+      "Orocovis", "Patillas", "Peñuelas", "Ponce", "Quebradillas", "Rincón", "Río Grande", "Sabana Grande",
+      "Salinas", "San Germán", "San Juan", "San Lorenzo", "San Sebastián", "Santa Isabel", "Toa Alta",
+      "Toa Baja", "Trujillo Alto", "Utuado", "Vega Alta", "Vega Baja", "Vieques", "Villalba", "Yabucoa", "Yauco"
+    ];
+
+    const townSelect = document.getElementById('town');
+    municipiosPR.forEach(pueblo => {
+      townSelect.innerHTML += `<option value="${pueblo}">${pueblo}</option>`;
+    });
+
+    // Elementos UI
     const modalAuth = document.getElementById('modalAuth');
+    const modalPublish = document.getElementById('modalPublish');
     const btnLogin = document.getElementById('btnLogin');
     const btnLogout = document.getElementById('btnLogout');
+    const btnOpenPublish = document.getElementById('btnOpenPublish');
     const btnCloseAuth = document.getElementById('btnCloseAuth');
+    const btnClosePublish = document.getElementById('btnClosePublish');
     const userGreeting = document.getElementById('userGreeting');
 
+    let currentUser = null;
+
+    // Modales Eventos
     btnLogin.addEventListener('click', () => modalAuth.classList.add('active'));
     btnCloseAuth.addEventListener('click', () => modalAuth.classList.remove('active'));
+    
+    btnOpenPublish.addEventListener('click', () => {
+      if (!currentUser) {
+        alert('Debes iniciar sesión para poder publicar un anuncio.');
+        modalAuth.classList.add('active');
+      } else {
+        modalPublish.classList.add('active');
+      }
+    });
+    btnClosePublish.addEventListener('click', () => modalPublish.classList.remove('active'));
 
     // Login / Registro con Email
     document.getElementById('authForm').addEventListener('submit', async (e) => {
@@ -193,11 +261,11 @@
       }
     });
 
-    // Cerrar sesión
     btnLogout.addEventListener('click', () => auth.signOut());
 
     // Monitoreo de sesión en tiempo real
     auth.onAuthStateChanged((user) => {
+      currentUser = user;
       if (user) {
         userGreeting.textContent = `Hola, ${user.displayName || user.email.split('@')[0]}`;
         userGreeting.style.display = 'inline';
@@ -209,6 +277,76 @@
         btnLogout.style.display = 'none';
       }
     });
+
+    // Guardar Anuncio en Firestore
+    const publishForm = document.getElementById('publishForm');
+    publishForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!currentUser) return;
+
+      const btnSubmit = document.getElementById('btnSubmitForm');
+      btnSubmit.textContent = 'Publicando...';
+      btnSubmit.disabled = true;
+
+      const newListing = {
+        category: document.getElementById('category').value,
+        title: document.getElementById('title').value,
+        price: document.getElementById('price').value,
+        town: document.getElementById('town').value,
+        phone: document.getElementById('phone').value,
+        description: document.getElementById('description').value,
+        userId: currentUser.uid,
+        userEmail: currentUser.email,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+
+      try {
+        await db.collection('anuncios').add(newListing);
+        alert('¡Anuncio publicado con éxito!');
+        modalPublish.classList.remove('active');
+        publishForm.reset();
+        loadListings();
+      } catch (err) {
+        alert('Error al publicar: ' + err.message);
+      } finally {
+        btnSubmit.textContent = 'Publicar Anuncio';
+        btnSubmit.disabled = false;
+      }
+    });
+
+    // Cargar Anuncios desde Firestore
+    async function loadListings() {
+      const container = document.getElementById('listingsContainer');
+      try {
+        const snapshot = await db.collection('anuncios').orderBy('createdAt', 'desc').get();
+        if (snapshot.empty) {
+          container.innerHTML = '<p style="color: var(--text-muted);">Aún no hay anuncios publicados. ¡Sé el primero en publicar!</p>';
+          return;
+        }
+
+        container.innerHTML = '';
+        snapshot.forEach((doc) => {
+          const item = doc.data();
+          const cardHTML = `
+            <article class="card-item">
+              <span class="badge">${item.category || 'General'}</span>
+              <div class="card-title">${item.title}</div>
+              <div class="card-price">${item.price}</div>
+              <div class="card-location">📍 ${item.town}, PR</div>
+              <p style="font-size: 0.85rem; margin-top: 0.5rem;">${item.description || ''}</p>
+              <div class="card-user">Publicado por: ${item.userEmail ? item.userEmail.split('@')[0] : 'Anónimo'}</div>
+            </article>
+          `;
+          container.innerHTML += cardHTML;
+        });
+      } catch (err) {
+        console.error('Error al cargar anuncios:', err);
+        container.innerHTML = '<p style="color: red;">Error al cargar anuncios.</p>';
+      }
+    }
+
+    // Cargar anuncios al iniciar
+    loadListings();
   </script>
 </body>
 </html>
