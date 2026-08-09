@@ -36,10 +36,10 @@
       flex-shrink: 0; 
     }
     .logo img { 
-      height: 70px; /* Tamaño del logo mas grande */
+      height: 70px; 
       width: auto; 
       object-fit: contain; 
-      mix-blend-mode: multiply; /* Elimina el fondo blanco de la imagen */
+      mix-blend-mode: multiply; 
     }
     .nav-links { 
       display: flex; 
@@ -103,6 +103,14 @@
     .card-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 0.4rem; }
     .card-price { font-size: 1.2rem; font-weight: bold; color: var(--brand-terracotta); margin-bottom: 0.4rem; }
     .card-location { font-size: 0.85rem; color: var(--text-muted); }
+
+    .no-results {
+      display: none;
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-muted);
+      grid-column: 1 / -1;
+    }
 
     /* Modal Flotante (Publicar Anuncio) */
     .modal-overlay {
@@ -170,16 +178,16 @@
     <p>Encuentra productos, empleos, cosechas locales y mascotas en adopción.</p>
     
     <div class="search-bar">
-      <input type="text" placeholder="¿Qué estás buscando hoy?" />
-      <select>
+      <input type="text" id="searchInput" placeholder="¿Qué estás buscando hoy?" />
+      <select id="townSelect">
         <option value="">Cualquier pueblo</option>
-        <option value="san-juan">San Juan</option>
-        <option value="ponce">Ponce</option>
-        <option value="mayaguez">Mayagüez</option>
-        <option value="caguas">Caguas</option>
-        <option value="arecibo">Arecibo</option>
+        <option value="Arecibo">Arecibo</option>
+        <option value="Caguas">Caguas</option>
+        <option value="Mayagüez">Mayagüez</option>
+        <option value="Ponce">Ponce</option>
+        <option value="San Juan">San Juan</option>
       </select>
-      <button class="btn-search">Buscar</button>
+      <button class="btn-search" id="btnSearch">Buscar</button>
     </div>
   </section>
 
@@ -193,8 +201,8 @@
 
     <h2 class="section-title">Publicaciones Recientes</h2>
     
-    <section class="listings-grid">
-      <article class="card-item">
+    <section class="listings-grid" id="listingsContainer">
+      <article class="card-item" data-town="Arecibo">
         <div class="card-img">🍌</div>
         <div class="card-body">
           <div>
@@ -206,7 +214,7 @@
         </div>
       </article>
 
-      <article class="card-item">
+      <article class="card-item" data-town="Ponce">
         <div class="card-img">🐶</div>
         <div class="card-body">
           <div>
@@ -218,7 +226,7 @@
         </div>
       </article>
 
-      <article class="card-item">
+      <article class="card-item" data-town="San Juan">
         <div class="card-img">💼</div>
         <div class="card-body">
           <div>
@@ -230,7 +238,7 @@
         </div>
       </article>
 
-      <article class="card-item">
+      <article class="card-item" data-town="Caguas">
         <div class="card-img">⚡</div>
         <div class="card-body">
           <div>
@@ -241,6 +249,8 @@
           <div class="card-location">📍 Caguas, PR</div>
         </div>
       </article>
+
+      <div class="no-results" id="noResults">No se encontraron anuncios que coincidan con tu búsqueda.</div>
     </section>
   </main>
 
@@ -296,6 +306,7 @@
   </div>
 
   <script>
+    // Modal Script
     const modal = document.getElementById('modalPublish');
     const btnOpen = document.getElementById('btnOpenModal');
     const btnClose = document.getElementById('btnCloseModal');
@@ -321,6 +332,45 @@
       modal.classList.remove('active');
       form.reset();
     });
+
+    // Lógica del Buscador
+    const searchInput = document.getElementById('searchInput');
+    const townSelect = document.getElementById('townSelect');
+    const btnSearch = document.getElementById('btnSearch');
+    const cards = document.querySelectorAll('.card-item');
+    const noResults = document.getElementById('noResults');
+
+    function filterListings() {
+      const query = searchInput.value.toLowerCase().trim();
+      const selectedTown = townSelect.value.toLowerCase();
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const title = card.querySelector('.card-title').textContent.toLowerCase();
+        const town = card.getAttribute('data-town').toLowerCase();
+
+        const matchesText = title.includes(query);
+        const matchesTown = selectedTown === '' || town === selectedTown;
+
+        if (matchesText && matchesTown) {
+          card.style.display = 'flex';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      if (visibleCount === 0) {
+        noResults.style.display = 'block';
+      } else {
+        noResults.style.display = 'none';
+      }
+    }
+
+    // Filtrar al hacer clic en Buscar o al escribir/seleccionar pueblo
+    btnSearch.addEventListener('click', filterListings);
+    searchInput.addEventListener('input', filterListings);
+    townSelect.addEventListener('change', filterListings);
   </script>
 
 </body>
