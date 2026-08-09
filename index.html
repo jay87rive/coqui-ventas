@@ -4,13 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Coquí Ventas - Mercado y Empleos en Puerto Rico</title>
-  
-  <!-- Firebase App & Firestore SDKs (Compat version) -->
+
+  <!-- Firebase App, Firestore y Auth SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 
   <script>
-    // Configuración de Firebase de Coquí Ventas
     const firebaseConfig = {
       apiKey: "AIzaSyBjLJnC7EGKXdCwc-VmIbXgckSdcaj3FhE",
       authDomain: "coqui-ventas.firebaseapp.com",
@@ -21,134 +21,194 @@
       measurementId: "G-BZJ2BZLRMS"
     };
 
-    // Inicializar Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
+    const auth = firebase.auth();
   </script>
 
   <style>
     :root {
-      --primary: #2e7d32;
-      --primary-dark: #1b5e20;
-      --secondary: #f57c00;
-      --bg: #f4f6f8;
-      --text: #333;
+      --brand-green-coqui: #2D5A27;
+      --brand-green-light: #4A8539;
+      --brand-terracotta:  #C85A32;
+      --bg-light:          #FAFAF7;
+      --text-primary:      #1A201C;
+      --text-muted:        #5A655D;
+      --border-color:      #E2E8E4;
     }
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: var(--bg);
-      color: var(--text);
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg-light); color: var(--text-primary); }
+
+    .navbar { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      padding: 0.8rem 2rem; 
+      background: #fff; 
+      border-bottom: 1px solid var(--border-color); 
     }
-    header {
-      background-color: var(--primary);
-      color: white;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    header h1 {
-      margin: 0;
-      font-size: 1.8rem;
-    }
-    nav a {
-      color: white;
-      text-decoration: none;
-      margin-left: 1.5rem;
-      font-weight: 500;
-    }
-    .container {
-      max-width: 1100px;
-      margin: 2rem auto;
-      padding: 0 1rem;
-    }
-    .hero {
-      background: white;
-      padding: 2rem;
-      border-radius: 8px;
-      text-align: center;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-      margin-bottom: 2rem;
-    }
+    .logo { font-size: 1.5rem; font-weight: bold; color: var(--brand-green-coqui); text-decoration: none; }
+    .nav-actions { display: flex; align-items: center; gap: 0.8rem; }
+
+    .btn-primary { background: var(--brand-green-coqui); color: #fff; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 600; cursor: pointer; }
+    .btn-secondary { background: transparent; border: 1px solid var(--border-color); padding: 0.6rem 1.2rem; border-radius: 8px; cursor: pointer; }
+    .btn-google { background: #4285F4; color: white; border: none; padding: 0.8rem; border-radius: 8px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 0.5rem; }
+
+    .container { max-width: 1100px; margin: 2rem auto; padding: 0 1rem; }
+    .hero { text-align: center; padding: 2.5rem 1rem; background: #fff; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 2rem; }
+    
     .categories {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2rem;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
     }
     .card {
       background: white;
-      padding: 1.5rem;
+      padding: 1.2rem;
       border-radius: 8px;
+      border: 1px solid var(--border-color);
       text-align: center;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-      transition: transform 0.2s;
     }
-    .card:hover {
-      transform: translateY(-4px);
-    }
-    .card h3 {
-      margin-top: 0;
-      color: var(--primary-dark);
-    }
-    footer {
-      text-align: center;
-      padding: 1.5rem;
-      background: #e0e0e0;
-      color: #666;
-      margin-top: 3rem;
-    }
+    .card h3 { color: var(--brand-green-coqui); margin-bottom: 0.5rem; font-size: 1.1rem; }
+
+    /* Modales */
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; z-index: 1000; }
+    .modal-overlay.active { display: flex; }
+    .modal-content { background: #fff; width: 100%; max-width: 400px; border-radius: 16px; padding: 2rem; position: relative; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .close-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; margin-bottom: 0.4rem; font-size: 0.9rem; font-weight: 600; }
+    .form-group input { width: 100%; padding: 0.8rem; border: 1px solid var(--border-color); border-radius: 8px; }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>🐸 Coquí Ventas</h1>
-    <nav>
-      <a href="#">Inicio</a>
-      <a href="#">Clasificados</a>
-      <a href="#">Empleos</a>
-      <a href="#">Mascotas</a>
-      <a href="#">Agrícola</a>
-    </nav>
+  <header class="navbar">
+    <a href="#" class="logo">🐸 Coquí Ventas</a>
+    <div class="nav-actions">
+      <span id="userGreeting" style="display:none; font-weight:600; font-size:0.9rem; color: var(--brand-green-coqui);"></span>
+      <button class="btn-secondary" id="btnLogin">Iniciar Sesión</button>
+      <button class="btn-secondary" id="btnLogout" style="display:none;">Cerrar Sesión</button>
+      <button class="btn-primary" id="btnOpenPublish">+ Publicar Anuncio</button>
+    </div>
   </header>
 
-  <div class="container">
+  <main class="container">
     <div class="hero">
-      <h2>El Mercado Digital de Puerto Rico</h2>
-      <p>Encuentra autos, bienes raíces, empleos, productos locales, adopción de mascotas y más.</p>
+      <h1>El Mercado Digital de Puerto Rico</h1>
+      <p style="color: var(--text-muted); margin-top: 0.5rem;">Conéctate con compradores y vendedores locales en los 78 municipios.</p>
     </div>
 
     <div class="categories">
       <div class="card">
         <h3>🚗 Vehículos & Piezas</h3>
-        <p>Autos, piezas y accesorios en toda la isla.</p>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">Autos, piezas y accesorios.</p>
       </div>
       <div class="card">
         <h3>🏠 Bienes Raíces</h3>
-        <p>Ventas y alquileres residenciales y comerciales.</p>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">Ventas y alquileres.</p>
       </div>
       <div class="card">
         <h3>💼 Empleos</h3>
-        <p>Oportunidades de trabajo locales.</p>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">Oportunidades laborales.</p>
       </div>
       <div class="card">
         <h3>🌱 Agrícola</h3>
-        <p>Productos locales e insumos del campo boricua.</p>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">Productos e insumos del campo.</p>
       </div>
       <div class="card">
-        <h3>🐾 Adopción de Mascotas</h3>
-        <p>Adopciones gratuitas y apoyo animal.</p>
+        <h3>🐾 Mascotas</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">Adopciones gratuitas.</p>
       </div>
+    </div>
+  </main>
+
+  <!-- Modal Auth -->
+  <div class="modal-overlay" id="modalAuth">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="authTitle">Iniciar Sesión</h3>
+        <button class="close-btn" id="btnCloseAuth">&times;</button>
+      </div>
+      <form id="authForm">
+        <div class="form-group">
+          <label>Correo Electrónico</label>
+          <input type="email" id="authEmail" required />
+        </div>
+        <div class="form-group">
+          <label>Contraseña</label>
+          <input type="password" id="authPassword" required />
+        </div>
+        <button type="submit" class="btn-primary" style="width:100%;">Entrar / Registrarme</button>
+      </form>
+      <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid var(--border-color);">
+      <button class="btn-google" id="btnGoogleLogin">Continuar con Google</button>
     </div>
   </div>
 
-  <footer>
-    <p>&copy; 2026 Coquí Ventas - Puerto Rico. Todos los derechos reservados.</p>
-  </footer>
+  <script>
+    const modalAuth = document.getElementById('modalAuth');
+    const btnLogin = document.getElementById('btnLogin');
+    const btnLogout = document.getElementById('btnLogout');
+    const btnCloseAuth = document.getElementById('btnCloseAuth');
+    const userGreeting = document.getElementById('userGreeting');
 
+    btnLogin.addEventListener('click', () => modalAuth.classList.add('active'));
+    btnCloseAuth.addEventListener('click', () => modalAuth.classList.remove('active'));
+
+    // Login / Registro con Email
+    document.getElementById('authForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('authEmail').value;
+      const pass = document.getElementById('authPassword').value;
+
+      try {
+        await auth.signInWithEmailAndPassword(email, pass);
+        modalAuth.classList.remove('active');
+      } catch (err) {
+        if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') {
+          try {
+            await auth.createUserWithEmailAndPassword(email, pass);
+            modalAuth.classList.remove('active');
+          } catch (createErr) {
+            alert('Error al registrar cuenta: ' + createErr.message);
+          }
+        } else {
+          alert('Error: ' + err.message);
+        }
+      }
+    });
+
+    // Login con Google
+    document.getElementById('btnGoogleLogin').addEventListener('click', async () => {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      try {
+        await auth.signInWithPopup(provider);
+        modalAuth.classList.remove('active');
+      } catch (err) {
+        alert('Error con Google: ' + err.message);
+      }
+    });
+
+    // Cerrar sesión
+    btnLogout.addEventListener('click', () => auth.signOut());
+
+    // Monitoreo de sesión en tiempo real
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        userGreeting.textContent = `Hola, ${user.displayName || user.email.split('@')[0]}`;
+        userGreeting.style.display = 'inline';
+        btnLogin.style.display = 'none';
+        btnLogout.style.display = 'inline-block';
+      } else {
+        userGreeting.style.display = 'none';
+        btnLogin.style.display = 'inline-block';
+        btnLogout.style.display = 'none';
+      }
+    });
+  </script>
 </body>
 </html>
