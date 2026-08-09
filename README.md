@@ -19,11 +19,14 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg-light); color: var(--text-primary); }
 
-    /* Encabezado */
-    .navbar { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; background: #fff; border-bottom: 1px solid var(--border-color); }
-    .logo img { height: 45px; vertical-align: middle; width: auto; object-fit: contain; }
-    .nav-links a { margin: 0 1rem; text-decoration: none; color: var(--text-muted); font-weight: 500; }
+    /* Encabezado Arreglado */
+    .navbar { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 2rem; background: #fff; border-bottom: 1px solid var(--border-color); gap: 1rem; }
+    .logo { display: flex; align-items: center; }
+    .logo img { height: 50px; width: auto; object-fit: contain; }
+    .nav-links { display: flex; gap: 1.5rem; }
+    .nav-links a { text-decoration: none; color: var(--text-muted); font-weight: 500; white-space: nowrap; }
     .nav-links a:hover { color: var(--brand-green-coqui); }
+    .nav-actions { display: flex; align-items: center; white-space: nowrap; }
     
     /* Botones */
     .btn-primary { background: var(--brand-green-coqui); color: #fff; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
@@ -119,9 +122,9 @@
       <a href="#clasificados">Clasificados</a>
       <a href="#empleos">Empleos</a>
       <a href="#agricola">Agrícola Local</a>
-      <a href="#mascotas">Mascotas en Adopción</a>
+      <a href="#mascotas">Mascotas</a>
     </nav>
-    <div>
+    <div class="nav-actions">
       <button class="btn-secondary">Iniciar Sesión</button>
       <button class="btn-primary" id="btnOpenModal">+ Publicar Anuncio</button>
     </div>
