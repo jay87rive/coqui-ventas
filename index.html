@@ -1,0 +1,76 @@
+:root {
+  /* Paleta Principal */
+  --brand-green-coqui: #2D5A27;  /* Verde Coquí / Naturaleza */
+  --brand-green-light: #4A8539;  /* Verde secundario / Acentos */
+  --brand-terracotta:  #C85A32;  /* Terracota / Tierra */
+  --brand-sand-gold:   #E6A817;  /* Dorado / Arena de playa */
+  --brand-coral:       #E05252;  /* Coral para badges o alertas */
+  
+  /* Tonos Neutros y Fondo */
+  --bg-light:          #FAFAF7;  /* Blanco cálido */
+  --text-primary:      #1A201C;  /* Gris muy oscuro/casi negro */
+  --text-muted:        #5A655D;  /* Gris medio */
+  --border-color:      #E2E8E4;  /* Borde suave */
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coquí Ventas - Mercado y Empleos en Puerto Rico</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Encabezado Principal -->
+  <header class="navbar">
+    <div class="logo">
+      <span class="logo-icon">🐸</span>
+      <span class="logo-text">Coquí<span class="highlight">Ventas</span></span>
+    </div>
+    
+    <nav class="nav-links">
+      <a href="#clasificados">Clasificados</a>
+      <a href="#empleos">Empleos</a>
+      <a href="#agricola">Agrícola Local</a>
+      <a href="#mascotas">Mascotas en Adopción</a>
+    </nav>
+
+    <div class="nav-actions">
+      <button class="btn-secondary">Iniciar Sesión</button>
+      <button class="btn-primary">+ Publicar Anuncio</button>
+    </div>
+  </header>
+
+  <!-- Sección Principal / Buscador -->
+  <section class="hero">
+    <h1>El mercado digital de <span class="text-terracotta">Puerto Rico</span></h1>
+    <p>Encuentra productos, empleos, cosechas locales y mascotas sin hogar.</p>
+    
+    <div class="search-bar">
+      <input type="text" placeholder="¿Qué estás buscando hoy?" />
+      <select>
+        <option value="">Cualquier pueblo</option>
+        <option value="san-juan">San Juan</option>
+        <option value="ponce">Ponce</option>
+        <option value="mayaguez">Mayagüez</option>
+        <option value="caguas">Caguas</option>
+        <option value="arecibo">Arecibo</option>
+      </select>
+      <button class="btn-search">Buscar</button>
+    </div>
+  </section>
+
+  <!-- Secciones Destacadas -->
+  <main class="container">
+    <!-- Categorías -->
+    <section class="categories-grid">
+      <div class="card-cat">📦 Clasificados</div>
+      <div class="card-cat">💼 Empleos</div>
+      <div class="card-cat">🌾 Mercado Agrícola</div>
+      <div class="card-cat">🐾 Adopción Responsable</div>
+    </section>
+  </main>
+
+</body>
+</html>
