@@ -201,7 +201,6 @@
       townSelect.innerHTML += `<option value="${pueblo}">${pueblo}</option>`;
     });
 
-    // Elementos UI
     const modalAuth = document.getElementById('modalAuth');
     const modalPublish = document.getElementById('modalPublish');
     const btnLogin = document.getElementById('btnLogin');
@@ -213,7 +212,6 @@
 
     let currentUser = null;
 
-    // Modales Eventos
     btnLogin.addEventListener('click', () => modalAuth.classList.add('active'));
     btnCloseAuth.addEventListener('click', () => modalAuth.classList.remove('active'));
     
@@ -227,7 +225,6 @@
     });
     btnClosePublish.addEventListener('click', () => modalPublish.classList.remove('active'));
 
-    // Login / Registro con Email
     document.getElementById('authForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const email = document.getElementById('authEmail').value;
@@ -250,7 +247,6 @@
       }
     });
 
-    // Login con Google
     document.getElementById('btnGoogleLogin').addEventListener('click', async () => {
       const provider = new firebase.auth.GoogleAuthProvider();
       try {
@@ -263,7 +259,6 @@
 
     btnLogout.addEventListener('click', () => auth.signOut());
 
-    // Monitoreo de sesión en tiempo real
     auth.onAuthStateChanged((user) => {
       currentUser = user;
       if (user) {
@@ -278,7 +273,6 @@
       }
     });
 
-    // Guardar Anuncio en Firestore
     const publishForm = document.getElementById('publishForm');
     publishForm.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -297,7 +291,7 @@
         description: document.getElementById('description').value,
         userId: currentUser.uid,
         userEmail: currentUser.email,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        createdAt: new Date()
       };
 
       try {
@@ -307,18 +301,17 @@
         publishForm.reset();
         loadListings();
       } catch (err) {
-        alert('Error al publicar: ' + err.message);
+        alert('Error en Firestore: ' + err.message);
       } finally {
         btnSubmit.textContent = 'Publicar Anuncio';
         btnSubmit.disabled = false;
       }
     });
 
-    // Cargar Anuncios desde Firestore
     async function loadListings() {
       const container = document.getElementById('listingsContainer');
       try {
-        const snapshot = await db.collection('anuncios').orderBy('createdAt', 'desc').get();
+        const snapshot = await db.collection('anuncios').get();
         if (snapshot.empty) {
           container.innerHTML = '<p style="color: var(--text-muted);">Aún no hay anuncios publicados. ¡Sé el primero en publicar!</p>';
           return;
@@ -345,7 +338,6 @@
       }
     }
 
-    // Cargar anuncios al iniciar
     loadListings();
   </script>
 </body>
