@@ -17,7 +17,7 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
 
     body {
@@ -170,7 +170,7 @@
       <p>Tu plataforma de clasificados en Puerto Rico</p>
     </header>
 
-    <!-- Formulario para Publicar -->
+    <!-- Formulario -->
     <div class="card">
       <h2>Publicar un Anuncio</h2>
       <form id="adForm">
@@ -192,12 +192,12 @@
         </div>
 
         <div class="form-group">
-          <label for="phone">Teléfono / WhatsApp de contacto</label>
+          <label for="phone">Teléfono / WhatsApp</label>
           <input type="tel" id="phone" placeholder="Ej. 7875551234" required />
         </div>
 
         <div class="form-group">
-          <label for="imageInput">Foto del producto</label>
+          <label for="imageInput">Foto del producto (Opcional)</label>
           <input type="file" id="imageInput" accept="image/*" />
         </div>
 
@@ -222,7 +222,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
   <script>
-    // 1. Configuración de Firebase
+    // 1. Firebase Config
     const firebaseConfig = {
       projectId: "coqui-ventas"
     };
@@ -230,7 +230,7 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // 2. Municipios de Puerto Rico
+    // 2. Municipios PR
     const municipiosPR = [
       "Adjuntas", "Aguada", "Aguadilla", "Aguas Buenas", "Aibonito", "Añasco", "Arecibo", "Arroyo",
       "Barceloneta", "Barranquitas", "Bayamón", "Cabo Rojo", "Caguas", "Camuy", "Canóvanas", "Carolina",
@@ -244,7 +244,6 @@
       "Trujillo Alto", "Utuado", "Vega Alta", "Vega Baja", "Vieques", "Villalba", "Yabucoa", "Yauco"
     ];
 
-    // Cargar municipios en el dropdown
     const townSelect = document.getElementById("town");
     municipiosPR.forEach(pueblo => {
       const option = document.createElement("option");
@@ -253,7 +252,7 @@
       townSelect.appendChild(option);
     });
 
-    // 3. Función para subir imagen a ImgBB con tu API Key
+    // 3. Subida de imagen a ImgBB
     async function uploadImageToImgBB(file) {
       const apiKey = '8f66d3350417bf5442495066b902dffb';
       const formData = new FormData();
@@ -267,13 +266,14 @@
       const data = await response.json();
 
       if (!response.ok || !data.success) {
-        throw new Error(data.error ? data.error.message : 'Error al subir la imagen');
+        const errorMsg = data.error ? data.error.message : 'Respuesta inválida del servidor';
+        throw new Error('Error al subir imagen: ' + errorMsg);
       }
 
       return data.data.url;
     }
 
-    // 4. Manejar el envío del formulario
+    // 4. Guardar Anuncio
     const adForm = document.getElementById("adForm");
     const btnSubmit = document.getElementById("btnSubmit");
 
@@ -296,7 +296,6 @@
           imageUrl = await uploadImageToImgBB(imageFile);
         }
 
-        // Guardar anuncio en Firestore
         await db.collection("ads").add({
           title: title,
           price: price,
@@ -307,18 +306,18 @@
           createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
 
-        alert("¡Anuncio publicado con éxito!");
+        alert("¡Anuncio publicado exitosamente!");
         adForm.reset();
       } catch (error) {
-        console.error("Error al publicar:", error);
-        alert("Error al publicar: " + error.message);
+        console.error("Detalle del error:", error);
+        alert(error.message);
       } finally {
         btnSubmit.disabled = false;
         btnSubmit.textContent = "Publicar Anuncio";
       }
     });
 
-    // 5. Cargar y mostrar anuncios en tiempo real
+    // 5. Cargar Anuncios
     const adsContainer = document.getElementById("adsContainer");
 
     db.collection("ads")
@@ -353,7 +352,7 @@
         });
       }, (error) => {
         console.error("Error al cargar anuncios:", error);
-        adsContainer.innerHTML = "<p>Error al cargar los anuncios.</p>";
+        adsContainer.innerHTML = "<p>Error al cargar anuncios desde la base de datos.</p>";
       });
   </script>
 </body>
