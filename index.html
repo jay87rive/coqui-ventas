@@ -1,51 +1,70 @@
-:root {
-  /* Paleta Principal */
-  --brand-green-coqui: #2D5A27;  /* Verde Coquí / Naturaleza */
-  --brand-green-light: #4A8539;  /* Verde secundario / Acentos */
-  --brand-terracotta:  #C85A32;  /* Terracota / Tierra */
-  --brand-sand-gold:   #E6A817;  /* Dorado / Arena de playa */
-  --brand-coral:       #E05252;  /* Coral para badges o alertas */
-  
-  /* Tonos Neutros y Fondo */
-  --bg-light:          #FAFAF7;  /* Blanco cálido */
-  --text-primary:      #1A201C;  /* Gris muy oscuro/casi negro */
-  --text-muted:        #5A655D;  /* Gris medio */
-  --border-color:      #E2E8E4;  /* Borde suave */
-}
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Coquí Ventas - Mercado y Empleos en Puerto Rico</title>
-  <link rel="stylesheet" href="styles.css" />
+  <style>
+    :root {
+      --brand-green-coqui: #2D5A27;
+      --brand-green-light: #4A8539;
+      --brand-terracotta:  #C85A32;
+      --brand-sand-gold:   #E6A817;
+      --bg-light:          #FAFAF7;
+      --text-primary:      #1A201C;
+      --text-muted:        #5A655D;
+      --border-color:      #E2E8E4;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg-light); color: var(--text-primary); }
+
+    /* Encabezado */
+    .navbar { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; background: #fff; border-bottom: 1px solid var(--border-color); }
+    .logo { font-size: 1.5rem; font-weight: bold; color: var(--brand-green-coqui); }
+    .logo-highlight { color: var(--brand-terracotta); }
+    .nav-links a { margin: 0 1rem; text-decoration: none; color: var(--text-muted); font-weight: 500; }
+    .nav-links a:hover { color: var(--brand-green-coqui); }
+    
+    /* Botones */
+    .btn-primary { background: var(--brand-green-coqui); color: #fff; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 600; cursor: pointer; }
+    .btn-secondary { background: transparent; border: 1px solid var(--border-color); padding: 0.6rem 1.2rem; border-radius: 8px; margin-right: 0.5rem; cursor: pointer; }
+
+    /* Hero Search */
+    .hero { text-align: center; padding: 4rem 1rem; background: linear-gradient(180deg, #FFFFFF 0%, var(--bg-light) 100%); }
+    .hero h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+    .hero p { color: var(--text-muted); margin-bottom: 2rem; }
+    .text-terracotta { color: var(--brand-terracotta); }
+
+    .search-bar { display: flex; justify-content: center; gap: 0.5rem; max-width: 600px; margin: 0 auto; }
+    .search-bar input, .search-bar select { padding: 0.8rem 1rem; border: 1px solid var(--border-color); border-radius: 8px; outline: none; }
+    .search-bar input { flex: 1; }
+    .btn-search { background: var(--brand-terracotta); color: #fff; border: none; padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: bold; cursor: pointer; }
+
+    /* Grid Categorías */
+    .categories-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; max-width: 900px; margin: 3rem auto; padding: 0 1rem; }
+    .card-cat { background: #fff; padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color); text-align: center; font-weight: 600; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+  </style>
 </head>
 <body>
 
-  <!-- Encabezado Principal -->
   <header class="navbar">
-    <div class="logo">
-      <span class="logo-icon">🐸</span>
-      <span class="logo-text">Coquí<span class="highlight">Ventas</span></span>
-    </div>
-    
+    <div class="logo">🐸 Coquí<span class="logo-highlight">Ventas</span></div>
     <nav class="nav-links">
-      <a href="#clasificados">Clasificados</a>
-      <a href="#empleos">Empleos</a>
-      <a href="#agricola">Agrícola Local</a>
-      <a href="#mascotas">Mascotas en Adopción</a>
+      <a href="#">Clasificados</a>
+      <a href="#">Empleos</a>
+      <a href="#">Agrícola Local</a>
+      <a href="#">Mascotas</a>
     </nav>
-
-    <div class="nav-actions">
+    <div>
       <button class="btn-secondary">Iniciar Sesión</button>
-      <button class="btn-primary">+ Publicar Anuncio</button>
+      <button class="btn-primary">+ Publicar</button>
     </div>
   </header>
 
-  <!-- Sección Principal / Buscador -->
   <section class="hero">
     <h1>El mercado digital de <span class="text-terracotta">Puerto Rico</span></h1>
-    <p>Encuentra productos, empleos, cosechas locales y mascotas sin hogar.</p>
+    <p>Encuentra productos, empleos, cosechas locales y mascotas en adopción.</p>
     
     <div class="search-bar">
       <input type="text" placeholder="¿Qué estás buscando hoy?" />
@@ -54,22 +73,16 @@
         <option value="san-juan">San Juan</option>
         <option value="ponce">Ponce</option>
         <option value="mayaguez">Mayagüez</option>
-        <option value="caguas">Caguas</option>
-        <option value="arecibo">Arecibo</option>
       </select>
       <button class="btn-search">Buscar</button>
     </div>
   </section>
 
-  <!-- Secciones Destacadas -->
-  <main class="container">
-    <!-- Categorías -->
-    <section class="categories-grid">
-      <div class="card-cat">📦 Clasificados</div>
-      <div class="card-cat">💼 Empleos</div>
-      <div class="card-cat">🌾 Mercado Agrícola</div>
-      <div class="card-cat">🐾 Adopción Responsable</div>
-    </section>
+  <main class="categories-grid">
+    <div class="card-cat">📦 Clasificados</div>
+    <div class="card-cat">💼 Empleos</div>
+    <div class="card-cat">🌾 Mercado Agrícola</div>
+    <div class="card-cat">🐾 Adopción Responsable</div>
   </main>
 
 </body>
