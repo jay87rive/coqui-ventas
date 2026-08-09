@@ -48,7 +48,7 @@
       background: #fff; 
       border-bottom: 1px solid var(--border-color); 
     }
-    .logo { font-size: 1.5rem; font-weight: bold; color: var(--brand-green-coqui); text-decoration: none; }
+    .logo img { height: 45px; vertical-align: middle; }
     .nav-actions { display: flex; align-items: center; gap: 0.8rem; }
 
     .btn-primary { background: var(--brand-green-coqui); color: #fff; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
@@ -60,7 +60,7 @@
     .hero { text-align: center; padding: 2.5rem 1rem; background: #fff; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 2rem; }
     
     .section-title { font-size: 1.4rem; color: var(--brand-green-coqui); margin-bottom: 1rem; }
-    .listings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
+    .listings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
     
     .card-item { 
       background: #fff; 
@@ -69,10 +69,11 @@
       overflow: hidden; 
       display: flex; 
       flex-direction: column; 
-      padding: 1.2rem;
+      padding: 1rem;
       transition: transform 0.2s, box-shadow 0.2s;
     }
     .card-item:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
+    .card-img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 0.8rem; background-color: #f0f0f0; }
     .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.75rem; font-weight: bold; margin-bottom: 0.5rem; background: #E8F5E9; color: var(--brand-green-coqui); width: fit-content; }
     .card-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 0.4rem; }
     .card-price { font-size: 1.2rem; font-weight: bold; color: var(--brand-terracotta); margin-bottom: 0.4rem; }
@@ -94,9 +95,9 @@
 <body>
 
   <header class="navbar">
-   <a href="#" class="logo">
-  <img src="logo.png" alt="Coquí Ventas" style="height: 40px; vertical-align: middle;">
-</a>
+    <a href="#" class="logo">
+      <img src="logo.png" alt="Coquí Ventas">
+    </a>
     <div class="nav-actions">
       <span id="userGreeting" style="display:none; font-weight:600; font-size:0.9rem; color: var(--brand-green-coqui);"></span>
       <button class="btn-secondary" id="btnLogin">Iniciar Sesión</button>
@@ -175,6 +176,10 @@
         <div class="form-group">
           <label for="phone">Teléfono / WhatsApp de contacto</label>
           <input type="tel" id="phone" placeholder="Ej. 7875551234" required />
+        </div>
+        <div class="form-group">
+          <label for="imageInput">Foto del producto / anuncio</label>
+          <input type="file" id="imageInput" accept="image/*" />
         </div>
         <div class="form-group">
           <label for="description">Descripción</label>
@@ -275,35 +280,62 @@
       }
     });
 
+    // Función para subir imagen a Cloudinary (Preset Anónimo)
+    async function uploadImageToCloudinary(file) {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', 'ml_default'); // preset estándar
+
+      const response = await fetch('https://api.cloudinary.com/v1_1/demo/image/upload', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al subir la imagen');
+      }
+
+      const data = await response.json();
+      return data.secure_url;
+    }
+
     const publishForm = document.getElementById('publishForm');
     publishForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       if (!currentUser) return;
 
       const btnSubmit = document.getElementById('btnSubmitForm');
-      btnSubmit.textContent = 'Publicando...';
+      btnSubmit.textContent = 'Subiendo imagen y datos...';
       btnSubmit.disabled = true;
 
-      const newListing = {
-        category: document.getElementById('category').value,
-        title: document.getElementById('title').value,
-        price: document.getElementById('price').value,
-        town: document.getElementById('town').value,
-        phone: document.getElementById('phone').value,
-        description: document.getElementById('description').value,
-        userId: currentUser.uid,
-        userEmail: currentUser.email,
-        createdAt: new Date()
-      };
-
       try {
+        const imageFile = document.getElementById('imageInput').files[0];
+        let imageUrl = '';
+
+        if (imageFile) {
+          imageUrl = await uploadImageToCloudinary(imageFile);
+        }
+
+        const newListing = {
+          category: document.getElementById('category').value,
+          title: document.getElementById('title').value,
+          price: document.getElementById('price').value,
+          town: document.getElementById('town').value,
+          phone: document.getElementById('phone').value,
+          description: document.getElementById('description').value,
+          imageUrl: imageUrl,
+          userId: currentUser.uid,
+          userEmail: currentUser.email,
+          createdAt: new Date()
+        };
+
         await db.collection('anuncios').add(newListing);
         alert('¡Anuncio publicado con éxito!');
         modalPublish.classList.remove('active');
         publishForm.reset();
         loadListings();
       } catch (err) {
-        alert('Error en Firestore: ' + err.message);
+        alert('Error al publicar: ' + err.message);
       } finally {
         btnSubmit.textContent = 'Publicar Anuncio';
         btnSubmit.disabled = false;
@@ -322,8 +354,13 @@
         container.innerHTML = '';
         snapshot.forEach((doc) => {
           const item = doc.data();
+          const imgTag = item.imageUrl 
+            ? `<img src="${item.imageUrl}" alt="${item.title}" class="card-img">`
+            : `<div class="card-img" style="display:flex;align-items:center;justify-content:center;color:#aaa;">Sin imagen</div>`;
+
           const cardHTML = `
             <article class="card-item">
+              ${imgTag}
               <span class="badge">${item.category || 'General'}</span>
               <div class="card-title">${item.title}</div>
               <div class="card-price">${item.price}</div>
