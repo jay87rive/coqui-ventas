@@ -31,19 +31,40 @@
     .btn-secondary { background: transparent; border: 1px solid var(--border-color); padding: 0.6rem 1.2rem; border-radius: 8px; margin-right: 0.5rem; cursor: pointer; }
 
     /* Hero Search */
-    .hero { text-align: center; padding: 4rem 1rem; background: linear-gradient(180deg, #FFFFFF 0%, var(--bg-light) 100%); }
+    .hero { text-align: center; padding: 4rem 1rem 3rem 1rem; background: linear-gradient(180deg, #FFFFFF 0%, var(--bg-light) 100%); }
     .hero h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
     .hero p { color: var(--text-muted); margin-bottom: 2rem; }
     .text-terracotta { color: var(--brand-terracotta); }
 
-    .search-bar { display: flex; justify-content: center; gap: 0.5rem; max-width: 600px; margin: 0 auto; }
+    .search-bar { display: flex; justify-content: center; gap: 0.5rem; max-width: 650px; margin: 0 auto; }
     .search-bar input, .search-bar select { padding: 0.8rem 1rem; border: 1px solid var(--border-color); border-radius: 8px; outline: none; }
     .search-bar input { flex: 1; }
     .btn-search { background: var(--brand-terracotta); color: #fff; border: none; padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
-    /* Grid Categorías */
-    .categories-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; max-width: 900px; margin: 3rem auto; padding: 0 1rem; }
-    .card-cat { background: #fff; padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color); text-align: center; font-weight: 600; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+    /* Contenedor Principal */
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 1rem 4rem 1rem; }
+
+    /* Categorías */
+    .categories-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 3rem; }
+    .card-cat { background: #fff; padding: 1.2rem; border-radius: 12px; border: 1px solid var(--border-color); text-align: center; font-weight: 600; cursor: pointer; transition: transform 0.2s; }
+    .card-cat:hover { transform: translateY(-3px); border-color: var(--brand-green-light); }
+
+    /* Anuncios Destacados */
+    .section-title { font-size: 1.5rem; margin-bottom: 1.5rem; color: var(--brand-green-coqui); }
+    .listings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
+    
+    .card-item { background: #fff; border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden; display: flex; flex-direction: column; }
+    .card-img { height: 160px; background: #e2e8e4; display: flex; align-items: center; justify-content: center; font-size: 3rem; }
+    .card-body { padding: 1rem; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+    .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.75rem; font-weight: bold; margin-bottom: 0.5rem; }
+    .badge-agricola { background: #E8F5E9; color: var(--brand-green-coqui); }
+    .badge-mascotas { background: #FFEBEE; color: var(--brand-terracotta); }
+    .badge-empleo { background: #FFF8E1; color: #B78103; }
+    .badge-clasificado { background: #F3E5F5; color: #7B1FA2; }
+    
+    .card-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 0.4rem; }
+    .card-price { font-size: 1.2rem; font-weight: bold; color: var(--brand-terracotta); margin-bottom: 0.4rem; }
+    .card-location { font-size: 0.85rem; color: var(--text-muted); }
   </style>
 </head>
 <body>
@@ -80,11 +101,69 @@
     </div>
   </section>
 
-  <main class="categories-grid">
-    <div class="card-cat">📦 Clasificados</div>
-    <div class="card-cat">💼 Empleos</div>
-    <div class="card-cat">🌾 Mercado Agrícola</div>
-    <div class="card-cat">🐾 Adopción Responsable</div>
+  <main class="container">
+    <section class="categories-grid">
+      <div class="card-cat">📦 Clasificados</div>
+      <div class="card-cat">💼 Empleos</div>
+      <div class="card-cat">🌾 Mercado Agrícola</div>
+      <div class="card-cat">🐾 Adopción Responsable</div>
+    </section>
+
+    <h2 class="section-title">Publicaciones Recientes</h2>
+    
+    <section class="listings-grid">
+      <!-- Ejemplo Agrícola -->
+      <article class="card-item">
+        <div class="card-img">🍌</div>
+        <div class="card-body">
+          <div>
+            <span class="badge badge-agricola">Agrícola Local</span>
+            <div class="card-title">Plátanos Verdes por Ciento</div>
+            <div class="card-price">$25.00</div>
+          </div>
+          <div class="card-location">📍 Arecibo, PR</div>
+        </div>
+      </article>
+
+      <!-- Ejemplo Mascota -->
+      <article class="card-item">
+        <div class="card-img">🐶</div>
+        <div class="card-body">
+          <div>
+            <span class="badge badge-mascotas">Adopción Gratis</span>
+            <div class="card-title">Perrita Sato en Adopción</div>
+            <div class="card-price" style="color: var(--brand-green-coqui);">Gratis</div>
+          </div>
+          <div class="card-location">📍 Ponce, PR</div>
+        </div>
+      </article>
+
+      <!-- Ejemplo Empleo -->
+      <article class="card-item">
+        <div class="card-img">💼</div>
+        <div class="card-body">
+          <div>
+            <span class="badge badge-empleo">Empleo</span>
+            <div class="card-title">Técnico de Electricidad</div>
+            <div class="card-price">$18 - $22 / hr</div>
+          </div>
+          <div class="card-location">📍 San Juan, PR</div>
+        </div>
+      </article>
+
+      <!-- Ejemplo Clasificado -->
+      <article class="card-item">
+        <div class="card-img">Generator</div>
+        <div class="card-body">
+          <div>
+            <span class="badge badge-clasificado">Clasificados</span>
+            <div class="card-title">Generador Inverter 3500W</div>
+            <div class="card-price">$450.00</div>
+          </div>
+          <div class="card-location">📍 Caguas, PR</div>
+        </div>
+      </article>
+    </section>
   </main>
 
 </body>
