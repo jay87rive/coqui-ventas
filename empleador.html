@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Panel de Control del Empleador - Coquí Ventas</title>
+  <title>Coquí Ventas - Mercado, Bienes Raíces y Empleos en Puerto Rico</title>
   
   <style>
     :root {
       --brand-green: #1b4332;
       --brand-green-hover: #2d6a4f;
+      --brand-accent: #d97706;
       --bg-body: #f8fafc;
       --bg-surface: #ffffff;
       --text-main: #0f172a;
@@ -16,12 +17,13 @@
       --border-color: #e2e8f0;
       --radius: 12px;
       --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
-      --shadow-md: 0 4px 12px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { background-color: var(--bg-body); color: var(--text-main); line-height: 1.5; }
 
+    /* Header Navbar */
     header {
       background-color: var(--brand-green);
       color: white;
@@ -30,188 +32,248 @@
       justify-content: space-between;
       align-items: center;
       box-shadow: var(--shadow-sm);
-    }
-
-    .logo { font-size: 1.2rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-    .btn-back { color: white; text-decoration: none; font-size: 0.9rem; opacity: 0.9; font-weight: 500; }
-    .btn-back:hover { opacity: 1; text-decoration: underline; }
-
-    .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
-
-    .page-title { margin-bottom: 24px; }
-    .page-title h1 { font-size: 1.6rem; font-weight: 700; color: var(--text-main); }
-    .page-title p { color: var(--text-muted); font-size: 0.9rem; }
-
-    /* Filtros */
-    .filters-card {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius);
-      padding: 20px;
-      margin-bottom: 24px;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .form-group label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.82rem; color: var(--text-muted); text-transform: uppercase; }
-    .form-group input, .form-group select {
-      width: 100%;
-      padding: 10px 12px;
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      font-size: 0.9rem;
-      outline: none;
-      background: #fff;
-    }
-
-    /* Layout Principal del Panel */
-    .dashboard-grid {
-      display: grid;
-      grid-template-columns: 1fr 380px;
-      gap: 24px;
-    }
-
-    /* Lista de Candidatos */
-    .candidates-list { display: flex; flex-direction: column; gap: 12px; }
-
-    .applicant-card {
-      background: white;
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius);
-      padding: 18px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: var(--shadow-sm);
-      transition: border-color 0.2s;
-      cursor: pointer;
-    }
-
-    .applicant-card:hover { border-color: var(--brand-green); }
-    .applicant-card.active { border-color: var(--brand-green); background-color: #f0fdf4; }
-
-    .applicant-info h3 { font-size: 1rem; font-weight: 700; color: var(--text-main); }
-    .applicant-info p { font-size: 0.85rem; color: var(--text-muted); margin-top: 2px; }
-
-    .badge {
-      display: inline-block;
-      font-size: 0.75rem;
-      padding: 3px 8px;
-      border-radius: 12px;
-      font-weight: 600;
-      margin-top: 6px;
-    }
-    .badge-1click { background: #dcfce7; color: #166534; }
-    .badge-custom { background: #e0f2fe; color: #075985; }
-
-    /* Panel Lateral de Detalle del Candidato */
-    .detail-panel {
-      background: white;
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius);
-      padding: 24px;
       position: sticky;
-      top: 20px;
-      height: fit-content;
-      box-shadow: var(--shadow-sm);
+      top: 0;
+      z-index: 100;
     }
 
-    .detail-header { border-bottom: 1px solid var(--border-color); padding-bottom: 16px; margin-bottom: 16px; }
-    .detail-header h2 { font-size: 1.25rem; font-weight: 700; }
-    .detail-header p { font-size: 0.88rem; color: var(--brand-green); font-weight: 600; margin-top: 4px; }
+    .logo { font-size: 1.4rem; font-weight: 800; display: flex; align-items: center; gap: 8px; text-decoration: none; color: white; }
+    .nav-actions { display: flex; align-items: center; gap: 12px; }
 
-    .skill-badge {
-      background: #f1f5f9;
-      color: #334155;
-      font-size: 0.78rem;
-      font-weight: 600;
-      padding: 4px 10px;
-      border-radius: 12px;
-      border: 1px solid #e2e8f0;
-      display: inline-block;
-      margin: 2px;
-    }
-
-    .btn-call {
-      display: block;
-      width: 100%;
-      text-align: center;
-      background: #16a34a;
+    .btn-nav {
+      background: rgba(255, 255, 255, 0.15);
       color: white;
-      text-decoration: none;
-      padding: 12px;
-      border-radius: 8px;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
       font-weight: 600;
-      margin-top: 20px;
+      font-size: 0.88rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
       transition: background 0.2s;
     }
 
-    .btn-call:hover { background: #15803d; }
+    .btn-nav:hover { background: rgba(255, 255, 255, 0.25); }
 
-    @media (max-width: 900px) {
-      .dashboard-grid { grid-template-columns: 1fr; }
+    .btn-publish {
+      background: var(--brand-accent);
+      color: white;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    .btn-publish:hover { opacity: 0.9; }
+
+    /* Main Layout */
+    .layout-container {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 30px;
+    }
+
+    /* Sidebar Departamentos */
+    .sidebar { background: white; padding: 20px; border-radius: var(--radius); border: 1px solid var(--border-color); height: fit-content; }
+    .sidebar h3 { font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em; margin-bottom: 12px; }
+    .dept-list { list-style: none; }
+    .dept-item {
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-main);
+      cursor: pointer;
+      margin-bottom: 4px;
+      transition: all 0.2s;
+    }
+    .dept-item:hover, .dept-item.active { background: var(--brand-green); color: white; }
+    .dept-item.highlight { background: #fef3c7; color: #92400e; font-weight: 600; }
+
+    /* Feed de Anuncios */
+    .feed-header { margin-bottom: 20px; }
+    .feed-header h2 { font-size: 1.5rem; font-weight: 700; }
+
+    .ads-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .ad-card {
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .ad-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+    .ad-image { width: 100%; height: 180px; object-fit: cover; background: #e2e8f0; }
+    .ad-body { padding: 16px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+    .ad-title { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+    .ad-price { font-size: 1.1rem; font-weight: 800; color: var(--brand-green); margin-bottom: 4px; }
+    .ad-location { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px; }
+
+    .btn-card {
+      width: 100%;
+      background: var(--brand-green);
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      display: block;
+    }
+
+    .btn-card:hover { background: var(--brand-green-hover); }
+
+    /* Modales */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 200;
+    }
+
+    .modal-card {
+      background: white;
+      border-radius: var(--radius);
+      width: 90%;
+      max-width: 500px;
+      padding: 24px;
+      box-shadow: var(--shadow-md);
+      position: relative;
+    }
+
+    .modal-close { position: absolute; top: 16px; right: 16px; font-size: 1.2rem; cursor: pointer; border: none; background: none; }
+
+    @media (max-width: 768px) {
+      .layout-container { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
   <header>
-    <div class="logo">🏢 Coquí Ventas - Panel de Reclutamiento</div>
-    <a href="index.html" class="btn-back">← Volver al Mercado</a>
+    <a href="#" class="logo">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      Coquí Ventas
+    </a>
+    <div class="nav-actions">
+      <button class="btn-nav" onclick="abrirModal('modalResume')">👤 Mi Resume</button>
+      
+      <!-- Botón configurado hacia la página limpia de empleador -->
+      <a href="empleador.html" class="btn-nav">💼 Panel Empleador</a>
+      
+      <button class="btn-publish" onclick="abrirModal('modalPublicar')">+ Publicar</button>
+    </div>
   </header>
 
-  <div class="container">
-    <div class="page-title">
-      <h1>Gestión de Candidatos y Postulaciones</h1>
-      <p>Revisa solicitudes en tiempo real y contacta directamente a los postulantes.</p>
+  <div class="layout-container">
+    <aside class="sidebar">
+      <h3>Departamentos</h3>
+      <ul class="dept-list">
+        <li class="dept-item active" onclick="filtrarDept('todos')">Todos los Anuncios</li>
+        <li class="dept-item highlight" onclick="filtrarDept('local')">De Aquí (Local)</li>
+        <li class="dept-item" onclick="filtrarDept('bienes-raices')">Bienes Raíces</li>
+        <li class="dept-item" onclick="filtrarDept('empleos')">Empleos Directos</li>
+        <li class="dept-item" onclick="filtrarDept('autos')">Autos y Vehículos</li>
+        <li class="dept-item" onclick="filtrarDept('electronica')">Electrónica y Equipos</li>
+        <li class="dept-item" onclick="filtrarDept('hogar')">Hogar y Muebles</li>
+        <li class="dept-item" onclick="filtrarDept('servicios')">Servicios Profesionales</li>
+        <li class="dept-item" onclick="filtrarDept('mascotas')">Adopción de Mascotas</li>
+      </ul>
+    </aside>
+
+    <main>
+      <div class="feed-header">
+        <h2 id="tituloSeccion">Explorando Anuncios</h2>
+      </div>
+
+      <div class="ads-grid" id="gridAnuncios">
+        <p style="color:var(--text-muted);">Cargando anuncios...</p>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal Mi Resume (Progresivo) -->
+  <div class="modal-overlay" id="modalResume">
+    <div class="modal-card">
+      <button class="modal-close" onclick="cerrarModal('modalResume')">✕</button>
+      <h3 style="margin-bottom:12px;">Mi Resume Progresivo</h3>
+      <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:16px;">
+        Guarda tus datos básicos para aplicar rápidamente con "1-Click Apply" a empleos locales.
+      </p>
+      <form id="formResume" onsubmit="guardarResume(event)">
+        <div style="margin-bottom:12px;">
+          <label style="font-size:0.8rem; font-weight:600;">Nombre Completo</label>
+          <input type="text" id="resNombre" required style="width:100%; padding:8px; margin-top:4px; border:1px solid var(--border-color); border-radius:6px;">
+        </div>
+        <div style="margin-bottom:12px;">
+          <label style="font-size:0.8rem; font-weight:600;">Correo Electrónico</label>
+          <input type="email" id="resEmail" required style="width:100%; padding:8px; margin-top:4px; border:1px solid var(--border-color); border-radius:6px;">
+        </div>
+        <div style="margin-bottom:16px;">
+          <label style="font-size:0.8rem; font-weight:600;">Teléfono de Contacto</label>
+          <input type="tel" id="resTelefono" required placeholder="787-000-0000" style="width:100%; padding:8px; margin-top:4px; border:1px solid var(--border-color); border-radius:6px;">
+        </div>
+        <button type="submit" class="btn-card">Guardar Perfil</button>
+      </form>
     </div>
+  </div>
 
-    <!-- Filtros de Búsqueda -->
-    <div class="filters-card">
-      <div class="form-group">
-        <label>Buscar Candidato</label>
-        <input type="text" id="filtroTexto" oninput="filtrarCandidatos()" placeholder="Nombre o correo...">
-      </div>
-      <div class="form-group">
-        <label>Experiencia Mínima</label>
-        <select id="filtroExperiencia" onchange="filtrarCandidatos()">
-          <option value="todas">Todas</option>
-          <option value="0-1">0 a 1 año</option>
-          <option value="2-5">2 a 5 años</option>
-          <option value="5+">Más de 5 años</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Tipo de Aplicación</label>
-        <select id="filtroTipo" onchange="filtrarCandidatos()">
-          <option value="todos">Todos</option>
-          <option value="1-click">1-Click Apply</option>
-          <option value="propuesta">Propuesta Custom</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- Contenido en 2 columnas -->
-    <div class="dashboard-grid">
-      <!-- Columna Izquierda: Lista -->
-      <div class="candidates-list" id="listaCandidatos">
-        <p style="color:var(--text-muted);">Cargando candidatos desde Firebase...</p>
-      </div>
-
-      <!-- Columna Derecha: Vista Detallada Limpia -->
-      <div class="detail-panel" id="panelDetalle">
-        <p style="text-align: center; color: var(--text-muted); padding: 40px 0;">
-          Selecciona un candidato de la lista para ver su perfil completo.
-        </p>
-      </div>
+  <!-- Modal Publicar Anuncio -->
+  <div class="modal-overlay" id="modalPublicar">
+    <div class="modal-card">
+      <button class="modal-close" onclick="cerrarModal('modalPublicar')">✕</button>
+      <h3 style="margin-bottom:12px;">Publicar Nuevo Anuncio</h3>
+      <form id="formPublicar" onsubmit="crearAnuncio(event)">
+        <div style="margin-bottom:12px;">
+          <label style="font-size:0.8rem; font-weight:600;">Título</label>
+          <input type="text" id="pubTitulo" required style="width:100%; padding:8px; margin-top:4px; border:1px solid var(--border-color); border-radius:6px;">
+        </div>
+        <div style="margin-bottom:12px;">
+          <label style="font-size:0.8rem; font-weight:600;">Categoría</label>
+          <select id="pubCategoria" style="width:100%; padding:8px; margin-top:4px; border:1px solid var(--border-color); border-radius:6px;">
+            <option value="bienes-raices">Bienes Raíces</option>
+            <option value="empleos">Empleos Directos</option>
+            <option value="autos">Autos y Vehículos</option>
+            <option value="electronica">Electrónica</option>
+            <option value="mascotas">Adopción de Mascotas</option>
+          </select>
+        </div>
+        <div style="margin-bottom:16px;">
+          <label style="font-size:0.8rem; font-weight:600;">Precio / Salario</label>
+          <input type="text" id="pubPrecio" placeholder="Ej. $850 / mes o $12/hr" required style="width:100%; padding:8px; margin-top:4px; border:1px solid var(--border-color); border-radius:6px;">
+        </div>
+        <button type="submit" class="btn-card">Publicar Ahora</button>
+      </form>
     </div>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-    import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBjLJnC7EGKXdCwc-VmI",
@@ -226,110 +288,90 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    window.baseDatosCandidatos = [];
+    window.todosAnuncios = [];
 
-    async function cargarCandidatos() {
+    async function cargarAnuncios() {
       try {
-        const q = query(collection(db, "candidatos"), orderBy("fecha", "desc"));
-        const snapshot = await getDocs(q);
-        window.baseDatosCandidatos = [];
-
-        snapshot.forEach((doc) => {
-          const data = doc.data();
-          window.baseDatosCandidatos.push({
-            id: doc.id,
-            nombre: data.nombre || "Candidato",
-            telefono: data.telefono || "Sin teléfono",
-            email: data.email || "Sin email",
-            tipo: data.tipo || "1-click",
-            fecha: data.fechaFormateada || "Reciente",
-            experienciaAnos: Number(data.experienciaAnos) || 0,
-            skills: data.skills || [],
-            historialLaboral: data.historialLaboral || [],
-            propuesta: data.propuesta || null
-          });
+        const querySnapshot = await getDocs(collection(db, "ads"));
+        window.todosAnuncios = [];
+        querySnapshot.forEach((doc) => {
+          window.todosAnuncios.push({ id: doc.id, ...doc.data() });
         });
-
-        renderLista(window.baseDatosCandidatos);
-      } catch (err) {
-        console.error("Error al cargar candidatos:", err);
+        renderAnuncios(window.todosAnuncios);
+      } catch (e) {
+        console.error("Error cargando anuncios:", e);
       }
     }
 
-    window.renderLista = function(lista) {
-      const cont = document.getElementById('listaCandidatos');
-      if(lista.length === 0) {
-        cont.innerHTML = '<div style="background:white; padding:20px; border-radius:12px; text-align:center; color:var(--text-muted);">No hay postulantes registrados.</div>';
+    window.renderAnuncios = function(lista) {
+      const container = document.getElementById('gridAnuncios');
+      if (lista.length === 0) {
+        container.innerHTML = '<p style="color:var(--text-muted);">No hay anuncios disponibles en esta categoría.</p>';
         return;
       }
 
-      cont.innerHTML = lista.map(c => `
-        <div class="applicant-card" onclick="verDetalle('${c.id}')">
-          <div class="applicant-info">
-            <h3>${c.nombre}</h3>
-            <p>📧 ${c.email} • ⏱️ ${c.experienciaAnos} años exp.</p>
-            <span class="badge ${c.tipo === '1-click' ? 'badge-1click' : 'badge-custom'}">
-              ${c.tipo === '1-click' ? '1-Click Apply' : 'Propuesta Custom'}
-            </span>
+      container.innerHTML = lista.map(item => `
+        <div class="ad-card">
+          <img src="${item.imagen || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=600&q=80'}" class="ad-image" alt="${item.titulo}">
+          <div class="ad-body">
+            <div>
+              <div class="ad-title">${item.titulo}</div>
+              <div class="ad-price">${item.precio}</div>
+              <div class="ad-location">${item.pueblo || 'Puerto Rico'}</div>
+            </div>
+            <button class="btn-card" onclick="alert('Ver detalle de: ${item.titulo}')">
+              ${item.categoria === 'empleos' ? 'Ver Empleo y Postularse' : 'Ver Propiedad'}
+            </button>
           </div>
-          <span style="font-size:0.8rem; color:var(--text-muted);">${c.fecha}</span>
         </div>
       `).join('');
     };
 
-    window.verDetalle = function(id) {
-      const c = window.baseDatosCandidatos.find(item => item.id === id);
-      if(!c) return;
-
-      const panel = document.getElementById('panelDetalle');
-      const telLimpio = c.telefono.replace(/\D/g, '');
-
-      panel.innerHTML = `
-        <div class="detail-header">
-          <h2>${c.nombre}</h2>
-          <p>📞 ${c.telefono}</p>
-          <p style="font-size:0.82rem; color:var(--text-muted); margin-top:2px;">✉️ ${c.email}</p>
-        </div>
-
-        <div style="margin-bottom: 16px;">
-          <h4 style="font-size:0.85rem; font-weight:700; margin-bottom:8px;">HABILIDADES</h4>
-          <div>${(c.skills || []).map(s => `<span class="skill-badge">${s}</span>`).join('') || '<p style="font-size:0.8rem; color:var(--text-muted);">Sin especificar</p>'}</div>
-        </div>
-
-        <div style="margin-bottom: 16px;">
-          <h4 style="font-size:0.85rem; font-weight:700; margin-bottom:8px;">HISTORIAL Y NOTAS</h4>
-          ${(c.historialLaboral || []).map(h => `
-            <div style="background:#f8fafc; padding:10px; border-radius:8px; margin-bottom:6px; border-left:3px solid var(--brand-green);">
-              <strong style="font-size:0.85rem;">${h.puesto}</strong>
-              <p style="font-size:0.8rem; color:var(--text-muted);">${h.descripcion}</p>
-            </div>
-          `).join('')}
-        </div>
-
-        <a href="tel:${telLimpio}" class="btn-call">📞 Llamar al Candidato</a>
-      `;
+    window.filtrarDept = function(cat) {
+      if (cat === 'todos') {
+        renderAnuncios(window.todosAnuncios);
+      } else {
+        const filtrados = window.todosAnuncios.filter(a => a.categoria === cat);
+        renderAnuncios(filtrados);
+      }
     };
 
-    window.filtrarCandidatos = function() {
-      const texto = document.getElementById('filtroTexto').value.toLowerCase();
-      const exp = document.getElementById('filtroExperiencia').value;
-      const tipo = document.getElementById('filtroTipo').value;
+    window.abrirModal = function(id) { document.getElementById(id).style.display = 'flex'; };
+    window.cerrarModal = function(id) { document.getElementById(id).style.display = 'none'; };
 
-      let res = window.baseDatosCandidatos.filter(c => {
-        const cTexto = c.nombre.toLowerCase().includes(texto) || c.email.toLowerCase().includes(texto);
-        const cTipo = (tipo === 'todos') || (c.tipo === tipo);
-        let cExp = true;
-        if(exp === '0-1') cExp = c.experienciaAnos <= 1;
-        if(exp === '2-5') cExp = c.experienciaAnos >= 2 && c.experienciaAnos <= 5;
-        if(exp === '5+') cExp = c.experienciaAnos > 5;
-
-        return cTexto && cTipo && cExp;
-      });
-
-      renderLista(res);
+    window.guardarResume = function(e) {
+      e.preventDefault();
+      const resume = {
+        nombre: document.getElementById('resNombre').value,
+        email: document.getElementById('resEmail').value,
+        telefono: document.getElementById('resTelefono').value
+      };
+      localStorage.setItem('coqui_resume', JSON.stringify(resume));
+      alert('¡Perfil guardado con éxito!');
+      cerrarModal('modalResume');
     };
 
-    cargarCandidatos();
+    window.crearAnuncio = async function(e) {
+      e.preventDefault();
+      const nuevo = {
+        titulo: document.getElementById('pubTitulo').value,
+        categoria: document.getElementById('pubCategoria').value,
+        precio: document.getElementById('pubPrecio').value,
+        pueblo: "San Juan, PR",
+        fecha: serverTimestamp()
+      };
+
+      try {
+        await addDoc(collection(db, "ads"), nuevo);
+        alert("Anuncio publicado exitosamente");
+        cerrarModal('modalPublicar');
+        cargarAnuncios();
+      } catch (err) {
+        console.error("Error al publicar:", err);
+      }
+    };
+
+    cargarAnuncios();
   </script>
 </body>
 </html>
