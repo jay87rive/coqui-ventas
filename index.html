@@ -22,8 +22,8 @@
     .logo { display: flex; align-items: center; text-decoration: none; font-weight: bold; color: var(--brand-green-coqui); font-size: 1.2rem; }
     .logo img { height: 40px; width: auto; object-fit: contain; margin-right: 8px; }
     .nav-links { display: flex; gap: 1.5rem; }
-    .nav-links a { text-decoration: none; color: var(--text-muted); font-weight: 500; white-space: nowrap; }
-    .nav-links a:hover { color: var(--brand-green-coqui); }
+    .nav-links a { text-decoration: none; color: var(--text-muted); font-weight: 500; cursor: pointer; white-space: nowrap; }
+    .nav-links a:hover, .nav-links a.active { color: var(--brand-green-coqui); font-weight: bold; }
     .nav-actions { display: flex; align-items: center; white-space: nowrap; }
 
     .btn-primary { background: var(--brand-green-coqui); color: #fff; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
@@ -40,15 +40,20 @@
 
     .container { max-width: 1100px; margin: 0 auto; padding: 0 1rem 4rem 1rem; }
 
-    .categories-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 3rem; }
+    .categories-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
     .card-cat { background: #fff; padding: 1.2rem; border-radius: 12px; border: 1px solid var(--border-color); text-align: center; font-weight: 600; cursor: pointer; transition: transform 0.2s; }
-    .card-cat:hover { transform: translateY(-3px); border-color: var(--brand-green-light); }
+    .card-cat:hover, .card-cat.active { transform: translateY(-3px); border-color: var(--brand-green-light); background: #f2f7f3; }
 
-    .section-title { font-size: 1.5rem; margin-bottom: 1.5rem; color: var(--brand-green-coqui); }
+    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .section-title { font-size: 1.5rem; color: var(--brand-green-coqui); }
+    .btn-reset-filter { background: none; border: none; color: var(--brand-terracotta); cursor: pointer; font-weight: bold; display: none; }
+
     .listings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
 
-    .card-item { background: #fff; border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden; display: flex; flex-direction: column; }
-    .card-img { height: 160px; background: #e2e8e4; display: flex; align-items: center; justify-content: center; font-size: 3rem; }
+    .card-item { background: #fff; border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden; display: flex; flex-direction: column; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+    .card-item:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
+    .card-img { height: 160px; background: #e2e8e4; display: flex; align-items: center; justify-content: center; font-size: 3rem; overflow: hidden; }
+    .card-img img { width: 100%; height: 100%; object-fit: cover; }
     .card-body { padding: 1rem; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
     .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.75rem; font-weight: bold; margin-bottom: 0.5rem; }
     .badge-agricola { background: #E8F5E9; color: var(--brand-green-coqui); }
@@ -56,11 +61,11 @@
     .badge-empleo { background: #FFF8E1; color: #B78103; }
     .badge-clasificado { background: #F3E5F5; color: #7B1FA2; }
 
-    .card-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 0.4rem; }
+    .card-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 0.4rem; color: var(--text-primary); }
     .card-price { font-size: 1.1rem; font-weight: bold; color: var(--brand-terracotta); margin-bottom: 0.4rem; }
     .card-location { font-size: 0.85rem; color: var(--text-muted); }
 
-    /* Modal Flotante */
+    /* Modales Flotantes */
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; z-index: 1000; padding: 1rem; }
     .modal-overlay.active { display: flex; }
     .modal-content { background: #fff; width: 100%; max-width: 550px; border-radius: 16px; padding: 2rem; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.15); max-height: 90vh; overflow-y: auto; }
@@ -76,6 +81,19 @@
 
     .btn-submit { width: 100%; background: var(--brand-green-coqui); color: #fff; border: none; padding: 0.9rem; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; margin-top: 0.5rem; }
     .btn-submit:hover { background: var(--brand-green-light); }
+
+    /* Modal Detalle de Anuncio */
+    .detail-img { width: 100%; height: 240px; border-radius: 12px; background: #e2e8e4; object-fit: cover; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; font-size: 4rem; overflow: hidden; }
+    .detail-img img { width: 100%; height: 100%; object-fit: cover; }
+    .detail-price { font-size: 1.5rem; font-weight: bold; color: var(--brand-terracotta); margin: 0.5rem 0; }
+    .detail-meta { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem; }
+    .detail-desc { font-size: 1rem; line-height: 1.5; color: #333; background: #f9f9f9; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; }
+    .contact-box { background: #e8f5e9; border: 1px solid #c8e6c9; padding: 1.2rem; border-radius: 12px; text-align: center; }
+    .contact-box h4 { color: var(--brand-green-coqui); margin-bottom: 0.5rem; }
+    .btn-contact { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 0.8rem; border-radius: 8px; font-weight: bold; text-decoration: none; color: white; margin-top: 0.5rem; }
+    .btn-whatsapp { background: #25D366; }
+    .btn-sms { background: #007AFF; }
+    .btn-email { background: #EA4335; }
   </style>
 </head>
 <body>
@@ -87,10 +105,11 @@
       Coquí Ventas
     </a>
     <nav class="nav-links">
-      <a href="#">Clasificados</a>
-      <a href="#">Empleos</a>
-      <a href="#">Agrícola Local</a>
-      <a href="#">Mascotas</a>
+      <a data-cat="all" class="active">Todos</a>
+      <a data-cat="clasificado">Clasificados</a>
+      <a data-cat="empleo">Empleos</a>
+      <a data-cat="agricola">Agrícola Local</a>
+      <a data-cat="mascotas">Mascotas</a>
     </nav>
     <div class="nav-actions">
       <button class="btn-primary" id="btnOpenModal">+ Publicar Anuncio</button>
@@ -102,65 +121,37 @@
     <h1>El mercado digital de Puerto Rico 🐸</h1>
     <p>Encuentra productos, empleos transparentes, cosechas locales y adopción de mascotas.</p>
     <div class="search-bar">
-      <input type="text" placeholder="¿Qué estás buscando hoy?" />
-      <select>
-        <option value="">Cualquier pueblo</option>
+      <input type="text" id="searchInput" placeholder="¿Qué estás buscando hoy?" />
+      <select id="townFilter">
+        <option value="">Todos los pueblos</option>
         <option value="Arecibo">Arecibo</option>
+        <option value="Bayamón">Bayamón</option>
         <option value="Caguas">Caguas</option>
+        <option value="Carolina">Carolina</option>
         <option value="Mayagüez">Mayagüez</option>
         <option value="Ponce">Ponce</option>
         <option value="San Juan">San Juan</option>
       </select>
-      <button class="btn-search">Buscar</button>
+      <button class="btn-search" id="btnSearch">Buscar</button>
     </div>
   </section>
 
   <!-- Categorías Principales -->
   <main class="container">
     <div class="categories-grid">
-      <div class="card-cat">📦 Clasificados</div>
-      <div class="card-cat">💼 Empleos Directos</div>
-      <div class="card-cat">🌾 Mercado Agrícola</div>
-      <div class="card-cat">🐾 Adopción Gratis</div>
+      <div class="card-cat" data-cat="clasificado">📦 Clasificados</div>
+      <div class="card-cat" data-cat="empleo">💼 Empleos Directos</div>
+      <div class="card-cat" data-cat="agricola">🌾 Mercado Agrícola</div>
+      <div class="card-cat" data-cat="mascotas">🐾 Adopción Gratis</div>
     </div>
 
-    <h2 class="section-title">Publicaciones Recientes</h2>
-    <section class="listings-grid">
-      <article class="card-item">
-        <div class="card-img">🍌</div>
-        <div class="card-body">
-          <div>
-            <span class="badge badge-agricola">Agrícola Local</span>
-            <div class="card-title">Plátanos Verdes Frescos</div>
-            <div class="card-price">$25.00 / ciento</div>
-          </div>
-          <div class="card-location">📍 Arecibo, PR</div>
-        </div>
-      </article>
+    <div class="section-header">
+      <h2 class="section-title" id="gridTitle">Publicaciones Recientes</h2>
+      <button class="btn-reset-filter" id="btnResetFilter">✖ Mostrar todos</button>
+    </div>
 
-      <article class="card-item">
-        <div class="card-img">🐶</div>
-        <div class="card-body">
-          <div>
-            <span class="badge badge-mascotas">Adopción Gratis</span>
-            <div class="card-title">Perrita Sato Busca Hogar</div>
-            <div class="card-price" style="color: var(--brand-green-coqui);">Gratis / Adopción</div>
-          </div>
-          <div class="card-location">📍 Ponce, PR</div>
-        </div>
-      </article>
-
-      <article class="card-item">
-        <div class="card-img">💼</div>
-        <div class="card-body">
-          <div>
-            <span class="badge badge-empleo">Empleo</span>
-            <div class="card-title">Mesero / Mesera</div>
-            <div class="card-price">$3.00/hr + Propinas</div>
-          </div>
-          <div class="card-location">📍 San Juan, PR</div>
-        </div>
-      </article>
+    <section class="listings-grid" id="listingsGrid">
+      <p style="text-align: center; width: 100%; color: var(--text-muted);">Cargando anuncios...</p>
     </section>
   </main>
 
@@ -189,7 +180,6 @@
           <input type="text" id="title" placeholder="Ej. Plátanos verdes, Mesero/a, Perrita en adopción..." required />
         </div>
 
-        <!-- Campos Requeridos para Empleo -->
         <div class="dynamic-section" id="sectionJob">
           <div class="form-group">
             <label for="jobSalary">Salario Requerido *</label>
@@ -197,7 +187,6 @@
           </div>
         </div>
 
-        <!-- Campos de Precio Estándar -->
         <div class="form-group" id="sectionPrice">
           <label for="price">Precio ($ USD) *</label>
           <input type="text" id="price" placeholder="Ej. 25.00 o Gratis" />
@@ -217,7 +206,6 @@
           </select>
         </div>
 
-        <!-- Preferencias de Notificación Seguras -->
         <div class="form-group">
           <label for="notifyPref">¿Cómo prefieres recibir los mensajes de interesados? *</label>
           <select id="notifyPref" required>
@@ -247,33 +235,73 @@
     </div>
   </div>
 
+  <!-- Modal para Detalle de Anuncio -->
+  <div class="modal-overlay" id="modalDetail">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="detailCategoryBadge">Anuncio</h3>
+        <button class="close-btn" id="btnCloseDetailModal">&times;</button>
+      </div>
+
+      <div class="detail-img" id="detailImgBox">
+        <!-- Imagen o Emoji -->
+      </div>
+
+      <h2 id="detailTitle" style="font-size: 1.5rem; margin-bottom: 0.2rem;"></h2>
+      <div class="detail-price" id="detailPrice"></div>
+      <div class="detail-meta" id="detailMeta">📍 Pueblo, PR</div>
+
+      <div class="detail-desc" id="detailDesc">
+        Sin descripción detallada.
+      </div>
+
+      <div class="contact-box">
+        <h4>🔒 Contacta al Anunciante</h4>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.8rem;">Tu contacto se canaliza de forma segura mediante Coquí Ventas.</p>
+        <div id="contactButtonContainer">
+          <!-- Botón de contacto dinámico -->
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Firebase SDK Integration -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // Configuración de Firebase para coqui-ventas
     const firebaseConfig = {
       projectId: "coqui-ventas",
       authDomain: "coqui-ventas.firebaseapp.com",
       storageBucket: "coqui-ventas.appspot.com"
     };
 
-    // Inicializar Firebase y Firestore
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
+    let todosLosAnuncios = [];
+    let filtroCategoria = 'all';
+
     // Referencias DOM
-    const modal = document.getElementById('modalPublish');
+    const modalPublish = document.getElementById('modalPublish');
+    const modalDetail = document.getElementById('modalDetail');
     const btnOpen = document.getElementById('btnOpenModal');
-    const btnClose = document.getElementById('btnCloseModal');
+    const btnCloseModal = document.getElementById('btnCloseModal');
+    const btnCloseDetailModal = document.getElementById('btnCloseDetailModal');
     const form = document.getElementById('publishForm');
     const selectCategory = document.getElementById('category');
     const sectionJob = document.getElementById('sectionJob');
     const sectionPrice = document.getElementById('sectionPrice');
-    const listingsGrid = document.querySelector('.listings-grid');
+    const listingsGrid = document.getElementById('listingsGrid');
 
-    // Cambiar campos dinámicamente según la categoría
+    // Filtros DOM
+    const searchInput = document.getElementById('searchInput');
+    const townFilter = document.getElementById('townFilter');
+    const btnSearch = document.getElementById('btnSearch');
+    const btnResetFilter = document.getElementById('btnResetFilter');
+    const gridTitle = document.getElementById('gridTitle');
+
+    // Categoría dinámica en el formulario
     selectCategory.addEventListener('change', (e) => {
       const val = e.target.value;
       if (val === 'empleo') {
@@ -289,10 +317,12 @@
       }
     });
 
-    // Abrir/Cerrar Modal
-    btnOpen.addEventListener('click', () => modal.classList.add('active'));
-    btnClose.addEventListener('click', () => modal.classList.remove('active'));
-    modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
+    // Modales
+    btnOpen.addEventListener('click', () => modalPublish.classList.add('active'));
+    btnCloseModal.addEventListener('click', () => modalPublish.classList.remove('active'));
+    btnCloseDetailModal.addEventListener('click', () => modalDetail.classList.remove('active'));
+    modalPublish.addEventListener('click', (e) => { if (e.target === modalPublish) modalPublish.classList.remove('active'); });
+    modalDetail.addEventListener('click', (e) => { if (e.target === modalDetail) modalDetail.classList.remove('active'); });
 
     // Compresión de imágenes
     function comprimirImagen(file, maxWidth = 800, quality = 0.7) {
@@ -322,7 +352,7 @@
       });
     }
 
-    // Guardar Anuncio en Firebase Firestore
+    // Publicar en Firebase
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const btnSubmit = form.querySelector('.btn-submit');
@@ -344,12 +374,7 @@
         const contactInfo = document.getElementById('contactInfo').value;
         const description = document.getElementById('description').value;
 
-        let priceOrSalary = '';
-        if (category === 'empleo') {
-          priceOrSalary = document.getElementById('jobSalary').value;
-        } else {
-          priceOrSalary = document.getElementById('price').value;
-        }
+        let priceOrSalary = category === 'empleo' ? document.getElementById('jobSalary').value : document.getElementById('price').value;
 
         await addDoc(collection(db, "anuncios"), {
           category,
@@ -363,8 +388,8 @@
           createdAt: serverTimestamp()
         });
 
-        alert('¡Anuncio publicado exitosamente en Firebase!');
-        modal.classList.remove('active');
+        alert('¡Anuncio publicado exitosamente!');
+        modalPublish.classList.remove('active');
         form.reset();
         cargarAnuncios();
       } catch (error) {
@@ -376,47 +401,146 @@
       }
     });
 
-    // Cargar Anuncios desde Firestore
+    // Cargar Anuncios
     async function cargarAnuncios() {
       try {
         const q = query(collection(db, "anuncios"), orderBy("createdAt", "desc"));
         const querySnapshot = await getDocs(q);
 
-        if (querySnapshot.empty) return;
-
-        listingsGrid.innerHTML = '';
-
+        todosLosAnuncios = [];
         querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          let badgeClass = 'badge-clasificado';
-          let badgeText = 'Clasificado';
-          let emoji = '📦';
-
-          if (data.category === 'agricola') { badgeClass = 'badge-agricola'; badgeText = 'Agrícola Local'; emoji = '🌾'; }
-          else if (data.category === 'mascotas') { badgeClass = 'badge-mascotas'; badgeText = 'Adopción Gratis'; emoji = '🐾'; }
-          else if (data.category === 'empleo') { badgeClass = 'badge-empleo'; badgeText = 'Empleo'; emoji = '💼'; }
-
-          const card = document.createElement('article');
-          card.className = 'card-item';
-          card.innerHTML = `
-            <div class="card-img">
-              ${data.imageBase64 ? `<img src="${data.imageBase64}" style="width:100%; height:100%; object-fit:cover;" />` : emoji}
-            </div>
-            <div class="card-body">
-              <div>
-                <span class="badge ${badgeClass}">${badgeText}</span>
-                <div class="card-title">${data.title}</div>
-                <div class="card-price">${data.priceOrSalary}</div>
-              </div>
-              <div class="card-location">📍 ${data.town}, PR</div>
-            </div>
-          `;
-          listingsGrid.appendChild(card);
+          todosLosAnuncios.push({ id: doc.id, ...doc.data() });
         });
+
+        renderizarAnuncios(todosLosAnuncios);
       } catch (error) {
         console.error("Error cargando anuncios: ", error);
+        listingsGrid.innerHTML = '<p style="text-align:center; width:100%;">Error al cargar las publicaciones.</p>';
       }
     }
+
+    // Renderizar lista en pantalla
+    function renderizarAnuncios(lista) {
+      if (lista.length === 0) {
+        listingsGrid.innerHTML = '<p style="text-align:center; width:100%; color: var(--text-muted);">No se encontraron anuncios con este criterio.</p>';
+        return;
+      }
+
+      listingsGrid.innerHTML = '';
+
+      lista.forEach((data) => {
+        let badgeClass = 'badge-clasificado';
+        let badgeText = 'Clasificado';
+        let emoji = '📦';
+
+        if (data.category === 'agricola') { badgeClass = 'badge-agricola'; badgeText = 'Agrícola Local'; emoji = '🌾'; }
+        else if (data.category === 'mascotas') { badgeClass = 'badge-mascotas'; badgeText = 'Adopción Gratis'; emoji = '🐾'; }
+        else if (data.category === 'empleo') { badgeClass = 'badge-empleo'; badgeText = 'Empleo'; emoji = '💼'; }
+
+        const card = document.createElement('article');
+        card.className = 'card-item';
+        card.innerHTML = `
+          <div class="card-img">
+            ${data.imageBase64 ? `<img src="${data.imageBase64}" />` : emoji}
+          </div>
+          <div class="card-body">
+            <div>
+              <span class="badge ${badgeClass}">${badgeText}</span>
+              <div class="card-title">${data.title}</div>
+              <div class="card-price">${data.priceOrSalary || 'Consulte'}</div>
+            </div>
+            <div class="card-location">📍 ${data.town || 'PR'}, PR</div>
+          </div>
+        `;
+
+        card.addEventListener('click', () => abrirDetalleAnuncio(data, badgeText, emoji));
+        listingsGrid.appendChild(card);
+      });
+    }
+
+    // Abrir Modal de Detalle y Contacto
+    function abrirDetalleAnuncio(data, badgeText, emoji) {
+      document.getElementById('detailCategoryBadge').textContent = badgeText;
+      document.getElementById('detailTitle').textContent = data.title;
+      document.getElementById('detailPrice').textContent = data.priceOrSalary || 'Consulte';
+      document.getElementById('detailMeta').textContent = `📍 ${data.town || 'Puerto Rico'}, PR`;
+      document.getElementById('detailDesc').textContent = data.description || 'El anunciante no incluyó una descripción adicional.';
+
+      const imgBox = document.getElementById('detailImgBox');
+      if (data.imageBase64) {
+        imgBox.innerHTML = `<img src="${data.imageBase64}" />`;
+      } else {
+        imgBox.innerHTML = emoji;
+      }
+
+      // Generar botón de contacto seguro
+      const contactContainer = document.getElementById('contactButtonContainer');
+      const mensajeBase = encodeURIComponent(`Hola, vi tu anuncio "${data.title}" en Coquí Ventas y me interesa obtener más información.`);
+      let contactHtml = '';
+
+      const contactoLimpio = (data.contactInfo || '').replace(/[^0-9]/g, '');
+
+      if (data.notifyPref === 'whatsapp' && contactoLimpio) {
+        contactHtml = `<a href="https://wa.me/1${contactoLimpio}?text=${mensajeBase}" target="_blank" class="btn-contact btn-whatsapp">💬 Contactar por WhatsApp</a>`;
+      } else if (data.notifyPref === 'sms' && contactoLimpio) {
+        contactHtml = `<a href="sms:+1${contactoLimpio}?body=${mensajeBase}" class="btn-contact btn-sms">📱 Enviar Mensaje de Texto (SMS)</a>`;
+      } else if (data.notifyPref === 'email' && data.contactInfo) {
+        contactHtml = `<a href="mailto:${data.contactInfo}?subject=Consulta sobre: ${encodeURIComponent(data.title)}&body=${mensajeBase}" class="btn-contact btn-email">📧 Enviar Correo Electrónico</a>`;
+      } else {
+        contactHtml = `<div style="padding:0.8rem; background:#fff; border-radius:8px; font-weight:bold; color:var(--brand-green-coqui);">${data.contactInfo || 'Contacto disponible al privado'}</div>`;
+      }
+
+      contactContainer.innerHTML = contactHtml;
+      modalDetail.classList.add('active');
+    }
+
+    // Lógica de Filtros y Búsqueda (Paso 1)
+    function aplicarFiltros() {
+      const texto = searchInput.value.toLowerCase().trim();
+      const pueblo = townFilter.value;
+
+      const filtrados = todosLosAnuncios.filter(item => {
+        const coincideTexto = !texto || item.title.toLowerCase().includes(texto) || (item.description && item.description.toLowerCase().includes(texto));
+        const coincidePueblo = !pueblo || item.town === pueblo;
+        const coincideCategoria = filtroCategoria === 'all' || item.category === filtroCategoria;
+
+        return coincideTexto && coincidePueblo && coincideCategoria;
+      });
+
+      if (texto || pueblo || filtroCategoria !== 'all') {
+        btnResetFilter.style.display = 'inline-block';
+        gridTitle.textContent = 'Resultados de Búsqueda';
+      } else {
+        btnResetFilter.style.display = 'none';
+        gridTitle.textContent = 'Publicaciones Recientes';
+      }
+
+      renderizarAnuncios(filtrados);
+    }
+
+    // Eventos de búsqueda y categoría
+    btnSearch.addEventListener('click', aplicarFiltros);
+    searchInput.addEventListener('keyup', (e) => { if (e.key === 'Enter') aplicarFiltros(); });
+    townFilter.addEventListener('change', aplicarFiltros);
+
+    // Filtros por Categoría en el Menú y Tarjetas
+    document.querySelectorAll('[data-cat]').forEach(elem => {
+      elem.addEventListener('click', (e) => {
+        filtroCategoria = e.currentTarget.getAttribute('data-cat');
+        document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+        if (e.currentTarget.tagName === 'A') e.currentTarget.classList.add('active');
+        aplicarFiltros();
+      });
+    });
+
+    btnResetFilter.addEventListener('click', () => {
+      searchInput.value = '';
+      townFilter.value = '';
+      filtroCategoria = 'all';
+      document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+      document.querySelector('.nav-links a[data-cat="all"]').classList.add('active');
+      aplicarFiltros();
+    });
 
     cargarAnuncios();
   </script>
