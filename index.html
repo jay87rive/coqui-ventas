@@ -235,18 +235,6 @@
       object-fit: cover;
     }
 
-    .badge-de-aqui-floating {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      background-color: var(--brand-green);
-      color: white;
-      padding: 4px 10px;
-      font-size: 0.72rem;
-      font-weight: 600;
-      border-radius: 20px;
-    }
-
     .card-content {
       padding: 16px;
       display: flex;
@@ -256,7 +244,7 @@
 
     .card-title { font-size: 1rem; font-weight: 600; margin-bottom: 6px; }
     .card-price, .card-salary { font-weight: 700; color: var(--brand-green); font-size: 1.05rem; margin-bottom: 6px; }
-    .card-location { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px; display: flex; align-items: center; gap: 4px; }
+    .card-location { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px; }
 
     .btn-submit {
       width: 100%;
@@ -282,9 +270,9 @@
       background: #0f172a;
       color: white;
       border: none;
-      padding: 10px 14px;
+      padding: 9px 14px;
       border-radius: 8px;
-      font-size: 0.88rem;
+      font-size: 0.85rem;
       font-weight: 600;
       cursor: pointer;
       display: flex;
@@ -360,24 +348,7 @@
       outline: none;
     }
 
-    .detail-gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-      gap: 10px;
-      margin: 14px 0;
-    }
-
-    .detail-gallery img { width: 100%; height: 100px; object-fit: cover; border-radius: 8px; cursor: pointer; }
-
-    /* Dashboard de Empleadores */
-    .dashboard-container {
-      background: white;
-      border-radius: 16px;
-      padding: 24px;
-      border: 1px solid var(--border-color);
-      margin-top: 24px;
-    }
-
+    /* Dashboard & Cards */
     .filters-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -399,6 +370,17 @@
       justify-content: space-between;
       align-items: flex-start;
       gap: 16px;
+    }
+
+    .skill-badge {
+      background: #f1f5f9;
+      color: #334155;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      display: inline-block;
     }
 
     @media (max-width: 850px) {
@@ -492,16 +474,10 @@
       </div>
       <p id="detallePrecio" style="font-size:1.2rem; font-weight:700; color:var(--brand-green);"></p>
       <p id="detalleUbicacion" style="color:var(--text-muted); font-size:0.85rem; margin-bottom:12px;"></p>
-      
-      <div class="detail-gallery" id="detalleGaleria"></div>
-
-      <h3 style="margin-top:15px; margin-bottom:6px; font-size:0.95rem;">Descripción</h3>
       <p id="detalleDescripcion" style="line-height:1.6; color:var(--text-main); margin-bottom:20px; font-size:0.9rem;"></p>
 
-      <!-- Botones de Acción (Se cargan dinámicamente según la categoría) -->
       <div id="contenedorBotonAccion"></div>
 
-      <!-- Formulario Oculto de Propuesta Personalizada -->
       <div id="formPropuestaContainer" style="display:none; margin-top:16px; padding:16px; background:#f8fafc; border-radius:12px; border:1px solid var(--border-color);">
         <h4 style="font-size:0.9rem; font-weight:700; margin-bottom:8px;">Envía tu propuesta personalizada</h4>
         <div class="form-group">
@@ -513,7 +489,7 @@
     </div>
   </div>
 
-  <!-- MODAL: Dashboard de Empleador (Base de Datos de Candidatos) -->
+  <!-- MODAL: Dashboard de Empleador -->
   <div class="modal-overlay" id="modalDashboardEmpleador">
     <div class="modal-content-large">
       <div class="modal-header">
@@ -539,8 +515,8 @@
           <select id="filtroExperiencia" onchange="filtrarCandidatos()">
             <option value="todas">Todas</option>
             <option value="0-1">0 a 1 año</option>
-            <option value="2-3">2 a 3 años</option>
-            <option value="3+">Más de 3 años</option>
+            <option value="2-5">2 a 5 años</option>
+            <option value="5+">Más de 5 años</option>
           </select>
         </div>
         <div class="form-group" style="margin-bottom:0;">
@@ -553,14 +529,44 @@
         </div>
       </div>
 
-      <!-- Lista de Candidatos -->
-      <div id="listaCandidatos">
-        <!-- Renderizado con JS -->
+      <div id="listaCandidatos"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: Ver Perfil Completo del Candidato (Vista Empleador) -->
+  <div class="modal-overlay" id="modalPerfilCandidatoDetalle">
+    <div class="modal-content-large" style="max-width: 700px;">
+      <div class="modal-header">
+        <div>
+          <h2 id="candNombre" style="font-size: 1.4rem; font-weight:700;">Nombre del Candidato</h2>
+          <p id="candContacto" style="font-size: 0.85rem; color: var(--brand-green); font-weight:600; margin-top:2px;"></p>
+        </div>
+        <button class="close-btn" onclick="cerrarModal('modalPerfilCandidatoDetalle')">&times;</button>
+      </div>
+
+      <!-- Destrezas / Skills -->
+      <div style="margin-bottom: 20px;">
+        <h3 style="font-size: 0.95rem; font-weight:700; margin-bottom: 8px;">Habilidades y Destrezas</h3>
+        <div id="candSkills" style="display:flex; flex-wrap:wrap; gap:6px;"></div>
+      </div>
+
+      <!-- Historial de Experiencia Laboral -->
+      <div style="margin-bottom: 20px;">
+        <h3 style="font-size: 0.95rem; font-weight:700; margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 6px;">
+          Historial Laboral / Experiencia
+        </h3>
+        <div id="candHistorial" style="display:flex; flex-direction:column; gap:12px;"></div>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:10px; margin-top: 20px;">
+        <a id="candLinkLlamar" href="#" class="btn-call" style="font-size:0.9rem; padding:10px 18px;">
+          📞 Llamar Candidato Ahora
+        </a>
       </div>
     </div>
   </div>
 
-  <!-- MODAL: Mi Perfil / Resume -->
+  <!-- MODAL: Mi Perfil / Resume (Para el Candidato) -->
   <div class="modal-overlay" id="modalPerfil">
     <div class="modal-content">
       <div class="modal-header">
@@ -577,12 +583,16 @@
           <input type="tel" id="perfilTelefono" required placeholder="787-000-0000" />
         </div>
         <div class="form-group">
-          <label>Años de Experiencia</label>
-          <input type="number" id="perfilExperienciaAnos" min="0" max="40" value="2" required />
+          <label>Años de Experiencia Total</label>
+          <input type="number" id="perfilExperienciaAnos" min="0" max="50" value="5" required />
         </div>
         <div class="form-group">
-          <label>Resumen de Experiencia</label>
-          <textarea id="perfilExperiencia" rows="3" required placeholder="Experiencia previa..."></textarea>
+          <label>Habilidades (Separadas por coma)</label>
+          <input type="text" id="perfilSkillsInput" placeholder="Servicio al Cliente, POS, Inventario..." />
+        </div>
+        <div class="form-group">
+          <label>Resumen / Experiencia previa</label>
+          <textarea id="perfilExperiencia" rows="3" placeholder="Detalla tu historial o empresas donde has trabajado..."></textarea>
         </div>
         <button type="submit" class="btn-submit">Guardar Resume</button>
       </form>
@@ -590,7 +600,7 @@
   </div>
 
   <script>
-    // Base de datos simulada de candidatos
+    // Base de datos extendida de candidatos
     let baseDatosCandidatos = [
       {
         id: "1",
@@ -599,7 +609,22 @@
         email: "carlos.rivera@email.com",
         tipo: "1-click",
         fecha: "2026-08-09",
-        experienciaAnos: 3,
+        experienciaAnos: 17,
+        skills: ["Atención al Cliente", "Caja Registradora", "Inventario", "Manejo de Personal"],
+        historialLaboral: [
+          {
+            empresa: "Supermercados Econo",
+            puesto: "Supervisor de Turno",
+            periodo: "2023 - 2026",
+            descripcion: "Encargado de supervisar líneas de caja, cuadres diarios y atención directa al cliente."
+          },
+          {
+            empresa: "Walmart Puerto Rico",
+            puesto: "Asociado de Ventas y Cajas",
+            periodo: "2009 - 2023",
+            descripcion: "Mantenimiento de góndolas, servicio al cliente y operación de cajas registradoras por 14 años."
+          }
+        ],
         propuesta: null
       },
       {
@@ -609,8 +634,17 @@
         email: "maria.delgado@email.com",
         tipo: "propuesta",
         fecha: "2026-08-08",
-        experienciaAnos: 1,
-        propuesta: "Cuento con disponibilidad inmediata para turnos de fin de semana y experiencia previa en servicio."
+        experienciaAnos: 2,
+        skills: ["POS / Terminal de Pago", "Protocolo de Mesas", "Trabajo en Equipo"],
+        historialLaboral: [
+          {
+            empresa: "Restaurante El Corderito",
+            puesto: "Mesera Principal",
+            periodo: "2024 - 2026",
+            descripcion: "Toma de pedidos, cobro e higiene de área de comedor."
+          }
+        ],
+        propuesta: "Cuento con disponibilidad inmediata para turnos de fin de semana y excelente actitud."
       }
     ];
 
@@ -655,19 +689,10 @@
       document.getElementById('modalDetalle').classList.add('active');
     }
 
-    function cerrarDetalleAnuncio() {
-      document.getElementById('modalDetalle').classList.remove('active');
-    }
-
-    function aplicarUnClick() {
-      alert("¡Postulación enviada exitosamente mediante 1-Click con tu perfil de Coquí Ventas!");
-      cerrarDetalleAnuncio();
-    }
-
-    function mostrarFormPropuesta() {
-      document.getElementById('formPropuestaContainer').style.display = 'block';
-    }
-
+    function cerrarDetalleAnuncio() { document.getElementById('modalDetalle').classList.remove('active'); }
+    function aplicarUnClick() { alert("¡Postulación enviada exitosamente mediante 1-Click con tu perfil de Coquí Ventas!"); cerrarDetalleAnuncio(); }
+    function mostrarFormPropuesta() { document.getElementById('formPropuestaContainer').style.display = 'block'; }
+    
     function enviarPropuestaPersonalizada() {
       const texto = document.getElementById('propuestaTexto').value.trim();
       if(!texto) return alert("Por favor escribe un mensaje.");
@@ -694,7 +719,7 @@
         const telLimpio = c.telefono.replace(/\D/g, '');
         html += `
           <div class="applicant-card">
-            <div>
+            <div style="flex:1;">
               <div style="display:flex; align-items:center; gap:8px;">
                 <h3 style="font-size:1rem; font-weight:700;">${c.nombre}</h3>
                 <span style="font-size:0.75rem; padding:2px 8px; border-radius:12px; background:${c.tipo === '1-click' ? '#dcfce7' : '#e0f2fe'}; color:${c.tipo === '1-click' ? '#166534' : '#075985'}; font-weight:600;">
@@ -704,19 +729,56 @@
               <p style="font-size:0.85rem; font-weight:700; color:var(--brand-green); margin-top:4px;">
                 📞 Teléfono directo: ${c.telefono}
               </p>
-              <p style="font-size:0.8rem; color:var(--text-muted);">Email: ${c.email} | Experiencia: ${c.experienciaAnos} años | Fecha: ${c.fecha}</p>
+              <p style="font-size:0.8rem; color:var(--text-muted);">Email: ${c.email} | Exp. Total: ${c.experienciaAnos} años | Fecha: ${c.fecha}</p>
               ${c.propuesta ? `<p style="font-size:0.85rem; margin-top:6px; background:#f1f5f9; padding:8px; border-radius:6px;">"${c.propuesta}"</p>` : ''}
             </div>
 
-            <div style="display:flex; gap:8px;">
-              <a href="tel:${telLimpio}" class="btn-call">
-                📞 Llamar Ahora
+            <div style="display:flex; flex-direction:column; gap:6px; min-width:140px;">
+              <button onclick="verPerfilCompleto('${c.id}')" class="btn-secondary">
+                👤 Ver Perfil
+              </button>
+              <a href="tel:${telLimpio}" class="btn-call" style="justify-content:center;">
+                📞 Llamar
               </a>
             </div>
           </div>
         `;
       });
       contenedor.innerHTML = html;
+    }
+
+    function verPerfilCompleto(candidatoId) {
+      const candidato = baseDatosCandidatos.find(c => c.id === candidatoId);
+      if (!candidato) return;
+
+      document.getElementById('candNombre').innerText = candidato.nombre;
+      document.getElementById('candContacto').innerText = `📞 ${candidato.telefono} | ✉️ ${candidato.email}`;
+      document.getElementById('candLinkLlamar').href = `tel:${candidato.telefono.replace(/\D/g, '')}`;
+
+      // Renderizar Skills
+      const skillsContainer = document.getElementById('candSkills');
+      skillsContainer.innerHTML = (candidato.skills || []).map(s => `<span class="skill-badge">${s}</span>`).join('');
+
+      // Renderizar Historial Laboral
+      const historialContainer = document.getElementById('candHistorial');
+      if (candidato.historialLaboral && candidato.historialLaboral.length > 0) {
+        historialContainer.innerHTML = candidato.historialLaboral.map(h => `
+          <div style="background: #f8fafc; border-left: 4px solid var(--brand-green); padding: 12px 16px; border-radius: 0 8px 8px 0;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <h4 style="font-size: 0.95rem; font-weight: 700; color: #0f172a;">${h.puesto}</h4>
+              <span style="font-size: 0.78rem; font-weight: 700; background: #e2e8f0; color: #475569; padding: 2px 8px; border-radius: 6px;">
+                ${h.periodo}
+              </span>
+            </div>
+            <p style="font-size: 0.85rem; font-weight: 600; color: var(--brand-green); margin: 2px 0 6px 0;">${h.empresa}</p>
+            <p style="font-size: 0.82rem; color: #475569; line-height: 1.4;">${h.descripcion}</p>
+          </div>
+        `).join('');
+      } else {
+        historialContainer.innerHTML = `<p style="font-size:0.85rem; color:var(--text-muted);">No hay historial detallado registrado.</p>`;
+      }
+
+      abrirModal('modalPerfilCandidatoDetalle');
     }
 
     function filtrarCandidatos() {
@@ -731,8 +793,8 @@
         
         let coincideExp = true;
         if(exp === '0-1') coincideExp = c.experienciaAnos <= 1;
-        if(exp === '2-3') coincideExp = c.experienciaAnos >= 2 && c.experienciaAnos <= 3;
-        if(exp === '3+') coincideExp = c.experienciaAnos > 3;
+        if(exp === '2-5') coincideExp = c.experienciaAnos >= 2 && c.experienciaAnos <= 5;
+        if(exp === '5+') coincideExp = c.experienciaAnos > 5;
 
         return coincideTexto && coincideTipo && coincideExp;
       });
