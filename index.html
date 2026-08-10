@@ -3,21 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coquí Ventas - Mercado, Bienes Raíces y Empleos en Puerto Rico</title>
-    
-    <!-- Firebase SDKs (Compat) -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-
+    <title>Coqui Ventas - Compra. Vende. Confía.</title>
     <style>
         :root {
-            --primary-color: #1b4332;
-            --accent-color: #d97706;
-            --bg-color: #f4f6f4;
-            --text-color: #212529;
-            --white: #ffffff;
-            --gray: #6c757d;
-            --light-gray: #e9ecef;
+            --primary-color: #2e7d32;
+            --accent-color: #4caf50;
+            --bg-color: #f9f9f9;
+            --sidebar-width: 260px;
         }
 
         * {
@@ -29,739 +21,225 @@
 
         body {
             background-color: var(--bg-color);
-            color: var(--text-color);
+            color: #333;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar con categorías a la izquierda */
+        aside {
+            width: var(--sidebar-width);
+            background: #fff;
+            border-right: 1px solid #ddd;
+            padding: 20px;
+            overflow-y: auto;
+            height: 100vh;
+            position: fixed;
+        }
+
+        aside h2 {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .category-list {
+            list-style: none;
+        }
+
+        .category-item {
+            margin-bottom: 15px;
+        }
+
+        .category-title {
+            font-weight: bold;
+            color: #444;
+            margin-bottom: 5px;
+        }
+
+        .sub-category-list {
+            list-style: none;
+            padding-left: 15px;
+        }
+
+        .sub-category-list li {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        /* Contenido principal */
+        main {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         header {
-            background-color: var(--white);
-            border-bottom: 1px solid var(--light-gray);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 2rem;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            text-align: center;
+            margin-bottom: 40px;
         }
 
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.25rem;
-            font-weight: bold;
+        header h1 {
             color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
         }
 
-        .header-actions {
-            display: flex;
-            gap: 15px;
+        header p {
+            font-style: italic;
+            color: #666;
+            font-size: 1.1rem;
         }
 
-        .btn {
-            background-color: var(--light-gray);
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            color: var(--text-color);
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
+        /* Botón Publicar grande y centrado */
+        .publish-container {
+            margin: 30px 0;
+            text-align: center;
         }
 
-        .btn:hover { opacity: 0.85; }
-
-        .btn-primary {
+        .btn-publish {
             background-color: var(--accent-color);
-            color: var(--white);
-        }
-
-        .main-container {
-            display: grid;
-            grid-template-columns: 300px 1fr;
-            gap: 2rem;
-            padding: 2rem;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        aside {
-            background: var(--white);
-            padding: 1.2rem;
-            border-radius: 8px;
-            border: 1px solid var(--light-gray);
-            height: fit-content;
-            max-height: 85vh;
-            overflow-y: auto;
-            position: sticky;
-            top: 90px;
-        }
-
-        aside h3 {
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            color: var(--gray);
-            margin-bottom: 1rem;
-            letter-spacing: 0.5px;
-        }
-
-        .department-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .category-group {
-            border-radius: 6px;
-            overflow: hidden;
-            background: #fafafa;
-            border: 1px solid var(--light-gray);
-        }
-
-        .dept-item {
-            width: 100%;
-            background: transparent;
-            border: none;
-            text-align: left;
-            padding: 10px 12px;
-            cursor: pointer;
-            font-size: 0.95rem;
+            color: white;
+            font-size: 1.4rem;
             font-weight: bold;
-            color: var(--text-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: background 0.2s;
-        }
-
-        .dept-item:hover, .dept-item.active {
-            background-color: #e2e8f0;
-            color: var(--primary-color);
-        }
-
-        .sub-categories {
-            display: none;
-            flex-direction: column;
-            padding: 4px 8px 8px 16px;
-            gap: 4px;
-            background: var(--white);
-            border-top: 1px solid var(--light-gray);
-        }
-
-        .category-group.open .sub-categories {
-            display: flex;
-        }
-
-        .sub-item {
-            background: transparent;
+            padding: 18px 45px;
             border: none;
-            text-align: left;
-            padding: 6px 10px;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .btn-publish:hover {
+            background-color: var(--primary-color);
+            transform: scale(1.05);
+        }
+
+        /* Pestaña de búsqueda por mapa (independiente) */
+        .map-search-tab {
+            margin-top: 20px;
+            background: #fff;
+            padding: 15px 25px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .map-search-tab input {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 250px;
+        }
+
+        .map-search-tab button {
+            padding: 8px 15px;
+            background: #333;
+            color: white;
+            border: none;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 0.88rem;
-            color: var(--gray);
-            transition: all 0.2s;
-        }
-
-        .sub-item:hover, .sub-item.active {
-            background-color: var(--bg-color);
-            color: var(--primary-color);
-            font-weight: bold;
-        }
-
-        .content-area h2 {
-            margin-bottom: 1.5rem;
-            color: var(--primary-color);
-        }
-
-        .ads-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .card {
-            background: var(--white);
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid var(--light-gray);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .card-img-wrapper {
-            position: relative;
-            width: 100%;
-            height: 180px;
-            background-color: #cbd5e1;
-        }
-
-        .card-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .card-body {
-            padding: 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            flex-grow: 1;
-        }
-
-        .card-title { font-size: 1.05rem; font-weight: bold; }
-        .card-price { font-size: 1.1rem; color: var(--primary-color); font-weight: bold; }
-        .card-location { font-size: 0.85rem; color: var(--gray); }
-
-        .card-footer {
-            padding: 1rem;
-            border-top: 1px solid var(--light-gray);
-            background-color: #fafafa;
-        }
-
-        .btn-block {
-            width: 100%;
-            background-color: var(--primary-color);
-            color: var(--white);
-            padding: 10px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        /* Modales */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .modal-overlay.active { display: flex; }
-
-        .modal-card {
-            background: var(--white);
-            width: 100%;
-            max-width: 500px;
-            border-radius: 12px;
-            padding: 2rem;
-            position: relative;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 1rem; right: 1rem;
-            background: none; border: none;
-            font-size: 1.25rem; cursor: pointer;
-            color: var(--gray);
-        }
-
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 0.4rem;
-            font-size: 0.9rem;
-        }
-
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%;
-            padding: 0.65rem;
-            border: 1px solid var(--light-gray);
-            border-radius: 6px;
-            font-size: 0.95rem;
-        }
-
-        @media(max-width: 768px) {
-            .main-container { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo-area">🐸 Coquí Ventas</div>
-        <div class="header-actions">
-            <button class="btn">Mi Resume</button>
-            <button class="btn">Panel Empleador</button>
-            <button class="btn btn-primary" onclick="abrirModal()">+ Publicar</button>
+    <!-- Panel Lateral Izquierdo: Categorías y Subcategorías -->
+    <aside>
+        <h2>Categorías</h2>
+        <ul class="category-list">
+            <li class="category-item">
+                <div class="category-title">1. Adopción de Animales</div>
+                <ul class="sub-category-list">
+                    <li>Reptiles</li>
+                    <li>Centros de adopción cercanos</li>
+                </ul>
+            </li>
+            <li class="category-item">
+                <div class="category-title">2. Electrónica</div>
+                <ul class="sub-category-list">
+                    <li>Laptops</li>
+                    <li>Desktops</li>
+                </ul>
+            </li>
+            <li class="category-item">
+                <div class="category-title">3. Hogar y Enseres</div>
+                <ul class="sub-category-list">
+                    <li><strong>Muebles:</strong></li>
+                    <li>- Juego de Comedor</li>
+                    <li>- Juego de Sala</li>
+                    <li>- Juego de Cuartos</li>
+                    <li>- Sala de estar</li>
+                    <li><strong>Electrodomésticos:</strong></li>
+                    <li>- Estufas</li>
+                    <li>- Neveras</li>
+                    <li>- Aires Acondicionados</li>
+                </ul>
+            </li>
+            <li class="category-item">
+                <div class="category-title">4. Bienes Raíces</div>
+                <ul class="sub-category-list">
+                    <li>Alquiler</li>
+                    <li>Venta</li>
+                </ul>
+            </li>
+            <li class="category-item">
+                <div class="category-title">5. Moda y Accesorios</div>
+                <ul class="sub-category-list">
+                    <li>Ropa de Hombre</li>
+                    <li>Ropa de Mujer</li>
+                    <li>Ropa de Niños</li>
+                </ul>
+            </li>
+            <li class="category-item">
+                <div class="category-title">6. Deportes</div>
+                <ul class="sub-category-list">
+                    <li>Deporte general</li>
+                    <li>Motoras y Accesorios</li>
+                </ul>
+            </li>
+            <li class="category-item">
+                <div class="category-title">7. Servicios Profesionales</div>
+                <ul class="sub-category-list">
+                    <li>Electricista</li>
+                    <li>Plomería</li>
+                    <li>Jardinería</li>
+                </ul>
+            </li>
+            <li class="category-item">
+                <div class="category-title">8. "De Aquí"</div>
+            </li>
+            <li class="category-item">
+                <div class="category-title">9. Turismo Interno</div>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Área Principal de la Página -->
+    <main>
+        <header>
+            <h1>Coqui Ventas</h1>
+            <p>Compra. Vende. Confía.</p>
+        </header>
+
+        <!-- Botón de Publicar en el centro, más grande y destacado -->
+        <div class="publish-container">
+            <button class="btn-publish">+ Publicar Anuncio</button>
         </div>
-    </header>
 
-    <div class="main-container">
-        <aside>
-            <h3>Departamentos</h3>
-            <div class="department-list" id="categoryList">
-                <button class="dept-item" style="margin-bottom: 8px; border-radius: 6px; background: #e2e8f0; color: var(--primary-color);" onclick="filtrarCategoria('Todos', this)">✨ Ver Todos los Anuncios</button>
-                
-                <!-- De Aquí (Local) -->
-                <div class="category-group">
-                    <button class="dept-item" onclick="toggleCategoria(this, 'De Aquí (Local)')">
-                        🌱 De Aquí (Local) <span>▾</span>
-                    </button>
-                    <div class="sub-categories">
-                        <button class="sub-item" onclick="filtrarSub('Frutas y Vegetales Frescos', this)">Frutas y Vegetales</button>
-                        <button class="sub-item" onclick="filtrarSub('Café y Cacao', this)">Café y Cacao</button>
-                        <button class="sub-item" onclick="filtrarSub('Artesanías y Productos Locales', this)">Artesanías y Locales</button>
-                    </div>
-                </div>
-
-                <!-- Adopción de Animales -->
-                <div class="category-group">
-                    <button class="dept-item" onclick="toggleCategoria(this, 'Adopción de Animales')">
-                        🐕 Adopción de Animales <span>▾</span>
-                    </button>
-                    <div class="sub-categories">
-                        <button class="sub-item" onclick="filtrarSub('Perros en Adopción', this)">Perros Rescatados</button>
-                        <button class="sub-item" onclick="filtrarSub('Gatos en Adopción', this)">Gatos Rescatados</button>
-                        <button class="sub-item" onclick="filtrarSub('Suministros de Refugio', this)">Suministros de Refugio</button>
-                    </div>
-                </div>
-
-                <!-- Vehículos y Piezas -->
-                <div class="category-group">
-                    <button class="dept-item" onclick="toggleCategoria(this, 'Vehículos y Piezas')">
-                        🚗 Vehículos y Piezas <span>▾</span>
-                    </button>
-                    <div class="sub-categories">
-                        <button class="sub-item" onclick="filtrarSub('Autos', this)">Autos</button>
-                        <button class="sub-item" onclick="filtrarSub('Camionetas', this)">Camionetas</button>
-                        <button class="sub-item" onclick="filtrarSub('Motoras', this)">Motoras</button>
-                        <button class="sub-item" onclick="filtrarSub('ATVs/UTVs', this)">ATVs / UTVs</button>
-                        <button class="sub-item" onclick="filtrarSub('Lanchas', this)">Lanchas</button>
-                        <button class="sub-item" onclick="filtrarSub('Piezas y Accesorios', this)">Piezas y Accesorios</button>
-                    </div>
-                </div>
-
-                <!-- Electrónica y Tecnología -->
-                <div class="category-group">
-                    <button class="dept-item" onclick="toggleCategoria(this, 'Electrónica y Tecnología')">
-                        💻 Electrónica y Tecnología <span>▾</span>
-                    </button>
-                    <div class="sub-categories">
-                        <button class="sub-item" onclick="filtrarSub('Celulares', this)">Celulares</button>
-                        <button class="sub-item" onclick="filtrarSub('Laptops', this)">Laptops</button>
-                        <button class="sub-item" onclick="filtrarSub('Consolas', this)">Consolas</button>
-                        <button class="sub-item" onclick="filtrarSub('Videojuegos', this)">Videojuegos</button>
-                        <button class="sub-item" onclick="filtrarSub('Televisores y Audio', this)">Televisores y Audio</button>
-                    </div>
-                </div>
-
-                <!-- Hogar y Enseres -->
-                <div class="category-group">
-                    <button class="dept-item" onclick="toggleCategoria(this, 'Hogar y Enseres')">
-                        🏠 Hogar y Enseres <span>▾</span>
-                    </button>
-                    <div class="sub-categories">
-                        <button class="sub-item" onclick="filtrarSub('Muebles', this)">Muebles</button>
-                        <button class="sub-item" onclick="filtrarSub('Electrodomésticos', this)">Electrodomésticos</button>
-                        <button class="sub-item" onclick="filtrarSub('Organización e Iluminación', this)">Organización e Iluminación</button>
-                    </div>
-                </div>
-
-                <!-- Jardín y Exteriores -->
-                <div class="category-group">
-                    <button class="dept-item" onclick="toggleCategoria(this, 'Jardín y Exteriores')">
-                        🌿 Jardín y Exteriores <span>▾</span>
-                    </button>
-                    <div class="sub-categories">
-                        <button class="sub-item" onclick="filtrarSub('Plantas', this)">Plantas</button>
-                        <button class="sub-item" onclick="filtrarSub('Masetas', this)">Masetas</button>
-                        <button class="sub-item" onclick="filtrarSub('Herramientas de Jardín', this)">Herramientas de Jardín</button>
-                        <button class="sub-item" onclick="filtrarSub('Muebles de Patio', this)">Muebles de Patio</button>
-                        <button class="sub-item" onclick="filtrarSub('Piscinas', this)">Piscinas</button>
-                    </div>
-                </div>
-
-                <!-- Bienes Raíces -->
-                <div class="category-group">
-                    <button class="dept-item" onclick="toggleCategoria(this, 'Bienes Raíces')">
-                        🏢 Bienes Raíces <span>▾</span>
-                    </button>
-                    <div class="sub-categories">
-                        <button class="sub-item" onclick="filtrarSub('Alquileres a largo plazo', this)">Alquileres a largo plazo</button>
-                        <button class="sub-item" onclick="filtrarSub('Ventas de Propiedades', this)">Ventas</button>
-                        <button class="sub-item" onclick="filtrarSub('Terrenos', this)">Terrenos</button>
-                        <button class="sub-item" onclick="filtrarSub('Locales Comerciales', this)">Locales Comerciales</button>
-                    </div>
-                </div>
-
-                <!-- Moda y Accesorios -->
-                <div class="category-group">
-                    <button class="dept-item" onclick="toggleCategoria(this, 'Moda y Accesorios')">
-                        👕 Moda y Accesorios <span>▾</span>
-                    </button>
-                    <div class="sub-categories">
-                        <button class="sub-item" onclick="filtrarSub('Ropa', this)">Ropa</button>
-                        <button class="sub-item" onclick="filtrarSub('Calzado', this)">Calzado</button>
-                        <button class="sub-item" onclick="filtrarSub('Joyería y Relojes', this)">Joyería y Relojes</button>
-                        <button class="sub-item" onclick="filtrarSub('Bolsos', this)">Bolsos</button>
-                    </div>
-                </div>
-
-                <!-- Deportes y Recreación -->
-                <div class="category-group">
-                    <button class="dept-item" onclick="toggleCategoria(this, 'Deportes y Recreación')">
-                        ⚽ Deportes y Recreación <span>▾</span>
-                    </button>
-                    <div class="sub-categories">
-                        <button class="sub-item" onclick="filtrarSub('Deportes Acuáticos', this)">Deportes Acuáticos</button>
-                        <button class="sub-item" onclick="filtrarSub('Bicicletas', this)">Bicicletas</button>
-                        <button class="sub-item" onclick="filtrarSub('Fitness', this)">Fitness</button>
-                        <button class="sub-item" onclick="filtrarSub('Equipos al Aire Libre', this)">Equipos al Aire Libre</button>
-                    </div>
-                </div>
-
-                <!-- Bebés y Niños -->
-                <div class="category-group">
-                    <button class="dept-item" onclick="toggleCategoria(this, 'Bebés y Niños')">
-                        👶 Bebés y Niños <span>▾</span>
-                    </button>
-                    <div class="sub-categories">
-                        <button class="sub-item" onclick="filtrarSub('Muebles de Bebé', this)">Muebles de Bebé</button>
-                        <button class="sub-item" onclick="filtrarSub('Coches', this)">Coches</button>
-                        <button class="sub-item" onclick="filtrarSub('Juguetes', this)">Juguetes</button>
-                        <button class="sub-item" onclick="filtrarSub('Ropa Infantil', this)">Ropa</button>
-                    </div>
-                </div>
-
-                <!-- Negocios y Comercial -->
-                <div class="category-group">
-                    <button class="dept-item" onclick="toggleCategoria(this, 'Negocios y Comercial')">
-                        📊 Negocios y Comercial <span>▾</span>
-                    </button>
-                    <div class="sub-categories">
-                        <button class="sub-item" onclick="filtrarSub('Mobiliario de Oficina', this)">Mobiliario de Oficina</button>
-                        <button class="sub-item" onclick="filtrarSub('Equipos Comerciales', this)">Equipos Comerciales</button>
-                        <button class="sub-item" onclick="filtrarSub('Inventario', this)">Inventario</button>
-                    </div>
-                </div>
-
-                <!-- Mascotas y Suministros -->
-                <div class="category-group">
-                    <button class="dept-item" onclick="toggleCategoria(this, 'Mascotas y Suministros')">
-                        🐾 Mascotas y Suministros <span>▾</span>
-                    </button>
-                    <div class="sub-categories">
-                        <button class="sub-item" onclick="filtrarSub('Accesorios de Mascotas', this)">Accesorios</button>
-                        <button class="sub-item" onclick="filtrarSub('Comida para Mascotas', this)">Comida</button>
-                        <button class="sub-item" onclick="filtrarSub('Artículos de Cuidado', this)">Artículos de Cuidado</button>
-                    </div>
-                </div>
-
-                <!-- Servicios Profesionales -->
-                <div class="category-group">
-                    <button class="dept-item" onclick="toggleCategoria(this, 'Servicios Profesionales')">
-                        🛠️ Servicios Profesionales <span>▾</span>
-                    </button>
-                    <div class="sub-categories">
-                        <button class="sub-item" onclick="filtrarSub('Reparaciones', this)">Reparaciones</button>
-                        <button class="sub-item" onclick="filtrarSub('Masajistas', this)">Masajistas</button>
-                        <button class="sub-item" onclick="filtrarSub('Camarógrafos y Fotógrafos', this)">Camarógrafos/Fotógrafos</button>
-                        <button class="sub-item" onclick="filtrarSub('DJs y Música', this)">DJs</button>
-                        <button class="sub-item" onclick="filtrarSub('Clases y Tutorías', this)">Clases</button>
-                    </div>
-                </div>
-
-                <!-- Turismo Interno y Experiencias -->
-                <div class="category-group">
-                    <button class="dept-item" onclick="toggleCategoria(this, 'Turismo Interno y Experiencias')">
-                        🌴 Turismo Interno y Experiencias <span>▾</span>
-                    </button>
-                    <div class="sub-categories">
-                        <button class="sub-item" onclick="filtrarSub('Excursiones', this)">Excursiones</button>
-                        <button class="sub-item" onclick="filtrarSub('Chinchorreos', this)">Chinchorreos</button>
-                        <button class="sub-item" onclick="filtrarSub('Pases de día', this)">Pases de día</button>
-                        <button class="sub-item" onclick="filtrarSub('Alquiler de equipos turísticos', this)">Alquiler de equipos</button>
-                        <button class="sub-item" onclick="filtrarSub('Experiencias de aventura', this)">Experiencias de aventura</button>
-                    </div>
-                </div>
-
-                <!-- Arte, Talleres y Eventos -->
-                <div class="category-group">
-                    <button class="dept-item" onclick="toggleCategoria(this, 'Arte, Talleres y Eventos')">
-                        🎨 Arte, Talleres y Eventos <span>▾</span>
-                    </button>
-                    <div class="sub-categories">
-                        <button class="sub-item" onclick="filtrarSub('Talleres de pintura y artesanías', this)">Talleres de pintura/artesanías</button>
-                        <button class="sub-item" onclick="filtrarSub('Música en vivo', this)">Música</button>
-                        <button class="sub-item" onclick="filtrarSub('Eventos comunitarios', this)">Eventos comunitarios</button>
-                        <button class="sub-item" onclick="filtrarSub('Actividades Gratuitas', this)">Actividades Gratuitas</button>
-                    </div>
-                </div>
-
-            </div>
-        </aside>
-
-        <main class="content-area">
-            <h2 id="feedTitle">Explorando Anuncios</h2>
-            <div class="ads-grid" id="cardsGrid">
-                <p>Cargando anuncios...</p>
-            </div>
-        </main>
-    </div>
-
-    <!-- Modal con Formulario de Publicación -->
-    <div class="modal-overlay" id="publishModal">
-        <div class="modal-card">
-            <button class="close-btn" onclick="cerrarModal()">&times;</button>
-            <h2 style="margin-bottom: 1rem; color: var(--primary-color);">Crear Publicación</h2>
-            
-            <form id="formPublicar" onsubmit="guardarAnuncio(event)">
-                <div class="form-group">
-                    <label>Título del Anuncio</label>
-                    <input type="text" id="titulo" required placeholder="Ej. Café de altura, iPhone 13, Adopción...">
-                </div>
-
-                <div class="form-group">
-                    <label>Categoría Principal</label>
-                    <select id="categoria" required onchange="actualizarSubcategoriasForm()">
-                        <option value="De Aquí (Local)">🌱 De Aquí (Local)</option>
-                        <option value="Adopción de Animales">🐕 Adopción de Animales</option>
-                        <option value="Vehículos y Piezas">🚗 Vehículos y Piezas</option>
-                        <option value="Electrónica y Tecnología">💻 Electrónica y Tecnología</option>
-                        <option value="Hogar y Enseres">🏠 Hogar y Enseres</option>
-                        <option value="Jardín y Exteriores">🌿 Jardín y Exteriores</option>
-                        <option value="Bienes Raíces">🏢 Bienes Raíces</option>
-                        <option value="Moda y Accesorios">👕 Moda y Accesorios</option>
-                        <option value="Deportes y Recreación">⚽ Deportes y Recreación</option>
-                        <option value="Bebés y Niños">👶 Bebés y Niños</option>
-                        <option value="Negocios y Comercial">📊 Negocios y Comercial</option>
-                        <option value="Mascotas y Suministros">🐾 Mascotas y Suministros</option>
-                        <option value="Servicios Profesionales">🛠️ Servicios Profesionales</option>
-                        <option value="Turismo Interno y Experiencias">🌴 Turismo Interno y Experiencias</option>
-                        <option value="Arte, Talleres y Eventos">🎨 Arte, Talleres y Eventos</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Subcategoría específica</label>
-                    <input type="text" id="subcategoria" placeholder="Ej. Frutas y Vegetales, Autos, Perros en Adopción...">
-                </div>
-
-                <div class="form-group">
-                    <label>Precio / Salario</label>
-                    <input type="text" id="precio" required placeholder="Ej. $45 o Gratis">
-                </div>
-
-                <div class="form-group">
-                    <label>Pueblo / Ubicación</label>
-                    <input type="text" id="ubicacion" required placeholder="Ej. Jayuya, PR">
-                </div>
-
-                <div class="form-group">
-                    <label>Foto (Selecciona 1 imagen)</label>
-                    <input type="file" id="fotos" accept="image/*">
-                </div>
-
-                <div class="form-group">
-                    <label>Descripción detallada</label>
-                    <textarea id="descripcion" rows="3" placeholder="Detalles del artículo, producto fresco o mascota..."></textarea>
-                </div>
-
-                <button type="submit" class="btn-block" id="btnGuardar">Publicar Anuncio</button>
-            </form>
+        <!-- Pestaña de Búsqueda por Mapa -->
+        <div class="map-search-tab">
+            <input type="text" placeholder="Buscar por ubicación o código postal...">
+            <button>Buscar en Mapa</button>
         </div>
-    </div>
+    </main>
 
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyBjLjNc7EGKXdCwc-VmI",
-            authDomain: "coqui-ventas.firebaseapp.com",
-            projectId: "coqui-ventas",
-            storageBucket: "coqui-ventas.appspot.com",
-            messagingSenderId: "425636251347",
-            appId: "1:425636251347:web:b96972a"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
-        let anunciosTotales = [];
-
-        window.onload = function() {
-            cargarAnuncios();
-        };
-
-        function cargarAnuncios() {
-            db.collection("ads").orderBy("createdAt", "desc").onSnapshot(snapshot => {
-                anunciosTotales = [];
-                snapshot.forEach(doc => {
-                    const data = doc.data();
-                    if (data.titulo) {
-                        anunciosTotales.push({ id: doc.id, ...data });
-                    }
-                });
-                renderizarTarjetas(anunciosTotales);
-            }, error => {
-                console.error("Error al cargar de Firestore:", error);
-                document.getElementById('cardsGrid').innerHTML = '<p>Error al conectar con la base de datos.</p>';
-            });
-        }
-
-        function renderizarTarjetas(lista) {
-            const grid = document.getElementById('cardsGrid');
-            grid.innerHTML = '';
-
-            if (lista.length === 0) {
-                grid.innerHTML = '<p>No hay anuncios publicados en esta categoría todavía.</p>';
-                return;
-            }
-
-            lista.forEach(ad => {
-                const foto = (ad.fotos && ad.fotos.length > 0) 
-                    ? ad.fotos[0] 
-                    : 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=500&q=80';
-
-                const cardHTML = `
-                    <article class="card">
-                        <div class="card-img-wrapper">
-                            <img src="${foto}" class="card-img">
-                        </div>
-                        <div class="card-body">
-                            <h3 class="card-title">${ad.titulo}</h3>
-                            <div class="card-price">${ad.precio}</div>
-                            <div class="card-location">📍 ${ad.ubicacion} ${ad.subcategoria ? '• ' + ad.subcategoria : ''}</div>
-                        </div>
-                        <div class="card-footer">
-                            <button class="btn-block" onclick='verDetalle("${encodeURIComponent(ad.titulo)}", "${encodeURIComponent(ad.precio)}", "${encodeURIComponent(ad.ubicacion)}", "${encodeURIComponent(ad.categoria)}", "${encodeURIComponent(ad.descripcion || "Sin descripción")}", "${encodeURIComponent(foto)}")'>Ver Detalle</button>
-                        </div>
-                    </article>
-                `;
-                grid.innerHTML += cardHTML;
-            });
-        }
-
-        function toggleCategoria(elemento, catNombre) {
-            // Cierra las demás y abre la actual o viceversa
-            const grupo = elemento.parentElement;
-            const isOpen = grupo.classList.contains('open');
-            
-            document.querySelectorAll('.category-group').forEach(el => el.classList.remove('open'));
-            
-            if (!isOpen) {
-                grupo.classList.add('open');
-            }
-
-            filtrarCategoria(catNombre, elemento);
-        }
-
-        function filtrarCategoria(cat, elemento) {
-            document.querySelectorAll('.dept-item').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.sub-item').forEach(el => el.classList.remove('active'));
-            if(elemento) elemento.classList.add('active');
-            
-            document.getElementById('feedTitle').innerText = cat === 'Todos' ? 'Explorando Anuncios' : cat;
-
-            if (cat === 'Todos') {
-                renderizarTarjetas(anunciosTotales);
-            } else {
-                const filtrados = anunciosTotales.filter(ad => ad.categoria === cat);
-                renderizarTarjetas(filtrados);
-            }
-        }
-
-        function filtrarSub(subcat, elemento) {
-            document.querySelectorAll('.sub-item').forEach(el => el.classList.remove('active'));
-            elemento.classList.add('active');
-            document.getElementById('feedTitle').innerText = subcat;
-
-            const filtrados = anunciosTotales.filter(ad => ad.subcategoria === subcat);
-            renderizarTarjetas(filtrados);
-        }
-
-        async function guardarAnuncio(e) {
-            e.preventDefault();
-            const btn = document.getElementById('btnGuardar');
-            btn.innerText = 'Subiendo anuncio...';
-            btn.disabled = true;
-
-            const titulo = document.getElementById('titulo').value;
-            const categoria = document.getElementById('categoria').value;
-            const subcategoria = document.getElementById('subcategoria').value;
-            const precio = document.getElementById('precio').value;
-            const ubicacion = document.getElementById('ubicacion').value;
-            const descripcion = document.getElementById('descripcion').value;
-            const archivoInput = document.getElementById('fotos');
-
-            let fotosURLs = [];
-
-            try {
-                if (archivoInput.files && archivoInput.files[0]) {
-                    const file = archivoInput.files[0];
-                    const base64 = await new Promise((resolve) => {
-                        const reader = new FileReader();
-                        reader.onload = (evt) => resolve(evt.target.result);
-                        reader.readAsDataURL(file);
-                    });
-                    fotosURLs.push(base64);
-                } else {
-                    fotosURLs.push('https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=500&q=80');
-                }
-
-                await db.collection("ads").add({
-                    titulo,
-                    categoria,
-                    subcategoria,
-                    precio,
-                    ubicacion,
-                    descripcion,
-                    fotos: fotosURLs,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
-                alert("¡Anuncio publicado con éxito!");
-                document.getElementById('formPublicar').reset();
-                cerrarModal();
-            } catch (err) {
-                console.error("Error al publicar:", err);
-                alert("Ocurrió un error al subir el anuncio.");
-            } finally {
-                btn.innerText = 'Publicar Anuncio';
-                btn.disabled = false;
-            }
-        }
-
-        function verDetalle(titulo, precio, ubicacion, categoria, descripcion, foto) {
-            const modalHTML = `
-                <div class="modal-overlay active" id="modalDetalle" onclick="if(event.target === this) cerrarDetalle()">
-                    <div class="modal-card">
-                        <button class="close-btn" onclick="cerrarDetalle()">&times;</button>
-                        <h2 style="margin-bottom: 1rem; color: var(--primary-color);">${decodeURIComponent(titulo)}</h2>
-                        <img src="${decodeURIComponent(foto)}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 6px; margin-bottom: 1rem;">
-                        <p style="font-size: 1.2rem; font-weight: bold; color: var(--primary-color); margin-bottom: 0.5rem;">${decodeURIComponent(precio)}</p>
-                        <p style="color: var(--gray); font-size: 0.9rem; margin-bottom: 0.5rem;">📍 <strong>Ubicación:</strong> ${decodeURIComponent(ubicacion)}</p>
-                        <p style="color: var(--gray); font-size: 0.9rem; margin-bottom: 1rem;">📂 <strong>Categoría:</strong> ${decodeURIComponent(categoria)}</p>
-                        <hr style="border: none; border-top: 1px solid var(--light-gray); margin-bottom: 1rem;">
-                        <p style="white-space: pre-wrap; font-size: 0.95rem;">${decodeURIComponent(descripcion)}</p>
-                    </div>
-                </div>
-            `;
-            document.body.insertAdjacentHTML('beforeend', modalHTML);
-        }
-
-        function cerrarDetalle() {
-            const modal = document.getElementById('modalDetalle');
-            if (modal) modal.remove();
-        }
-
-        function abrirModal() { document.getElementById('publishModal').classList.add('active'); }
-        function cerrarModal() { document.getElementById('publishModal').classList.remove('active'); }
-        function actualizarSubcategoriasForm() { /* Opcional para lógica de autocompletado futura */ }
-    </script>
 </body>
 </html>
