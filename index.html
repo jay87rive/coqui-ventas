@@ -10,121 +10,151 @@
   
   <style>
     :root {
-      --brand-green-coqui: #2D5A27;
-      --brand-green-light: #4A8539;
-      --brand-terracotta: #C85A32;
-      --brand-sand-gold: #E6A817;
-      --brand-klarna-pink: #FFB3C7;
-      --brand-ath-orange: #FF6600;
-      --brand-card-blue: #1A1F71;
-      --bg-light: #F4F6F4;
-      --sidebar-bg: #FFFFFF;
-      --text-dark: #1E293B;
-      --text-muted: #64748B;
-      --border-color: #E2E8F0;
+      /* Paleta Elegante y Moderna */
+      --brand-green: #1b4332;       /* Verde bosque elegante */
+      --brand-green-hover: #2d6a4f; /* Verde suave para hover */
+      --brand-accent: #d97706;      /* Ámbar/Terracota sutil para botones de acción */
+      --brand-gold: #b45309;        /* Dorado sobrio para "De Aquí" */
+      --brand-gold-bg: #fef3c7;     /* Fondo suave dorado */
+      
+      --bg-body: #f8fafc;           /* Fondo gris ultra-limpio */
+      --bg-surface: #ffffff;        /* Blanco para tarjetas y sidebar */
+      
+      --text-main: #0f172a;         /* Texto principal de alto contraste */
+      --text-muted: #64748b;        /* Texto secundario */
+      --border-color: #e2e8f0;      /* Líneas de división sutiles */
+      
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.05);
+      --shadow-lg: 0 10px 25px rgba(0,0,0,0.08);
+      --radius: 12px;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     }
 
     body {
-      background-color: var(--bg-light);
-      color: var(--text-dark);
+      background-color: var(--bg-body);
+      color: var(--text-main);
       line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* SVG Icon Alignment */
+    .icon {
+      width: 18px;
+      height: 18px;
+      stroke-width: 2;
+      stroke: currentColor;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
     }
 
     /* Header */
     header {
-      background-color: var(--brand-green-coqui);
+      background-color: var(--brand-green);
       color: white;
-      padding: 0.8rem 1.5rem;
+      padding: 0.85rem 1.8rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      box-shadow: var(--shadow-sm);
       position: sticky;
       top: 0;
       z-index: 100;
     }
 
     .logo {
-      font-size: 1.4rem;
-      font-weight: 800;
+      font-size: 1.25rem;
+      font-weight: 700;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
+      letter-spacing: -0.02em;
+    }
+
+    .logo svg {
+      width: 24px;
+      height: 24px;
     }
 
     .nav-links {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       align-items: center;
     }
 
     .btn-publicar {
-      background-color: var(--brand-terracotta);
+      background-color: var(--brand-accent);
       color: white;
       border: none;
-      padding: 9px 18px;
+      padding: 8px 16px;
       border-radius: 20px;
-      font-weight: 700;
+      font-weight: 600;
+      font-size: 0.88rem;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: background 0.2s, transform 0.1s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .btn-publicar:hover {
-      background-color: #b04b27;
+      background-color: #b45309;
     }
 
     .btn-perfil {
-      background-color: rgba(255, 255, 255, 0.15);
+      background-color: rgba(255, 255, 255, 0.12);
       color: white;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      padding: 8px 15px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 8px 16px;
       border-radius: 20px;
-      font-weight: 600;
+      font-weight: 500;
+      font-size: 0.88rem;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 6px;
-      font-size: 0.88rem;
+      transition: background 0.2s;
     }
 
     .btn-perfil:hover {
-      background-color: rgba(255, 255, 255, 0.25);
+      background-color: rgba(255, 255, 255, 0.2);
     }
 
     /* Layout */
     .app-layout {
       display: flex;
-      max-width: 1400px;
+      max-width: 1350px;
       margin: 0 auto;
-      min-height: calc(100vh - 60px);
+      min-height: calc(100vh - 65px);
     }
 
-    /* Sidebar Izquierdo */
+    /* Sidebar */
     .sidebar {
-      width: 280px;
-      background-color: var(--sidebar-bg);
+      width: 270px;
+      background-color: var(--bg-surface);
       border-right: 1px solid var(--border-color);
-      padding: 20px 15px;
+      padding: 24px 16px;
       flex-shrink: 0;
       position: sticky;
-      top: 60px;
-      height: calc(100vh - 60px);
+      top: 65px;
+      height: calc(100vh - 65px);
       overflow-y: auto;
     }
 
     .sidebar-title {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.08em;
       color: var(--text-muted);
-      margin-bottom: 12px;
+      margin-bottom: 14px;
       font-weight: 700;
       padding-left: 8px;
     }
@@ -141,93 +171,89 @@
       text-align: left;
       background: transparent;
       border: none;
-      padding: 10px 12px;
-      border-radius: 10px;
-      font-size: 0.92rem;
-      font-weight: 600;
-      color: var(--text-dark);
+      padding: 9px 12px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-main);
       cursor: pointer;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      transition: all 0.2s ease;
+      gap: 10px;
+      transition: all 0.15s ease;
     }
 
     .category-item button:hover {
-      background-color: #f0f7f0;
-      color: var(--brand-green-coqui);
+      background-color: #f1f5f9;
+      color: var(--brand-green);
     }
 
     .category-item button.active {
-      background-color: var(--brand-green-coqui);
+      background-color: var(--brand-green);
       color: white;
     }
 
     .category-item button.highlight-de-aqui {
-      background-color: #fffdf2;
-      border: 1px solid var(--brand-sand-gold);
-      color: #946800;
+      background-color: var(--brand-gold-bg);
+      color: var(--brand-gold);
+      font-weight: 600;
     }
 
     .category-item button.highlight-de-aqui:hover {
-      background-color: #fef8e0;
+      background-color: #fde68a;
     }
 
     .category-item button.highlight-de-aqui.active {
-      background-color: var(--brand-sand-gold);
-      color: #111;
-    }
-
-    .cat-icon-text {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      background-color: var(--brand-gold);
+      color: white;
     }
 
     /* Main Content */
     .main-content {
       flex: 1;
-      padding: 25px;
+      padding: 28px;
     }
 
     .section-header {
-      margin-bottom: 20px;
+      margin-bottom: 24px;
     }
 
     .section-header h1 {
-      font-size: 1.5rem;
-      color: var(--text-dark);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
     }
 
-    /* Grid & Cards */
+    /* Cards */
     .grid-ads {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 22px;
     }
 
     .card {
-      background: white;
-      border-radius: 14px;
+      background: var(--bg-surface);
+      border-radius: var(--radius);
       border: 1px solid var(--border-color);
       overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
       display: flex;
       flex-direction: column;
       cursor: pointer;
     }
 
     .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
     }
 
     .card-img-container {
       position: relative;
       width: 100%;
       height: 180px;
-      background-color: #e2e8f0;
+      background-color: #f1f5f9;
       overflow: hidden;
     }
 
@@ -241,61 +267,78 @@
       position: absolute;
       top: 10px;
       left: 10px;
-      background-color: var(--brand-green-coqui);
+      background-color: var(--brand-green);
       color: white;
       padding: 4px 10px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      font-size: 0.72rem;
+      font-weight: 600;
+      border-radius: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
 
     .card-content {
-      padding: 18px;
+      padding: 16px;
       display: flex;
       flex-direction: column;
-      height: 100%;
+      flex: 1;
     }
 
     .card-title {
-      font-size: 1.1rem;
-      font-weight: 700;
+      font-size: 1rem;
+      font-weight: 600;
       margin-bottom: 6px;
+      color: var(--text-main);
     }
 
-    .card-salary, .card-price {
-      font-weight: 800;
-      color: var(--brand-terracotta);
-      font-size: 1.1rem;
+    .card-price, .card-salary {
+      font-weight: 700;
+      color: var(--brand-green);
+      font-size: 1.05rem;
       margin-bottom: 6px;
     }
 
     .card-location {
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       color: var(--text-muted);
       margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
 
     .btn-submit {
       width: 100%;
-      background: var(--brand-green-coqui);
+      background: var(--brand-green);
       color: white;
       border: none;
-      padding: 10px 12px;
+      padding: 9px 12px;
       border-radius: 8px;
-      font-size: 0.92rem;
-      font-weight: 700;
+      font-size: 0.88rem;
+      font-weight: 600;
       cursor: pointer;
       margin-top: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background 0.2s;
     }
 
-    /* Modales General */
+    .btn-submit:hover {
+      background: var(--brand-green-hover);
+    }
+
+    /* Modales */
     .modal-overlay {
       display: none;
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      background: rgba(0,0,0,0.6);
+      background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(4px);
       justify-content: center;
       align-items: center;
       z-index: 1000;
@@ -305,155 +348,101 @@
       display: flex;
     }
 
-    .modal-content {
-      background: white;
-      width: 100%;
-      max-width: 520px;
-      padding: 25px;
+    .modal-content, .modal-content-large {
+      background: var(--bg-surface);
       border-radius: 16px;
+      box-shadow: var(--shadow-lg);
       max-height: 90vh;
       overflow-y: auto;
+      padding: 24px;
     }
 
-    .modal-content-large {
-      background: white;
-      width: 90%;
-      max-width: 820px;
-      padding: 25px;
-      border-radius: 16px;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
+    .modal-content { width: 100%; max-width: 480px; }
+    .modal-content-large { width: 90%; max-width: 800px; }
 
     .modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 15px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 12px;
+    }
+
+    .modal-header h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
     }
 
     .close-btn {
       background: none;
       border: none;
-      font-size: 1.8rem;
+      font-size: 1.5rem;
+      color: var(--text-muted);
       cursor: pointer;
     }
 
     .form-group {
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .form-group label {
       display: block;
       margin-bottom: 6px;
       font-weight: 600;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
+      color: var(--text-main);
     }
 
     .form-group input, .form-group select, .form-group textarea {
       width: 100%;
-      padding: 10px;
+      padding: 9px 12px;
       border: 1px solid var(--border-color);
       border-radius: 8px;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
+      outline: none;
     }
 
-    .radio-group {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 6px;
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      border-color: var(--brand-green);
     }
 
-    .radio-option {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px;
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    .calculated-box {
-      background: #f8faf8;
-      border: 1px dashed var(--brand-green-coqui);
-      padding: 12px;
-      border-radius: 8px;
-      margin-top: 8px;
-      font-weight: bold;
-      color: var(--brand-green-coqui);
-    }
-
-    .payment-badges {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 8px;
-    }
-
-    .badge-payment {
-      padding: 5px 10px;
-      border-radius: 6px;
-      font-weight: bold;
-      font-size: 0.8rem;
-    }
-
-    .badge-card { background: var(--brand-card-blue); color: white; }
-    .badge-klarna { background: var(--brand-klarna-pink); color: #111; }
-    .badge-ath { background: var(--brand-ath-orange); color: white; }
-
-    /* Galería de Detalle */
+    /* Galería */
     .detail-gallery {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
       gap: 10px;
-      margin: 15px 0;
+      margin: 14px 0;
     }
 
     .detail-gallery img {
       width: 100%;
-      height: 120px;
+      height: 100px;
       object-fit: cover;
       border-radius: 8px;
       cursor: pointer;
-      transition: transform 0.2s;
+      transition: opacity 0.2s;
     }
 
     .detail-gallery img:hover {
-      transform: scale(1.03);
+      opacity: 0.85;
     }
 
-    /* Visualizador Pantalla Completa (Lightbox) */
+    /* Lightbox */
     .fullscreen-viewer {
       display: none;
       position: fixed;
       top: 0; left: 0;
       width: 100vw; height: 100vh;
-      background: rgba(0,0,0,0.95);
+      background: rgba(0, 0, 0, 0.92);
       z-index: 2000;
       justify-content: center;
       align-items: center;
     }
 
-    .fullscreen-viewer.active {
-      display: flex;
-    }
-
-    .fullscreen-viewer img {
-      max-width: 90%;
-      max-height: 90%;
-      object-fit: contain;
-    }
-
-    .close-fullscreen {
-      position: absolute;
-      top: 20px;
-      right: 30px;
-      color: white;
-      font-size: 2.5rem;
-      cursor: pointer;
-    }
+    .fullscreen-viewer.active { display: flex; }
+    .fullscreen-viewer img { max-width: 90%; max-height: 90%; object-fit: contain; }
+    .close-fullscreen { position: absolute; top: 20px; right: 30px; color: white; font-size: 2rem; cursor: pointer; }
 
     @media (max-width: 850px) {
       .app-layout { flex-direction: column; }
@@ -465,10 +454,19 @@
 
   <!-- Header -->
   <header>
-    <div class="logo">🐸 Coquí Ventas</div>
+    <div class="logo">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      Coquí Ventas
+    </div>
     <div class="nav-links">
-      <button class="btn-perfil" onclick="abrirModal('modalPerfil')">📄 Mi Resume / Perfil</button>
-      <button class="btn-publicar" onclick="abrirModal('modalPublicar')">+ Publicar Anuncio</button>
+      <button class="btn-perfil" onclick="abrirModal('modalPerfil')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Mi Resume
+      </button>
+      <button class="btn-publicar" onclick="abrirModal('modalPublicar')">
+        <svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Publicar
+      </button>
     </div>
   </header>
 
@@ -476,61 +474,36 @@
     
     <!-- Sidebar -->
     <aside class="sidebar">
-      <div class="sidebar-title">Departamentos y Filtros</div>
+      <div class="sidebar-title">Departamentos</div>
       <ul class="category-list">
         <li class="category-item">
           <button class="active" onclick="filtrar('todos', this)">
-            <span class="cat-icon-text">🌐 Todos los Anuncios</span>
+            <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            Todos los Anuncios
           </button>
         </li>
         <li class="category-item">
           <button class="highlight-de-aqui" onclick="filtrar('de-aqui', this)">
-            <span class="cat-icon-text">🇵🇷 De Aquí (Local)</span>
+            <svg class="icon" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            De Aquí (Local)
           </button>
         </li>
         <li class="category-item">
           <button onclick="filtrar('bienes-raices', this)">
-            <span class="cat-icon-text">🏠 Bienes Raíces</span>
+            <svg class="icon" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Bienes Raíces
           </button>
         </li>
         <li class="category-item">
           <button onclick="filtrar('empleos', this)">
-            <span class="cat-icon-text">💼 Empleos Directos</span>
-          </button>
-        </li>
-        <li class="category-item">
-          <button onclick="filtrar('agricola', this)">
-            <span class="cat-icon-text">🌾 Mercado Agrícola</span>
-          </button>
-        </li>
-        <li class="category-item">
-          <button onclick="filtrar('jardineria', this)">
-            <span class="cat-icon-text">🌱 Jardinería y Patios</span>
-          </button>
-        </li>
-        <li class="category-item">
-          <button onclick="filtrar('talleres', this)">
-            <span class="cat-icon-text">🔧 Talleres y Mecánica</span>
-          </button>
-        </li>
-        <li class="category-item">
-          <button onclick="filtrar('actividades', this)">
-            <span class="cat-icon-text">🎉 Actividades y Eventos</span>
+            <svg class="icon" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            Empleos Directos
           </button>
         </li>
         <li class="category-item">
           <button onclick="filtrar('mascotas', this)">
-            <span class="cat-icon-text">🐾 Adopción de Mascotas</span>
-          </button>
-        </li>
-        <li class="category-item">
-          <button onclick="filtrar('clasificados', this)">
-            <span class="cat-icon-text">📦 Clasificados Generales</span>
-          </button>
-        </li>
-        <li class="category-item">
-          <button onclick="filtrar('vehiculos', this)">
-            <span class="cat-icon-text">🚗 Vehículos y Piezas</span>
+            <svg class="icon" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            Adopción de Mascotas
           </button>
         </li>
       </ul>
@@ -544,56 +517,56 @@
 
       <div class="grid-ads" id="gridAnuncios">
         
-        <!-- BIENES RAÍCES (Sin Ofertas) -->
-        <div class="card" data-cat="bienes-raices" onclick="abrirDetalleAnuncio('Apartamento Moderno (2 Cuartos / 1 Baño)', '$850 / mes', '📍 Mayagüez, PR', 'Apartamento remodelado. Incluye agua, estacionamiento privado y estufa. No se permiten mascotas. Requisitos: Fianza y primer mes.', ['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=800&q=80'], 'bienes-raices', 0)">
+        <!-- BIENES RAÍCES -->
+        <div class="card" data-cat="bienes-raices" onclick="abrirDetalleAnuncio('Apartamento Moderno (2 Cuartos / 1 Baño)', '$850 / mes', 'Mayagüez, PR', 'Apartamento remodelado. Incluye agua, estacionamiento privado y estufa. No se permiten mascotas. Requisitos: Fianza y primer mes.', ['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80'], 'bienes-raices', 0)">
           <div class="card-img-container">
             <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80" alt="Apartamento" />
           </div>
           <div class="card-content">
             <h3 class="card-title">Apartamento Moderno (2 Cuartos)</h3>
             <p class="card-price">$850 / mes</p>
-            <p class="card-location">📍 Mayagüez, PR</p>
-            <button class="btn-submit">🔑 Ver Anuncio Completo</button>
+            <p class="card-location"><svg class="icon" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Mayagüez, PR</p>
+            <button class="btn-submit">Ver Detalle Propiedad</button>
           </div>
         </div>
 
         <!-- EMPLEO -->
-        <div class="card" data-cat="empleos" onclick="abrirDetalleAnuncio('Mesero / Mesera (Restaurante Metro)', '💵 $3/hr + Propinas y Comisiones', '📍 San Juan, PR', 'Buscamos meseros con buena presencia y excelente trato al cliente. Turnos rotativos y ambiente muy dinámico.', ['https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80'], 'empleos', 0)">
+        <div class="card" data-cat="empleos" onclick="abrirDetalleAnuncio('Mesero / Mesera (Restaurante Metro)', '$3/hr + Propinas y Comisiones', 'San Juan, PR', 'Buscamos meseros con buena presencia y excelente trato al cliente. Turnos rotativos.', ['https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80'], 'empleos', 0)">
           <div class="card-img-container">
-            <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80" alt="Restaurante Mesero" />
+            <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80" alt="Mesero" />
           </div>
           <div class="card-content">
             <h3 class="card-title">Mesero / Mesera (Restaurante Metro)</h3>
-            <p class="card-salary">💵 $3/hr + Propinas y Comisiones</p>
-            <p class="card-location">📍 San Juan, PR</p>
-            <button class="btn-submit">📝 Ver Anuncio Completo</button>
+            <p class="card-salary">$3/hr + Propinas y Comisiones</p>
+            <p class="card-location"><svg class="icon" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> San Juan, PR</p>
+            <button class="btn-submit">Ver Empleo y Postularse</button>
           </div>
         </div>
 
-        <!-- PRODUCTO LOCAL "DE AQUÍ" (Con Ofertas) -->
-        <div class="card" data-cat="de-aqui" onclick="abrirDetalleAnuncio('Café Artesanal de Jayuya (1 lb)', '$12.00', '📍 Jayuya, PR', 'Café 100% puro cosechado en la cordillera central. Tueste medio, notas chocolate y avellana. Envíos a todo Puerto Rico.', ['https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=800&q=80'], 'de-aqui', 12.00)">
+        <!-- PRODUCTO LOCAL -->
+        <div class="card" data-cat="de-aqui" onclick="abrirDetalleAnuncio('Café Artesanal de Jayuya (1 lb)', '$12.00', 'Jayuya, PR', 'Café 100% puro cosechado en la cordillera central. Tueste medio.', ['https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=800&q=80'], 'de-aqui', 12.00)">
           <div class="card-img-container">
-            <span class="badge-de-aqui-floating">🇵🇷 100% De Aquí</span>
-            <img src="https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=600&q=80" alt="Café Artesanal" />
+            <span class="badge-de-aqui-floating">100% De Aquí</span>
+            <img src="https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=600&q=80" alt="Café" />
           </div>
           <div class="card-content">
             <h3 class="card-title">Café Artesanal de Jayuya (1 lb)</h3>
             <p class="card-price">$12.00</p>
-            <p class="card-location">📍 Jayuya, PR</p>
-            <button class="btn-submit">🛍️ Ver Anuncio Completo</button>
+            <p class="card-location"><svg class="icon" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Jayuya, PR</p>
+            <button class="btn-submit">Ver Detalle / Ofertar</button>
           </div>
         </div>
 
         <!-- MASCOTAS -->
-        <div class="card" data-cat="mascotas" onclick="abrirDetalleAnuncio('Perrito Rescatado en Adopción', 'Gratis (Adopción Responsable)', '📍 Ponce, PR', 'Cachorro de 4 meses vacunado y desparasitado. Busca un hogar amoroso.', ['https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80'], 'mascotas', 0)">
+        <div class="card" data-cat="mascotas" onclick="abrirDetalleAnuncio('Perrito Rescatado en Adopción', 'Gratis (Adopción Responsable)', 'Ponce, PR', 'Cachorro de 4 meses vacunado y desparasitado. Busca un hogar amoroso.', ['https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80'], 'mascotas', 0)">
           <div class="card-img-container">
             <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=600&q=80" alt="Perro en Adopción" />
           </div>
           <div class="card-content">
             <h3 class="card-title">Perrito Rescatado en Adopción</h3>
-            <p class="card-price" style="color: var(--brand-green-coqui);">Gratis (Adopción Responsable)</p>
-            <p class="card-location">📍 Ponce, PR</p>
-            <button class="btn-submit">🐾 Ver Anuncio Completo</button>
+            <p class="card-price">Gratis (Adopción Responsable)</p>
+            <p class="card-location"><svg class="icon" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Ponce, PR</p>
+            <button class="btn-submit">Quiero Adoptar</button>
           </div>
         </div>
 
@@ -609,24 +582,50 @@
         <h2 id="detalleTitulo">Título</h2>
         <button class="close-btn" onclick="cerrarDetalleAnuncio()">&times;</button>
       </div>
-      <p id="detallePrecio" style="font-size:1.3rem; font-weight:bold; color:var(--brand-terracotta);"></p>
-      <p id="detalleUbicacion" style="color:var(--text-muted); margin-bottom:12px;"></p>
+      <p id="detallePrecio" style="font-size:1.2rem; font-weight:700; color:var(--brand-green);"></p>
+      <p id="detalleUbicacion" style="color:var(--text-muted); font-size:0.85rem; margin-bottom:12px;"></p>
       
-      <p style="font-size:0.85rem; font-weight:bold; color:var(--text-muted);">📷 Haz clic en cualquier foto para verla en pantalla completa:</p>
+      <p style="font-size:0.8rem; font-weight:600; color:var(--text-muted);">Haz clic en cualquier imagen para verla en pantalla completa:</p>
       <div class="detail-gallery" id="detalleGaleria"></div>
 
-      <h3 style="margin-top:15px; margin-bottom:6px;">Descripción del Anuncio</h3>
-      <p id="detalleDescripcion" style="line-height:1.6; margin-bottom:20px;"></p>
+      <h3 style="margin-top:15px; margin-bottom:6px; font-size:0.95rem;">Descripción</h3>
+      <p id="detalleDescripcion" style="line-height:1.6; color:var(--text-main); margin-bottom:20px; font-size:0.9rem;"></p>
 
       <div id="contenedorBotonAccion"></div>
     </div>
   </div>
 
-  <!-- MODAL: Mi Perfil / Resume -->
+  <!-- MODAL: Contacto para Adopción -->
+  <div class="modal-overlay" id="modalAdopcion">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Solicitar Adopción</h2>
+        <button class="close-btn" onclick="cerrarModal('modalAdopcion')">&times;</button>
+      </div>
+      <form id="formAdopcion" onsubmit="enviarMensajeAdopcion(event)">
+        <p id="tituloMascotaAdopcion" style="font-weight: 600; color: var(--brand-green); margin-bottom: 12px;"></p>
+        <div class="form-group">
+          <label for="nombreAdoptante">Tu Nombre Completo</label>
+          <input type="text" id="nombreAdoptante" required placeholder="Ej. Maria Lopez">
+        </div>
+        <div class="form-group">
+          <label for="contactoAdoptante">Teléfono / WhatsApp o Correo</label>
+          <input type="text" id="contactoAdoptante" required placeholder="Ej. 787-000-0000">
+        </div>
+        <div class="form-group">
+          <label for="mensajeAdoptante">Mensaje para el Rescatista / Dueño</label>
+          <textarea id="mensajeAdoptante" rows="3" required placeholder="Hola, me gustaría darle un hogar a esta mascota..."></textarea>
+        </div>
+        <button type="submit" class="btn-submit">Enviar Mensaje de Adopción</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Perfil / Resume -->
   <div class="modal-overlay" id="modalPerfil">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>📄 Mi Perfil Laboral / Resume</h2>
+        <h2>Mi Perfil Laboral / Resume</h2>
         <button class="close-btn" onclick="cerrarModal('modalPerfil')">&times;</button>
       </div>
       <form id="formPerfil" onsubmit="guardarPerfilEnBaseDeDatos(event)">
@@ -639,109 +638,34 @@
           <input type="tel" id="perfilTelefono" placeholder="787-000-0000" required />
         </div>
         <div class="form-group">
-          <label for="perfilEmail">Correo Electrónico</label>
-          <input type="email" id="perfilEmail" placeholder="juan.perez@email.com" required />
+          <label for="perfilExperiencia">Resumen de Experiencia</label>
+          <textarea id="perfilExperiencia" rows="3" placeholder="Experiencia relevante..." required></textarea>
         </div>
-        <div class="form-group">
-          <label for="perfilExperiencia">Resumen de Experiencia Laboral</label>
-          <textarea id="perfilExperiencia" rows="3" placeholder="Experiencia como mesero..." required></textarea>
-        </div>
-        <button type="submit" class="btn-submit">💾 Guardar mi Resume</button>
+        <button type="submit" class="btn-submit">Guardar Resume</button>
       </form>
     </div>
   </div>
 
-  <!-- MODAL: Contacto Bienes Raíces (Sin Ofertas) -->
-  <div class="modal-overlay" id="modalBienesRaices">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>🔑 Contactar por Propiedad</h2>
-        <button class="close-btn" onclick="cerrarModal('modalBienesRaices')">&times;</button>
-      </div>
-      <form id="formBienesRaices" onsubmit="enviarContactoBR(event)">
-        <p id="tituloPropiedadBR" style="font-weight: bold; color: var(--brand-green-coqui); margin-bottom: 12px;"></p>
-        <div class="form-group">
-          <label for="nombreBR">Tu Nombre</label>
-          <input type="text" id="nombreBR" required placeholder="Tu nombre completo">
-        </div>
-        <div class="form-group">
-          <label for="contactoBR">Teléfono o Correo</label>
-          <input type="text" id="contactoBR" required placeholder="Ej. 787-000-0000">
-        </div>
-        <div class="form-group">
-          <label for="motivoBR">¿Qué deseas solicitar?</label>
-          <select id="motivoBR">
-            <option value="cita">📅 Agendar cita para ver la propiedad</option>
-            <option value="requisitos">📋 Requisitos de alquiler / compra</option>
-          </select>
-        </div>
-        <button type="submit" class="btn-submit">Enviar Solicitud Directa</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- MODAL: Oferta / Propuesta (Ventas Generales) -->
-  <div class="modal-overlay" id="modalPropuesta">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>Enviar Oferta / Propuesta</h2>
-        <button class="close-btn" onclick="cerrarModal('modalPropuesta')">&times;</button>
-      </div>
-      <form id="formPropuesta" onsubmit="enviarPropuesta(event)">
-        <p id="propuestaArticulo" style="font-weight: bold; color: var(--brand-green-coqui); margin-bottom: 12px;"></p>
-        <div class="form-group">
-          <label for="descuentoSelect">Descuento Sugerido</label>
-          <select id="descuentoSelect" onchange="calcularOferta()">
-            <option value="0">Precio original</option>
-            <option value="5">-5% Descuento</option>
-            <option value="10">-10% Descuento</option>
-            <option value="15">-15% Descuento</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="montoOferta">Monto Propuesto ($)</label>
-          <input type="number" id="montoOferta" step="0.01" oninput="actualizarCalculoDesdeInput()">
-        </div>
-        <div class="calculated-box">
-          Propuesta Total: $<span id="resultadoOferta">0.00</span>
-        </div>
-        <div class="form-group" style="margin-top:15px; border-top:1px solid var(--border-color); padding-top:12px;">
-          <label>Acepta Pagos Con:</label>
-          <div class="payment-badges">
-            <span class="badge-payment badge-card">💳 Tarjeta</span>
-            <span class="badge-payment badge-klarna">Klarna</span>
-            <span class="badge-payment badge-ath">ATH Móvil</span>
-          </div>
-        </div>
-        <button type="submit" class="btn-submit">Enviar Propuesta Formal</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- MODAL: Publicar Anuncio -->
+  <!-- MODAL: Publicar -->
   <div class="modal-overlay" id="modalPublicar">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>Publicar Anuncio en Coquí Ventas</h2>
+        <h2>Publicar Anuncio</h2>
         <button class="close-btn" onclick="cerrarModal('modalPublicar')">&times;</button>
       </div>
       <form id="formPublicar" onsubmit="guardarAnuncio(event)">
         <div class="form-group">
           <label for="categoria">Categoría</label>
           <select id="categoria" required>
-            <option value="bienes-raices">🏠 Bienes Raíces</option>
-            <option value="clasificados">📦 Clasificados Generales</option>
-            <option value="de-aqui">🇵🇷 De Aquí (Productos Locales)</option>
-            <option value="empleos">💼 Empleos Directos</option>
+            <option value="bienes-raices">Bienes Raíces</option>
+            <option value="de-aqui">De Aquí (Productos Locales)</option>
+            <option value="empleos">Empleos Directos</option>
+            <option value="mascotas">Adopción de Mascotas</option>
           </select>
         </div>
         <div class="form-group">
           <label for="titulo">Título de la Publicación</label>
-          <input type="text" id="titulo" placeholder="Ej. Apartamento / Café" required />
-        </div>
-        <div class="form-group">
-          <label for="pueblo">Pueblo / Municipio</label>
-          <input type="text" id="pueblo" placeholder="Ej. Mayagüez" required />
+          <input type="text" id="titulo" placeholder="Ej. Apartamento / Mascotas" required />
         </div>
         <button type="submit" class="btn-submit">Publicar Anuncio</button>
       </form>
@@ -756,16 +680,9 @@
 
   <script>
     let posicionScrollGuardada = 0;
-    let precioOriginalGlobal = 0;
-    let perfilUsuario = null;
 
-    function abrirModal(id) {
-      document.getElementById(id).classList.add('active');
-    }
-
-    function cerrarModal(id) {
-      document.getElementById(id).classList.remove('active');
-    }
+    function abrirModal(id) { document.getElementById(id).classList.add('active'); }
+    function cerrarModal(id) { document.getElementById(id).classList.remove('active'); }
 
     function filtrar(cat, el) {
       document.querySelectorAll('.category-item button').forEach(b => b.classList.remove('active'));
@@ -796,12 +713,14 @@
       });
 
       const btnAccion = document.getElementById('contenedorBotonAccion');
-      if (categoria === 'bienes-raices') {
-        btnAccion.innerHTML = `<button class="btn-submit" onclick="cerrarDetalleAnuncio(); prepararContactoBienesRaices('${titulo}')">🔑 Contactar por esta Propiedad</button>`;
+      if (categoria === 'mascotas') {
+        btnAccion.innerHTML = `<button class="btn-submit" onclick="cerrarDetalleAnuncio(); prepararAdopcion('${titulo}')">Quiero Adoptar</button>`;
+      } else if (categoria === 'bienes-raices') {
+        btnAccion.innerHTML = `<button class="btn-submit" onclick="cerrarDetalleAnuncio(); alert('Solicitud de contacto enviada.')">Contactar por esta Propiedad</button>`;
       } else if (categoria === 'empleos') {
-        btnAccion.innerHTML = `<button class="btn-submit" onclick="cerrarDetalleAnuncio(); abrirModal('modalPerfil')">📝 Postularse a este Empleo</button>`;
+        btnAccion.innerHTML = `<button class="btn-submit" onclick="cerrarDetalleAnuncio(); abrirModal('modalPerfil')">Postularse a este Empleo</button>`;
       } else {
-        btnAccion.innerHTML = `<button class="btn-submit" onclick="cerrarDetalleAnuncio(); prepararPropuesta('${titulo}', ${precioNum})">🤝 Enviar Oferta / Hacer Propuesta</button>`;
+        btnAccion.innerHTML = `<button class="btn-submit" onclick="cerrarDetalleAnuncio(); alert('Enviar propuesta de compra...')">Enviar Oferta</button>`;
       }
 
       document.getElementById('modalDetalle').classList.add('active');
@@ -821,52 +740,26 @@
       document.getElementById('viewerPantallaCompleta').classList.remove('active');
     }
 
-    function prepararContactoBienesRaices(titulo) {
-      document.getElementById('tituloPropiedadBR').innerText = 'Propiedad: ' + titulo;
-      abrirModal('modalBienesRaices');
+    function prepararAdopcion(titulo) {
+      document.getElementById('tituloMascotaAdopcion').innerText = 'Mascota: ' + titulo;
+      abrirModal('modalAdopcion');
     }
 
-    function prepararPropuesta(titulo, precio) {
-      precioOriginalGlobal = parseFloat(precio) || 0;
-      document.getElementById('propuestaArticulo').innerText = 'Oferta para: ' + titulo;
-      document.getElementById('montoOferta').value = precioOriginalGlobal;
-      document.getElementById('resultadoOferta').innerText = precioOriginalGlobal.toFixed(2);
-      abrirModal('modalPropuesta');
-    }
-
-    function calcularOferta() {
-      const descuento = parseFloat(document.getElementById('descuentoSelect').value) || 0;
-      const precioFinal = precioOriginalGlobal * (1 - descuento / 100);
-      document.getElementById('montoOferta').value = precioFinal.toFixed(2);
-      document.getElementById('resultadoOferta').innerText = precioFinal.toFixed(2);
-    }
-
-    function actualizarCalculoDesdeInput() {
-      const valor = parseFloat(document.getElementById('montoOferta').value) || 0;
-      document.getElementById('resultadoOferta').innerText = valor.toFixed(2);
+    function enviarMensajeAdopcion(e) {
+      e.preventDefault();
+      alert('¡Tu mensaje de adopción ha sido enviado al rescatista!');
+      cerrarModal('modalAdopcion');
     }
 
     function guardarPerfilEnBaseDeDatos(e) {
       e.preventDefault();
-      alert('¡Perfil y Resume guardados exitosamente!');
+      alert('¡Perfil guardado exitosamente!');
       cerrarModal('modalPerfil');
-    }
-
-    function enviarContactoBR(e) {
-      e.preventDefault();
-      alert('¡Tu solicitud sobre la propiedad ha sido enviada!');
-      cerrarModal('modalBienesRaices');
-    }
-
-    function enviarPropuesta(e) {
-      e.preventDefault();
-      alert('Oferta enviada exitosamente.');
-      cerrarModal('modalPropuesta');
     }
 
     function guardarAnuncio(e) {
       e.preventDefault();
-      alert('¡Anuncio publicado exitosamente!');
+      alert('¡Anuncio publicado!');
       cerrarModal('modalPublicar');
     }
   </script>
