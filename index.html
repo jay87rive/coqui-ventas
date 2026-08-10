@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Coquí Ventas - Mercado y Empleos en Puerto Rico</title>
+  <title>Coquí Ventas - Mercado, Bienes Raíces y Empleos en Puerto Rico</title>
   
   <!-- SDK de Klarna -->
   <script src="https://x.klarnacdn.net/kp/lib/v1/api.js" async></script>
@@ -17,9 +17,10 @@
       --brand-klarna-pink: #FFB3C7;
       --brand-ath-orange: #FF6600;
       --brand-card-blue: #1A1F71;
-      --bg-light: #FAFAF7;
-      --text-dark: #222222;
-      --text-muted: #666666;
+      --bg-light: #F4F6F4;
+      --sidebar-bg: #FFFFFF;
+      --text-dark: #1E293B;
+      --text-muted: #64748B;
       --border-color: #E2E8F0;
     }
 
@@ -36,22 +37,23 @@
       line-height: 1.5;
     }
 
+    /* Encabezado Superior */
     header {
       background-color: var(--brand-green-coqui);
       color: white;
-      padding: 1rem 2rem;
+      padding: 0.8rem 1.5rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       position: sticky;
       top: 0;
       z-index: 100;
     }
 
     .logo {
-      font-size: 1.5rem;
-      font-weight: bold;
+      font-size: 1.4rem;
+      font-weight: 800;
       display: flex;
       align-items: center;
       gap: 8px;
@@ -67,9 +69,9 @@
       background-color: var(--brand-terracotta);
       color: white;
       border: none;
-      padding: 10px 18px;
+      padding: 9px 18px;
       border-radius: 20px;
-      font-weight: bold;
+      font-weight: 700;
       cursor: pointer;
       transition: background 0.2s;
     }
@@ -81,95 +83,143 @@
     .btn-perfil {
       background-color: rgba(255, 255, 255, 0.15);
       color: white;
-      border: 1px solid rgba(255, 255, 255, 0.4);
-      padding: 9px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 8px 15px;
       border-radius: 20px;
       font-weight: 600;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 6px;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
     }
 
     .btn-perfil:hover {
       background-color: rgba(255, 255, 255, 0.25);
     }
 
-    main {
-      max-width: 1200px;
-      margin: 20px auto;
-      padding: 0 20px;
-    }
-
-    /* Barra de Categorías Completa */
-    .categories-bar {
+    /* Estructura Principal con Sidebar Izquierdo */
+    .app-layout {
       display: flex;
-      gap: 10px;
-      overflow-x: auto;
-      padding-bottom: 12px;
-      margin-bottom: 25px;
-      scrollbar-width: thin;
-      scrollbar-color: var(--brand-green-coqui) transparent;
+      max-width: 1400px;
+      margin: 0 auto;
+      min-height: calc(100vh - 60px);
     }
 
-    .categories-bar::-webkit-scrollbar {
-      height: 6px;
+    /* Sidebar Izquierdo Moderno */
+    .sidebar {
+      width: 280px;
+      background-color: var(--sidebar-bg);
+      border-right: 1px solid var(--border-color);
+      padding: 20px 15px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 60px;
+      height: calc(100vh - 60px);
+      overflow-y: auto;
     }
 
-    .categories-bar::-webkit-scrollbar-thumb {
-      background: var(--brand-green-light);
+    .sidebar-title {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      font-weight: 700;
+      padding-left: 8px;
+    }
+
+    .category-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .category-item button {
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      border: none;
+      padding: 10px 12px;
       border-radius: 10px;
-    }
-
-    .cat-btn {
-      background: white;
-      border: 1px solid var(--border-color);
-      padding: 10px 16px;
-      border-radius: 25px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--text-dark);
       cursor: pointer;
-      white-space: nowrap;
       display: flex;
       align-items: center;
-      gap: 6px;
-      font-weight: 500;
-      font-size: 0.9rem;
-      transition: all 0.2s;
+      justify-content: space-between;
+      transition: all 0.2s ease;
     }
 
-    .cat-btn:hover, .cat-btn.active {
-      border-color: var(--brand-green-coqui);
+    .category-item button:hover {
       background-color: #f0f7f0;
       color: var(--brand-green-coqui);
     }
 
-    .cat-btn.de-aqui-btn {
-      border-color: var(--brand-sand-gold);
-      background-color: #fffdf5;
-      font-weight: bold;
+    .category-item button.active {
+      background-color: var(--brand-green-coqui);
+      color: white;
+    }
+
+    .category-item button.highlight-de-aqui {
+      background-color: #fffdf2;
+      border: 1px solid var(--brand-sand-gold);
+      color: #946800;
+    }
+
+    .category-item button.highlight-de-aqui:hover {
+      background-color: #fef8e0;
+    }
+
+    .category-item button.highlight-de-aqui.active {
+      background-color: var(--brand-sand-gold);
+      color: #111;
+    }
+
+    .cat-icon-text {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Área Principal de Contenido */
+    .main-content {
+      flex: 1;
+      padding: 25px;
+    }
+
+    .section-header {
+      margin-bottom: 20px;
+    }
+
+    .section-header h1 {
+      font-size: 1.5rem;
+      color: var(--text-dark);
     }
 
     /* Grid de Anuncios */
     .grid-ads {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
       gap: 20px;
     }
 
     .card {
       background: white;
-      border-radius: 12px;
+      border-radius: 14px;
       border: 1px solid var(--border-color);
       overflow: hidden;
-      position: relative;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-      transition: transform 0.2s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      transition: transform 0.2s, box-shadow 0.2s;
       display: flex;
       flex-direction: column;
     }
 
     .card:hover {
       transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
     }
 
     .card.badge-de-aqui-border {
@@ -183,14 +233,13 @@
       color: white;
       padding: 4px 10px;
       font-size: 0.75rem;
-      font-weight: bold;
+      font-weight: 700;
       border-radius: 12px;
       margin-bottom: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
     .card-content {
-      padding: 15px;
+      padding: 18px;
       display: flex;
       flex-direction: column;
       height: 100%;
@@ -198,20 +247,21 @@
 
     .card-title {
       font-size: 1.1rem;
+      font-weight: 700;
       margin-bottom: 6px;
     }
 
     .card-salary, .card-price {
-      font-weight: bold;
+      font-weight: 800;
       color: var(--brand-terracotta);
-      font-size: 1.05rem;
+      font-size: 1.1rem;
       margin-bottom: 6px;
     }
 
     .card-location {
       font-size: 0.85rem;
       color: var(--text-muted);
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
 
     .action-buttons {
@@ -227,16 +277,20 @@
     }
 
     .btn-secondary {
-      background: #f0f4f1;
-      color: var(--brand-green-coqui);
-      border: 1px solid var(--brand-green-coqui);
-      padding: 8px 12px;
+      background: #f1f5f9;
+      color: var(--text-dark);
+      border: 1px solid var(--border-color);
+      padding: 9px 12px;
       border-radius: 8px;
-      font-weight: bold;
+      font-weight: 600;
       cursor: pointer;
       flex: 1;
       font-size: 0.85rem;
       text-align: center;
+    }
+
+    .btn-secondary:hover {
+      background: #e2e8f0;
     }
 
     .btn-submit {
@@ -246,8 +300,8 @@
       border: none;
       padding: 10px 12px;
       border-radius: 8px;
-      font-size: 0.95rem;
-      font-weight: bold;
+      font-size: 0.92rem;
+      font-weight: 700;
       cursor: pointer;
       flex: 1;
     }
@@ -259,14 +313,13 @@
       padding: 9px 12px;
       border-radius: 8px;
       font-size: 0.9rem;
-      font-weight: bold;
+      font-weight: 700;
       cursor: pointer;
       width: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
-      transition: all 0.2s;
     }
 
     .btn-quick-apply:hover {
@@ -376,7 +429,6 @@
       margin-bottom: 16px;
     }
 
-    /* Badges de métodos de pago */
     .payment-badges {
       display: flex;
       flex-wrap: wrap;
@@ -389,29 +441,31 @@
       border-radius: 6px;
       font-weight: bold;
       font-size: 0.8rem;
-      display: inline-flex;
-      align-items: center;
     }
 
-    .badge-card {
-      background: var(--brand-card-blue);
-      color: white;
-    }
+    .badge-card { background: var(--brand-card-blue); color: white; }
+    .badge-klarna { background: var(--brand-klarna-pink); color: #111; }
+    .badge-ath { background: var(--brand-ath-orange); color: white; }
 
-    .badge-klarna {
-      background: var(--brand-klarna-pink);
-      color: #111;
-    }
-
-    .badge-ath {
-      background: var(--brand-ath-orange);
-      color: white;
+    /* Responsivo para Móviles */
+    @media (max-width: 850px) {
+      .app-layout {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        top: 0;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- Encabezado -->
+  <!-- Header Superior -->
   <header>
     <div class="logo">🐸 Coquí Ventas</div>
     <div class="nav-links">
@@ -420,93 +474,165 @@
     </div>
   </header>
 
-  <main>
-    <!-- Barra Completa de Categorías y Departamentos -->
-    <div class="categories-bar">
-      <button class="cat-btn active" onclick="filtrar('todos')">🌐 Todos</button>
-      <button class="cat-btn de-aqui-btn" onclick="filtrar('de-aqui')">🇵🇷 De Aquí</button>
-      <button class="cat-btn" onclick="filtrar('empleos')">💼 Empleos Directos</button>
-      <button class="cat-btn" onclick="filtrar('agricola')">🌾 Mercado Agrícola</button>
-      <button class="cat-btn" onclick="filtrar('jardineria')">🌱 Jardinería y Patios</button>
-      <button class="cat-btn" onclick="filtrar('talleres')">🔧 Talleres y Mecánica</button>
-      <button class="cat-btn" onclick="filtrar('actividades')">🎉 Actividades y Eventos</button>
-      <button class="cat-btn" onclick="filtrar('mascotas')">🐾 Adopción Gratis de Mascotas</button>
-      <button class="cat-btn" onclick="filtrar('clasificados')">📦 Clasificados Generales</button>
-      <button class="cat-btn" onclick="filtrar('vehiculos')">🚗 Vehículos y Piezas</button>
-    </div>
+  <div class="app-layout">
+    
+    <!-- MENU LATERAL IZQUIERDO (Listado de Categorías) -->
+    <aside class="sidebar">
+      <div class="sidebar-title">Departamentos y Filtros</div>
+      <ul class="category-list">
+        <li class="category-item">
+          <button class="active" onclick="filtrar('todos', this)">
+            <span class="cat-icon-text">🌐 Todos los Anuncios</span>
+          </button>
+        </li>
+        <li class="category-item">
+          <button class="highlight-de-aqui" onclick="filtrar('de-aqui', this)">
+            <span class="cat-icon-text">🇵🇷 De Aquí (Local)</span>
+          </button>
+        </li>
+        <li class="category-item">
+          <button onclick="filtrar('bienes-raices', this)">
+            <span class="cat-icon-text">🏠 Bienes Raíces</span>
+          </button>
+        </li>
+        <li class="category-item">
+          <button onclick="filtrar('empleos', this)">
+            <span class="cat-icon-text">💼 Empleos Directos</span>
+          </button>
+        </li>
+        <li class="category-item">
+          <button onclick="filtrar('agricola', this)">
+            <span class="cat-icon-text">🌾 Mercado Agrícola</span>
+          </button>
+        </li>
+        <li class="category-item">
+          <button onclick="filtrar('jardineria', this)">
+            <span class="cat-icon-text">🌱 Jardinería y Patios</span>
+          </button>
+        </li>
+        <li class="category-item">
+          <button onclick="filtrar('talleres', this)">
+            <span class="cat-icon-text">🔧 Talleres y Mecánica</span>
+          </button>
+        </li>
+        <li class="category-item">
+          <button onclick="filtrar('actividades', this)">
+            <span class="cat-icon-text">🎉 Actividades y Eventos</span>
+          </button>
+        </li>
+        <li class="category-item">
+          <button onclick="filtrar('mascotas', this)">
+            <span class="cat-icon-text">🐾 Adopción de Mascotas</span>
+          </button>
+        </li>
+        <li class="category-item">
+          <button onclick="filtrar('clasificados', this)">
+            <span class="cat-icon-text">📦 Clasificados Generales</span>
+          </button>
+        </li>
+        <li class="category-item">
+          <button onclick="filtrar('vehiculos', this)">
+            <span class="cat-icon-text">🚗 Vehículos y Piezas</span>
+          </button>
+        </li>
+      </ul>
+    </aside>
 
-    <!-- Lista de Anuncios -->
-    <div class="grid-ads" id="gridAnuncios">
-      
-      <!-- Anuncio de Empleo -->
-      <div class="card" data-cat="empleos">
-        <div class="card-content">
-          <h3 class="card-title">Mesero / Mesera</h3>
-          <p class="card-salary">💵 $3/hr + Propinas y Comisiones</p>
-          <p class="card-location">📍 San Juan, PR</p>
-          
-          <div class="action-buttons">
-            <button class="btn-quick-apply" onclick="aplicarUnClick('Mesero / Mesera')">⚡ Aplicar en 1 Click</button>
-            <div class="btn-row">
-              <button class="btn-secondary" onclick="abrirModal('modalContacto')">💬 Pregunta</button>
-              <button class="btn-submit" onclick="prepararPostulacion('Mesero / Mesera', '$3/hr + Propinas y Comisiones')">📝 Postularse</button>
+    <!-- ÁREA DE ANUNCIOS -->
+    <main class="main-content">
+      <div class="section-header">
+        <h1 id="tituloCategoria">Explorando Todos los Anuncios</h1>
+      </div>
+
+      <div class="grid-ads" id="gridAnuncios">
+        
+        <!-- Bienes Raíces -->
+        <div class="card" data-cat="bienes-raices">
+          <div class="card-content">
+            <h3 class="card-title">Apartamento en Alquiler (2 Cuartos)</h3>
+            <p class="card-price">$850 / mes</p>
+            <p class="card-location">📍 Mayagüez, PR</p>
+            
+            <div class="action-buttons">
+              <div class="btn-row">
+                <button class="btn-secondary" onclick="abrirModal('modalContacto')">💬 Pregunta</button>
+                <button class="btn-submit" onclick="prepararPropuesta('Apartamento Mayagüez', 850)">🤝 Solicitar Info</button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Anuncio Jardinería -->
-      <div class="card" data-cat="jardineria">
-        <div class="card-content">
-          <h3 class="card-title">Mantenimiento de Patios y Jardines</h3>
-          <p class="card-price">Cotización Gratis</p>
-          <p class="card-location">📍 Carolina y Área Metro</p>
-          
-          <div class="action-buttons">
-            <div class="btn-row">
-              <button class="btn-secondary" onclick="abrirModal('modalContacto')">💬 Mensaje</button>
-              <button class="btn-submit" onclick="prepararPropuesta('Mantenimiento de Patios y Jardines', 0)">🤝 Solicitar Servicio</button>
+        <!-- Empleo -->
+        <div class="card" data-cat="empleos">
+          <div class="card-content">
+            <h3 class="card-title">Mesero / Mesera</h3>
+            <p class="card-salary">💵 $3/hr + Propinas y Comisiones</p>
+            <p class="card-location">📍 San Juan, PR</p>
+            
+            <div class="action-buttons">
+              <button class="btn-quick-apply" onclick="aplicarUnClick('Mesero / Mesera')">⚡ Aplicar en 1 Click</button>
+              <div class="btn-row">
+                <button class="btn-secondary" onclick="abrirModal('modalContacto')">💬 Pregunta</button>
+                <button class="btn-submit" onclick="prepararPostulacion('Mesero / Mesera', '$3/hr + Propinas y Comisiones')">📝 Postularse</button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Anuncio Producto Local "De Aquí" -->
-      <div class="card badge-de-aqui-border" data-cat="de-aqui">
-        <div class="card-content">
-          <span class="badge-de-aqui">🇵🇷 100% De Aquí</span>
-          <h3 class="card-title">Café Artesanal de Jayuya</h3>
-          <p class="card-price">$12.00</p>
-          <p class="card-location">📍 Jayuya, PR</p>
-          
-          <div class="action-buttons">
-            <div class="btn-row">
-              <button class="btn-secondary" onclick="abrirModal('modalContacto')">💬 Mensaje</button>
-              <button class="btn-submit" onclick="prepararPropuesta('Café Artesanal de Jayuya', 12.00)">🤝 Hacer Propuesta</button>
+        <!-- Jardinería -->
+        <div class="card" data-cat="jardineria">
+          <div class="card-content">
+            <h3 class="card-title">Mantenimiento de Patios y Jardines</h3>
+            <p class="card-price">Cotización Gratis</p>
+            <p class="card-location">📍 Carolina y Área Metro</p>
+            
+            <div class="action-buttons">
+              <div class="btn-row">
+                <button class="btn-secondary" onclick="abrirModal('modalContacto')">💬 Mensaje</button>
+                <button class="btn-submit" onclick="prepararPropuesta('Mantenimiento de Patios y Jardines', 0)">🤝 Solicitar Servicio</button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Anuncio Mascotas -->
-      <div class="card" data-cat="mascotas">
-        <div class="card-content">
-          <h3 class="card-title">Perrito Rescatado en Adopción</h3>
-          <p class="card-price" style="color: var(--brand-green-coqui);">Gratis (Adopción Responsable)</p>
-          <p class="card-location">📍 Ponce, PR</p>
-          
-          <div class="action-buttons">
-            <div class="btn-row">
-              <button class="btn-secondary" style="width:100%" onclick="abrirModal('modalContacto')">🐾 Preguntar por Adopción</button>
+        <!-- Producto De Aquí -->
+        <div class="card badge-de-aqui-border" data-cat="de-aqui">
+          <div class="card-content">
+            <span class="badge-de-aqui">🇵🇷 100% De Aquí</span>
+            <h3 class="card-title">Café Artesanal de Jayuya</h3>
+            <p class="card-price">$12.00</p>
+            <p class="card-location">📍 Jayuya, PR</p>
+            
+            <div class="action-buttons">
+              <div class="btn-row">
+                <button class="btn-secondary" onclick="abrirModal('modalContacto')">💬 Mensaje</button>
+                <button class="btn-submit" onclick="prepararPropuesta('Café Artesanal de Jayuya', 12.00)">🤝 Hacer Propuesta</button>
+              </div>
             </div>
           </div>
         </div>
+
+        <!-- Mascotas -->
+        <div class="card" data-cat="mascotas">
+          <div class="card-content">
+            <h3 class="card-title">Perrito Rescatado en Adopción</h3>
+            <p class="card-price" style="color: var(--brand-green-coqui);">Gratis (Adopción Responsable)</p>
+            <p class="card-location">📍 Ponce, PR</p>
+            
+            <div class="action-buttons">
+              <div class="btn-row">
+                <button class="btn-secondary" style="width:100%" onclick="abrirModal('modalContacto')">🐾 Preguntar por Adopción</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
+    </main>
 
-    </div>
-  </main>
+  </div>
 
-  <!-- MODAL: Mi Perfil / Guardar Resume -->
+  <!-- MODAL: Mi Perfil / Resume -->
   <div class="modal-overlay" id="modalPerfil">
     <div class="modal-content">
       <div class="modal-header">
@@ -637,7 +763,7 @@
     </div>
   </div>
 
-  <!-- MODAL: Oferta / Propuesta para Productos -->
+  <!-- MODAL: Oferta / Propuesta -->
   <div class="modal-overlay" id="modalPropuesta">
     <div class="modal-content">
       <div class="modal-header">
@@ -681,8 +807,8 @@
         <div class="form-group" style="margin-top:15px; border-top:1px solid var(--border-color); padding-top:12px;">
           <label>Métodos de Pago Disponibles:</label>
           <div class="payment-badges">
-            <span class="badge-payment badge-card">💳 Tarjeta Débito / Crédito</span>
-            <span class="badge-payment badge-klarna">Klarna (Paga en 4)</span>
+            <span class="badge-payment badge-card">💳 Tarjeta</span>
+            <span class="badge-payment badge-klarna">Klarna</span>
             <span class="badge-payment badge-ath">ATH Móvil</span>
           </div>
         </div>
@@ -703,6 +829,7 @@
         <div class="form-group">
           <label for="categoria">Categoría / Departamento</label>
           <select id="categoria" name="categoria" onchange="cambiarFormularioPorCategoria()" required>
+            <option value="bienes-raices">🏠 Bienes Raíces (Alquiler / Venta)</option>
             <option value="clasificados">Clasificados Generales</option>
             <option value="de-aqui">🇵🇷 De Aquí (Productos / Negocios Locales)</option>
             <option value="empleos">Empleos Directos</option>
@@ -717,13 +844,13 @@
 
         <div class="form-group">
           <label for="titulo">Título de la Publicación</label>
-          <input type="text" id="titulo" placeholder="Ej. Mesero / Servicio de Patio / Miel Local" required />
+          <input type="text" id="titulo" placeholder="Ej. Alquiler de Apartamento / Mesero / Café" required />
         </div>
 
         <div class="form-group" id="grupoSalario" style="display: none;">
           <label for="salario">Salario / Compensación (Obligatorio)</label>
-          <input type="text" id="salario" placeholder="Ej. $3/hr + propinas, ó $10.50/hr fijo" />
-          <p class="field-hint">Detallar el salario es obligatorio en empleos para evitar preguntas innecesarias.</p>
+          <input type="text" id="salario" placeholder="Ej. $3/hr + propinas" />
+          <p class="field-hint">Detallar el salario es obligatorio en empleos.</p>
         </div>
 
         <div class="form-group" id="grupoPrecio">
@@ -733,7 +860,7 @@
 
         <div class="form-group">
           <label for="pueblo">Pueblo / Municipio</label>
-          <input type="text" id="pueblo" placeholder="Ej. Ponce, Mayagüez, San Juan" required />
+          <input type="text" id="pueblo" placeholder="Ej. Mayagüez, Ponce, San Juan" required />
         </div>
 
         <div class="form-group">
@@ -758,53 +885,61 @@
       document.getElementById(id).classList.remove('active');
     }
 
+    function filtrar(categoria, elemento) {
+      const btns = document.querySelectorAll('.category-item button');
+      btns.forEach(b => b.classList.remove('active'));
+      elemento.classList.add('active');
+
+      const titulo = document.getElementById('tituloCategoria');
+      titulo.innerText = 'Explorando: ' + elemento.innerText.trim();
+
+      const tarjetas = document.querySelectorAll('.card');
+      tarjetas.forEach(t => {
+        if (categoria === 'todos' || t.dataset.cat === categoria) {
+          t.style.display = 'flex';
+        } else {
+          t.style.display = 'none';
+        }
+      });
+    }
+
     function guardarPerfilEnBaseDeDatos(e) {
       e.preventDefault();
       perfilUsuario = {
         nombre: document.getElementById('perfilNombre').value,
         telefono: document.getElementById('perfilTelefono').value,
         email: document.getElementById('perfilEmail').value,
-        experiencia: document.getElementById('perfilExperiencia').value,
-        tieneResumeSubido: document.getElementById('perfilArchivo').files.length > 0
+        experiencia: document.getElementById('perfilExperiencia').value
       };
 
-      alert('¡Perfil y Resume guardados exitosamente en Coquí Ventas!\nAhora puedes aplicar a empleos en 1 Click.');
+      alert('¡Perfil y Resume guardados exitosamente en Coquí Ventas!');
       cerrarModal('modalPerfil');
     }
 
     function aplicarUnClick(puesto) {
       if (!perfilUsuario) {
-        alert('Aún no tienes un Resume guardado en tu perfil.\nPor favor completa tu perfil laboral para habilitar la postulación en 1 Click.');
+        alert('Por favor guarda tu perfil primero.');
         abrirModal('modalPerfil');
         return;
       }
-
-      const confirmacion = confirm(`¿Deseas enviar tu perfil guardado (${perfilUsuario.nombre}) para el puesto de "${puesto}"?`);
-      if (confirmacion) {
-        alert(`⚡ ¡Postulación enviada en 1 Click!\n\nEl patrono de la vacante "${puesto}" ha recibido tu resumen laboral (${perfilUsuario.email}).`);
-      }
+      alert(`⚡ ¡Postulación enviada en 1 Click para "${puesto}"!`);
     }
 
     function prepararPostulacion(puesto, salario) {
       document.getElementById('puestoTitulo').innerText = 'Puesto: ' + puesto;
-      document.getElementById('puestoSalario').innerText = 'Salario publicado: ' + salario;
-
+      document.getElementById('puestoSalario').innerText = 'Salario: ' + salario;
       if (perfilUsuario) {
         document.getElementById('bannerPerfilGuardado').style.display = 'block';
         document.getElementById('nombreCandidato').value = perfilUsuario.nombre;
         document.getElementById('contactoCandidato').value = perfilUsuario.telefono || perfilUsuario.email;
         document.getElementById('experiencia').value = perfilUsuario.experiencia;
-      } else {
-        document.getElementById('bannerPerfilGuardado').style.display = 'none';
       }
-
       abrirModal('modalPostulacion');
     }
 
     function prepararPropuesta(titulo, precio) {
       precioOriginalGlobal = parseFloat(precio) || 0;
       document.getElementById('propuestaArticulo').innerText = 'Propuesta para: ' + titulo;
-      document.getElementById('descuentoSelect').value = '0';
       document.getElementById('montoOferta').value = precioOriginalGlobal;
       document.getElementById('resultadoOferta').innerText = precioOriginalGlobal.toFixed(2);
       abrirModal('modalPropuesta');
@@ -813,12 +948,10 @@
     function calcularOferta() {
       const descuento = document.getElementById('descuentoSelect').value;
       const inputMonto = document.getElementById('montoOferta');
-
       if (descuento === 'personalizado') {
         inputMonto.focus();
         return;
       }
-
       const porcentaje = parseFloat(descuento) || 0;
       const precioFinal = precioOriginalGlobal * (1 - porcentaje / 100);
       inputMonto.value = precioFinal.toFixed(2);
@@ -837,32 +970,11 @@
 
       if (cat === 'empleos') {
         grupoSalario.style.display = 'block';
-        document.getElementById('salario').setAttribute('required', 'true');
-        grupoPrecio.style.display = 'none';
-      } else if (cat === 'mascotas') {
-        grupoSalario.style.display = 'none';
-        document.getElementById('salario').removeAttribute('required');
         grupoPrecio.style.display = 'none';
       } else {
         grupoSalario.style.display = 'none';
-        document.getElementById('salario').removeAttribute('required');
         grupoPrecio.style.display = 'block';
       }
-    }
-
-    function filtrar(categoria) {
-      const btns = document.querySelectorAll('.cat-btn');
-      btns.forEach(b => b.classList.remove('active'));
-      event.target.classList.add('active');
-
-      const tarjetas = document.querySelectorAll('.card');
-      tarjetas.forEach(t => {
-        if (categoria === 'todos' || t.dataset.cat === categoria) {
-          t.style.display = 'flex';
-        } else {
-          t.style.display = 'none';
-        }
-      });
     }
 
     function guardarAnuncio(e) {
@@ -873,20 +985,19 @@
 
     function enviarMensaje(e) {
       e.preventDefault();
-      alert('Tu consulta ha sido enviada de forma segura.');
+      alert('Tu consulta ha sido enviada.');
       cerrarModal('modalContacto');
     }
 
     function enviarPropuesta(e) {
       e.preventDefault();
-      const monto = document.getElementById('montoOferta').value;
-      alert('Tu propuesta por $' + monto + ' ha sido enviada.');
+      alert('Propuesta enviada.');
       cerrarModal('modalPropuesta');
     }
 
     function enviarPostulacion(e) {
       e.preventDefault();
-      alert('¡Tu solicitud de empleo ha sido enviada con éxito!');
+      alert('Solicitud enviada.');
       cerrarModal('modalPostulacion');
     }
   </script>
