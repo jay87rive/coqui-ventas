@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Coquí Ventas - Mercado, Bienes Raíces y Empleos en Puerto Rico</title>
     
-    <!-- Firebase SDKs -->
+    <!-- Firebase SDKs (Compat) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
@@ -214,11 +214,10 @@
             top: 0; left: 0;
             width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.5);
-            display: flex;
+            display: none;
             justify-content: center;
             align-items: center;
             z-index: 1000;
-            display: none;
         }
 
         .modal-overlay.active { display: flex; }
@@ -296,21 +295,21 @@
         <main class="content-area">
             <h2 id="feedTitle">Explorando Anuncios</h2>
             <div class="ads-grid" id="cardsGrid">
-                <p>Cargando anuncios reales...</p>
+                <p>Cargando anuncios...</p>
             </div>
         </main>
     </div>
 
-    <!-- Modal Formulario de Publicación -->
+    <!-- Modal con Formulario Directo -->
     <div class="modal-overlay" id="publishModal">
         <div class="modal-card">
             <button class="close-btn" onclick="cerrarModal()">&times;</button>
-            <h2 style="margin-bottom: 1rem; color: var(--primary-color);">+ Crear Publicación Real</h2>
+            <h2 style="margin-bottom: 1rem; color: var(--primary-color);">Crear Publicación</h2>
             
             <form id="formPublicar" onsubmit="guardarAnuncio(event)">
                 <div class="form-group">
                     <label>Título del Anuncio</label>
-                    <input type="text" id="titulo" required placeholder="Ej. Apartamento, iPhone, Empleo...">
+                    <input type="text" id="titulo" required placeholder="Ej. iPhone 13, Apartamento...">
                 </div>
 
                 <div class="form-group">
@@ -329,22 +328,22 @@
 
                 <div class="form-group">
                     <label>Precio / Salario</label>
-                    <input type="text" id="precio" required placeholder="Ej. $850 / mes o $12/hr">
+                    <input type="text" id="precio" required placeholder="Ej. $450 o $15/hr">
                 </div>
 
                 <div class="form-group">
                     <label>Pueblo / Ubicación</label>
-                    <input type="text" id="ubicacion" required placeholder="Ej. Mayagüez, PR">
+                    <input type="text" id="ubicacion" required placeholder="Ej. Bayamón, PR">
                 </div>
 
                 <div class="form-group">
-                    <label>Fotos (Puedes seleccionar varias)</label>
+                    <label>Fotos (Opcional, puedes elegir varias)</label>
                     <input type="file" id="fotos" multiple accept="image/*">
                 </div>
 
                 <div class="form-group">
                     <label>Descripción detallada</label>
-                    <textarea id="descripcion" rows="3" placeholder="Detalles de la propiedad, artículo o vacante..."></textarea>
+                    <textarea id="descripcion" rows="3" placeholder="Detalles del artículo o servicio..."></textarea>
                 </div>
 
                 <button type="submit" class="btn-block" id="btnGuardar">Publicar Anuncio</button>
@@ -353,7 +352,6 @@
     </div>
 
     <script>
-        // Tus credenciales de Firebase integradas directamente
         const firebaseConfig = {
             apiKey: "AIzaSyBjLjNc7EGKXdCwc-VmI",
             authDomain: "coqui-ventas.firebaseapp.com",
@@ -476,7 +474,6 @@
             let fotosURLs = [];
 
             try {
-                // Subir cada imagen seleccionada a Firebase Storage
                 for (let file of archivos) {
                     const storageRef = storage.ref(`anuncios/${Date.now()}_${file.name}`);
                     await storageRef.put(file);
@@ -484,7 +481,6 @@
                     fotosURLs.push(url);
                 }
 
-                // Guardar los datos del anuncio en Firestore
                 await db.collection("ads").add({
                     titulo,
                     categoria,
@@ -495,12 +491,12 @@
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
-                alert("¡Anuncio publicado exitosamente!");
+                alert("¡Anuncio publicado con éxito!");
                 document.getElementById('formPublicar').reset();
                 cerrarModal();
             } catch (err) {
                 console.error("Error al publicar:", err);
-                alert("Ocurrió un error al subir el anuncio. Revisa la consola o los permisos de Firebase.");
+                alert("Ocurrió un error al subir el anuncio. Revisa la consola o las reglas de Firebase.");
             } finally {
                 btn.innerText = 'Publicar Anuncio';
                 btn.disabled = false;
