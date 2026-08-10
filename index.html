@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Coqui Ventas - Compra • Vende • Confía</title>
-    <link rel="icon" href="logo.png" type="image/png">
+    <link rel="icon" href="logo.png.PNG" type="image/png">
     <style>
         :root {
             --primary: #127369;
@@ -13,6 +13,8 @@
             --light-bg: #F4F7F6;
             --accent: #4C9A2A;
             --white: #FFFFFF;
+            --text-color: #333333;
+            --gray-border: #E0E0E0;
         }
 
         * {
@@ -24,13 +26,14 @@
 
         body {
             background-color: var(--light-bg);
-            color: #333;
+            color: var(--text-color);
+            line-height: 1.6;
         }
 
         /* HEADER */
         header {
             background-color: var(--white);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
             padding: 15px 5%;
             display: flex;
             justify-content: space-between;
@@ -47,27 +50,28 @@
         }
 
         .logo-container img {
-            height: 50px;
+            height: 48px;
             width: auto;
         }
 
         .logo-text h1 {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             color: var(--dark-slate);
             font-weight: 700;
             letter-spacing: 0.5px;
         }
 
         .logo-text p {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--primary);
             font-weight: 600;
             text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         nav {
             display: flex;
-            gap: 20px;
+            gap: 25px;
             align-items: center;
         }
 
@@ -86,7 +90,7 @@
         .btn-primary {
             background-color: var(--primary);
             color: var(--white);
-            padding: 10px 20px;
+            padding: 10px 22px;
             border-radius: 6px;
             text-decoration: none;
             font-weight: 600;
@@ -102,12 +106,13 @@
             background: linear-gradient(135deg, var(--dark-slate), var(--secondary));
             color: var(--white);
             text-align: center;
-            padding: 80px 20px;
+            padding: 70px 20px;
         }
 
         .hero h2 {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
+            font-size: 2.3rem;
+            margin-bottom: 12px;
+            font-weight: 700;
         }
 
         .hero p {
@@ -117,18 +122,18 @@
         }
 
         .search-bar {
-            max-width: 600px;
+            max-width: 580px;
             margin: 0 auto;
             display: flex;
             background: var(--white);
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
         }
 
         .search-bar input {
             flex: 1;
-            padding: 15px;
+            padding: 15px 20px;
             border: none;
             outline: none;
             font-size: 1rem;
@@ -148,39 +153,106 @@
             background-color: #3b7c20;
         }
 
-        /* MAIN CONTENT - FEATURES / PRODUCTS */
+        /* CONTAINER GENERAL */
         .container {
             max-width: 1200px;
             margin: 40px auto;
             padding: 0 20px;
         }
 
-        .section-title {
-            font-size: 1.8rem;
-            color: var(--dark-slate);
-            margin-bottom: 20px;
-            border-bottom: 2px solid #ddd;
-            padding-bottom: 10px;
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--gray-border);
+            padding-bottom: 12px;
         }
 
-        .grid-features {
+        .section-title {
+            font-size: 1.6rem;
+            color: var(--dark-slate);
+            font-weight: 700;
+        }
+
+        /* CARRUSEL / GRID DE PRODUCTOS ORGANIZADO */
+        .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 25px;
             margin-bottom: 50px;
         }
 
-        .feature-card {
+        .product-card {
             background: var(--white);
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            text-align: center;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid var(--gray-border);
+            display: flex;
+            flex-direction: column;
         }
 
-        .feature-card h3 {
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .product-image {
+            height: 180px;
+            background-color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .product-info {
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex-grow: 1;
+        }
+
+        .product-title {
+            font-size: 1.05rem;
+            color: var(--dark-slate);
+            font-weight: 700;
+        }
+
+        .product-price {
+            font-size: 1.2rem;
             color: var(--primary);
+            font-weight: 800;
+        }
+
+        .product-desc {
+            font-size: 0.85rem;
+            color: #666;
             margin-bottom: 10px;
+        }
+
+        .btn-card {
+            display: block;
+            text-align: center;
+            background-color: var(--light-bg);
+            color: var(--dark-slate);
+            padding: 8px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: background 0.3s, color 0.3s;
+            margin-top: auto;
+        }
+
+        .btn-card:hover {
+            background-color: var(--primary);
+            color: var(--white);
         }
 
         /* FOOTER */
@@ -188,13 +260,13 @@
             background-color: var(--dark-slate);
             color: var(--white);
             text-align: center;
-            padding: 30px 20px;
-            margin-top: 50px;
+            padding: 35px 20px;
+            margin-top: 60px;
         }
 
         footer p {
             font-size: 0.9rem;
-            opacity: 0.8;
+            opacity: 0.85;
         }
     </style>
 </head>
@@ -202,7 +274,7 @@
 
     <header>
         <div class="logo-container">
-            <img src="logo.png" alt="Coqui Ventas Logo">
+            <img src="logo.png.PNG" alt="Coqui Ventas Logo">
             <div class="logo-text">
                 <h1>COQUI VENTAS</h1>
                 <p>Compra • Vende • Confía</p>
@@ -210,35 +282,65 @@
         </div>
         <nav>
             <a href="#inicio">Inicio</a>
-            <a href="#explorar">Explorar</a>
-            <a href="#vender">Vender Artículos</a>
+            <a href="#productos">Explorar</a>
+            <a href="#vender">Vender</a>
             <a href="#login" class="btn-primary">Iniciar Sesión</a>
         </nav>
     </header>
 
     <section class="hero" id="inicio">
         <h2>El mercado digital donde encuentras de todo</h2>
-        <p>Publica tus productos gratis, encuentra lo que buscas cerca de ti y haz negocios seguros.</p>
+        <p>Publica tus productos gratis, conecta con compradores y haz transacciones seguras.</p>
         <div class="search-bar">
-            <input type="text" placeholder="¿Qué estás buscando hoy? (Ej. Autos, Electrónica, Ropa...)">
+            <input type="text" placeholder="¿Qué estás buscando hoy? (Ej. Electrónica, Ropa, Autos...)">
             <button>Buscar</button>
         </div>
     </section>
 
-    <div class="container" id="explorar">
-        <h3 class="section-title">Funciones Principales Habilitadas</h3>
-        <div class="grid-features">
-            <div class="feature-card">
-                <h3>🛍️ Publicar y Comprar</h3>
-                <p>Módulo habilitado para que los usuarios suban fotos, precios y descripciones de sus artículos al instante.</p>
+    <div class="container" id="productos">
+        <div class="section-header">
+            <h3 class="section-title">Productos Destacados</h3>
+        </div>
+
+        <div class="products-grid">
+            <div class="product-card">
+                <div class="product-image">Foto del Artículo</div>
+                <div class="product-info">
+                    <h4 class="product-title">Smartphone de Gama Media</h4>
+                    <div class="product-price">$250.00</div>
+                    <p class="product-desc">En excelente estado, liberado para cualquier compañía y con garantía.</p>
+                    <a href="#" class="btn-card">Ver Detalles</a>
+                </div>
             </div>
-            <div class="feature-card">
-                <h3>💬 Chat Directo</h3>
-                <p>Canal de comunicación activo entre compradores y vendedores para negociar de forma rápida y directa.</p>
+
+            <div class="product-card">
+                <div class="product-image">Foto del Artículo</div>
+                <div class="product-info">
+                    <h4 class="product-title">Laptop para Estudiante / Trabajo</h4>
+                    <div class="product-price">$480.00</div>
+                    <p class="product-desc">Procesador rápido, 8GB RAM, ideal para clases y teletrabajo.</p>
+                    <a href="#" class="btn-card">Ver Detalles</a>
+                </div>
             </div>
-            <div class="feature-card">
-                <h3>🔒 Sistema de Confianza</h3>
-                <p>Perfiles verificados y valoraciones para garantizar transacciones totalmente seguras en cada compra.</p>
+
+            <div class="product-card">
+                <div class="product-image">Foto del Artículo</div>
+                <div class="product-info">
+                    <h4 class="product-title">Bicicleta de Montaña Aro 29</h4>
+                    <div class="product-price">$195.00</div>
+                    <p class="product-desc">Lista para rodar, frenos de disco y suspensión delantera ajustable.</p>
+                    <a href="#" class="btn-card">Ver Detalles</a>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image">Foto del Artículo</div>
+                <div class="product-info">
+                    <h4 class="product-title">Mueble Modular para Sala</h4>
+                    <div class="product-price">$320.00</div>
+                    <p class="product-desc">Diseño moderno, cómodo y en excelentes condiciones de cuidado.</p>
+                    <a href="#" class="btn-card">Ver Detalles</a>
+                </div>
             </div>
         </div>
     </div>
