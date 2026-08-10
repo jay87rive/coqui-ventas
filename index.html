@@ -9,7 +9,7 @@
             --primary-color: #2e7d32;
             --accent-color: #4caf50;
             --bg-color: #f9f9f9;
-            --sidebar-width: 260px;
+            --sidebar-width: 280px;
         }
 
         * {
@@ -26,7 +26,7 @@
             min-height: 100vh;
         }
 
-        /* Sidebar con categorías a la izquierda */
+        /* Panel Lateral Izquierdo */
         aside {
             width: var(--sidebar-width);
             background: #fff;
@@ -35,6 +35,8 @@
             overflow-y: auto;
             height: 100vh;
             position: fixed;
+            left: 0;
+            top: 0;
         }
 
         aside h2 {
@@ -68,7 +70,7 @@
             margin-bottom: 4px;
         }
 
-        /* Contenido principal */
+        /* Contenido Principal */
         main {
             margin-left: var(--sidebar-width);
             flex: 1;
@@ -76,17 +78,18 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: flex-start;
         }
 
         header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
 
         header h1 {
             color: var(--primary-color);
             font-size: 2.5rem;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
 
         header p {
@@ -95,18 +98,18 @@
             font-size: 1.1rem;
         }
 
-        /* Botón Publicar grande y centrado */
+        /* Botón Publicar grande y centrado en el medio de la pantalla */
         .publish-container {
-            margin: 30px 0;
+            margin: 40px 0;
             text-align: center;
         }
 
         .btn-publish {
             background-color: var(--accent-color);
             color: white;
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             font-weight: bold;
-            padding: 18px 45px;
+            padding: 20px 50px;
             border: none;
             border-radius: 50px;
             cursor: pointer;
@@ -119,9 +122,8 @@
             transform: scale(1.05);
         }
 
-        /* Pestaña de búsqueda por mapa (independiente) */
+        /* Pestaña independiente de búsqueda por mapa */
         .map-search-tab {
-            margin-top: 20px;
             background: #fff;
             padding: 15px 25px;
             border-radius: 8px;
@@ -130,22 +132,29 @@
             display: flex;
             gap: 10px;
             align-items: center;
+            margin-top: 20px;
         }
 
         .map-search-tab input {
-            padding: 8px 12px;
+            padding: 10px 12px;
             border: 1px solid #ccc;
             border-radius: 4px;
-            width: 250px;
+            width: 280px;
+            font-size: 0.95rem;
         }
 
         .map-search-tab button {
-            padding: 8px 15px;
+            padding: 10px 18px;
             background: #333;
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            font-weight: bold;
+        }
+
+        .map-search-tab button:hover {
+            background: #555;
         }
     </style>
 </head>
@@ -155,20 +164,26 @@
     <aside>
         <h2>Categorías</h2>
         <ul class="category-list">
+            
+            <!-- 1. Adopción de Animales -->
             <li class="category-item">
                 <div class="category-title">1. Adopción de Animales</div>
                 <ul class="sub-category-list">
-                    <li>Reptiles</li>
-                    <li>Centros de adopción cercanos</li>
+                    <li>• Reptiles</li>
+                    <li>• Centros de adopción cercanos</li>
                 </ul>
             </li>
+
+            <!-- 2. Electrónica -->
             <li class="category-item">
                 <div class="category-title">2. Electrónica</div>
                 <ul class="sub-category-list">
-                    <li>Laptops</li>
-                    <li>Desktops</li>
+                    <li>• Laptops</li>
+                    <li>• Desktops</li>
                 </ul>
             </li>
+
+            <!-- 3. Hogar y Enseres -->
             <li class="category-item">
                 <div class="category-title">3. Hogar y Enseres</div>
                 <ul class="sub-category-list">
@@ -177,59 +192,72 @@
                     <li>- Juego de Sala</li>
                     <li>- Juego de Cuartos</li>
                     <li>- Sala de estar</li>
-                    <li><strong>Electrodomésticos:</strong></li>
+                    <li style="margin-top: 5px;"><strong>Electrodomésticos:</strong></li>
                     <li>- Estufas</li>
                     <li>- Neveras</li>
                     <li>- Aires Acondicionados</li>
                 </ul>
             </li>
+
+            <!-- 4. Bienes Raíces -->
             <li class="category-item">
                 <div class="category-title">4. Bienes Raíces</div>
                 <ul class="sub-category-list">
-                    <li>Alquiler</li>
-                    <li>Venta</li>
+                    <li>• Alquiler</li>
+                    <li>• Venta</li>
                 </ul>
             </li>
+
+            <!-- 5. Moda y Accesorios -->
             <li class="category-item">
                 <div class="category-title">5. Moda y Accesorios</div>
                 <ul class="sub-category-list">
-                    <li>Ropa de Hombre</li>
-                    <li>Ropa de Mujer</li>
-                    <li>Ropa de Niños</li>
+                    <li>• Ropa de Hombre</li>
+                    <li>• Ropa de Mujer</li>
+                    <li>• Ropa de Niños</li>
                 </ul>
             </li>
+
+            <!-- 6. Deportes -->
             <li class="category-item">
                 <div class="category-title">6. Deportes</div>
                 <ul class="sub-category-list">
-                    <li>Deporte general</li>
-                    <li>Motoras y Accesorios</li>
+                    <li>• Deporte general</li>
+                    <li>• Motoras y Accesorios</li>
                 </ul>
             </li>
+
+            <!-- 7. Servicios Profesionales -->
             <li class="category-item">
                 <div class="category-title">7. Servicios Profesionales</div>
                 <ul class="sub-category-list">
-                    <li>Electricista</li>
-                    <li>Plomería</li>
-                    <li>Jardinería</li>
+                    <li>• Electricista</li>
+                    <li>• Plomería</li>
+                    <li>• Jardinería</li>
                 </ul>
             </li>
+
+            <!-- 8. "De Aquí" -->
             <li class="category-item">
                 <div class="category-title">8. "De Aquí"</div>
             </li>
+
+            <!-- 9. Turismo Interno -->
             <li class="category-item">
                 <div class="category-title">9. Turismo Interno</div>
             </li>
+
         </ul>
     </aside>
 
-    <!-- Área Principal de la Página -->
+    <!-- Área Principal -->
     <main>
         <header>
             <h1>Coqui Ventas</h1>
             <p>Compra. Vende. Confía.</p>
         </header>
 
-        <!-- Botón de Publicar en el centro, más grande y destacado -->
+        <!-- Botón de Publicar en el medio de la pantalla (más grande) -->
         <div class="publish-container">
             <button class="btn-publish">+ Publicar Anuncio</button>
         </div>
