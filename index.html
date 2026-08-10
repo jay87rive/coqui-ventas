@@ -3,482 +3,354 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coquí Ventas - Mercado, Bienes Raíces y Empleos en Puerto Rico</title>
-    
-    <!-- Firebase SDKs (Compat) -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-
+    <title>Coqui Ventas | Tu Mercado en Línea</title>
+    <!-- Google Fonts & Tailwind CSS para un diseño moderno y rápido -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            dark: '#0f172a'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --primary-color: #1b4332;
-            --accent-color: #d97706;
-            --bg-color: #f4f6f4;
-            --text-color: #212529;
-            --white: #ffffff;
-            --gray: #6c757d;
-            --light-gray: #e9ecef;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-        }
-
-        header {
-            background-color: var(--white);
-            border-bottom: 1px solid var(--light-gray);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 2rem;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.25rem;
-            font-weight: bold;
-            color: var(--primary-color);
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 15px;
-        }
-
-        .btn {
-            background-color: var(--light-gray);
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            color: var(--text-color);
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-        }
-
-        .btn:hover { opacity: 0.85; }
-
-        .btn-primary {
-            background-color: var(--accent-color);
-            color: var(--white);
-        }
-
-        .main-container {
-            display: grid;
-            grid-template-columns: 260px 1fr;
-            gap: 2rem;
-            padding: 2rem;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        aside h3 {
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            color: var(--gray);
-            margin-bottom: 1rem;
-        }
-
-        .department-list {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .dept-item {
-            background: transparent;
-            border: none;
-            text-align: left;
-            padding: 10px 14px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.95rem;
-            color: var(--text-color);
-            transition: background 0.2s;
-        }
-
-        .dept-item:hover, .dept-item.active {
-            background-color: #e2e8f0;
-            font-weight: bold;
-            color: var(--primary-color);
-        }
-
-        .content-area h2 {
-            margin-bottom: 1.5rem;
-            color: var(--primary-color);
-        }
-
-        .ads-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .card {
-            background: var(--white);
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid var(--light-gray);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .card-img-wrapper {
-            position: relative;
-            width: 100%;
-            height: 180px;
-            background-color: #cbd5e1;
-        }
-
-        .card-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .card-body {
-            padding: 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            flex-grow: 1;
-        }
-
-        .card-title { font-size: 1.05rem; font-weight: bold; }
-        .card-price { font-size: 1.1rem; color: var(--primary-color); font-weight: bold; }
-        .card-location { font-size: 0.85rem; color: var(--gray); }
-
-        .card-footer {
-            padding: 1rem;
-            border-top: 1px solid var(--light-gray);
-            background-color: #fafafa;
-        }
-
-        .btn-block {
-            width: 100%;
-            background-color: var(--primary-color);
-            color: var(--white);
-            padding: 10px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        /* Modales */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .modal-overlay.active { display: flex; }
-
-        .modal-card {
-            background: var(--white);
-            width: 100%;
-            max-width: 500px;
-            border-radius: 12px;
-            padding: 2rem;
-            position: relative;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 1rem; right: 1rem;
-            background: none; border: none;
-            font-size: 1.25rem; cursor: pointer;
-            color: var(--gray);
-        }
-
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 0.4rem;
-            font-size: 0.9rem;
-        }
-
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%;
-            padding: 0.65rem;
-            border: 1px solid var(--light-gray);
-            border-radius: 6px;
-            font-size: 0.95rem;
-        }
-
-        @media(max-width: 768px) {
-            .main-container { grid-template-columns: 1fr; }
-        }
+        /* Ocultar scrollbar en elementos deslizables pero mantener funcionalidad */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased flex flex-col min-h-screen">
 
-    <header>
-        <div class="logo-area">🐸 Coquí Ventas</div>
-        <div class="header-actions">
-            <button class="btn">Mi Resume</button>
-            <button class="btn">Panel Empleador</button>
-            <button class="btn btn-primary" onclick="abrirModal()">+ Publicar</button>
+    <!-- BARRA SUPERIOR DE ANUNCIOS / INFO -->
+    <div class="bg-brand-dark text-white text-xs py-2 px-4 text-center font-medium tracking-wide">
+        <i class="fa-solid fa-bullhorn text-brand-500 mr-2"></i> ¡Publica tus anuncios gratis hoy en Puerto Rico! • Pagos seguros con Klarna
+    </div>
+
+    <!-- NAVEGACIÓN PRINCIPAL (HEADER) -->
+    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+            
+            <!-- Logo -->
+            <a href="#" class="flex items-center gap-2 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-brand-500 flex items-center justify-center text-white shadow-md shadow-brand-500/20 group-hover:scale-105 transition-transform">
+                    <i class="fa-solid fa-cochlea text-lg"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-xl font-extrabold tracking-tight text-slate-900 leading-none">Coqui<span class="text-brand-600">Ventas</span></span>
+                    <span class="text-[10px] font-semibold tracking-widest text-slate-400 uppercase mt-1">Puerto Rico</span>
+                </div>
+            </a>
+
+            <!-- Barra de Búsqueda Flexible -->
+            <div class="flex-1 max-w-xl hidden md:flex items-center">
+                <div class="relative w-full">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-slate-400">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </span>
+                    <input type="text" placeholder="¿Qué estás buscando hoy? (autos,empleos,hogar...)" class="w-full pl-11 pr-4 py-3 bg-slate-100/80 border border-transparent rounded-2xl text-sm focus:bg-white focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 outline-none transition-all">
+                </div>
+            </div>
+
+            <!-- Botones de Acción -->
+            <div class="flex items-center gap-3">
+                <a href="#" class="hidden sm:inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-brand-600 px-4 py-2.5 rounded-xl hover:bg-slate-100 transition-colors">
+                    <i class="fa-regular fa-user"></i> Entrar
+                </a>
+                <a href="#" class="inline-flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-bold px-5 py-3 rounded-2xl shadow-lg shadow-brand-600/25 hover:shadow-xl hover:shadow-brand-600/30 active:scale-95 transition-all">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Publicar Anuncio</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Búsqueda móvil -->
+        <div class="px-4 pb-3 md:hidden">
+            <div class="relative w-full">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-slate-400">
+                    <i class="fa-solid fa-magnifying-glass text-sm"></i>
+                </span>
+                <input type="text" placeholder="¿Qué estás buscando hoy?" class="w-full pl-10 pr-4 py-2.5 bg-slate-100 border border-transparent rounded-xl text-sm focus:bg-white focus:border-brand-500 outline-none">
+            </div>
         </div>
     </header>
 
-    <div class="main-container">
-        <aside>
-            <h3>Departamentos</h3>
-            <div class="department-list" id="categoryList">
-                <button class="dept-item active" onclick="filtrarCategoria('Todos', this)">Todos los Anuncios</button>
-                <button class="dept-item" onclick="filtrarCategoria('De Aquí (Local)', this)">De Aquí (Local)</button>
-                <button class="dept-item" onclick="filtrarCategoria('Bienes Raíces', this)">Bienes Raíces</button>
-                <button class="dept-item" onclick="filtrarCategoria('Empleos Directos', this)">Empleos Directos</button>
-                <button class="dept-item" onclick="filtrarCategoria('Autos y Vehículos', this)">Autos y Vehículos</button>
-                <button class="dept-item" onclick="filtrarCategoria('Electrónica y Equipos', this)">Electrónica y Equipos</button>
-                <button class="dept-item" onclick="filtrarCategoria('Hogar y Muebles', this)">Hogar y Muebles</button>
-                <button class="dept-item" onclick="filtrarCategoria('Servicios Profesionales', this)">Servicios Profesionales</button>
-                <button class="dept-item" onclick="filtrarCategoria('Adopción de Mascotas', this)">Adopción de Mascotas</button>
+    <!-- CATEGORÍAS MODERNAS (Desplazamiento horizontal fluido) -->
+    <nav class="bg-white border-b border-slate-100 py-3 shadow-2xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center gap-3 overflow-x-auto no-scrollbar py-1">
+                <button class="flex items-center gap-2 px-4 py-2 bg-brand-50 text-brand-700 rounded-xl text-xs font-bold whitespace-nowrap border border-brand-200 shadow-2xs">
+                    <i class="fa-solid fa-border-all"></i> Todo
+                </button>
+                <button class="flex items-center gap-2 px-4 py-2 bg-slate-50 hover:bg-slate-100 text-slate-600 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors">
+                    <i class="fa-solid fa-car text-slate-400"></i> Vehículos
+                </button>
+                <button class="flex items-center gap-2 px-4 py-2 bg-slate-50 hover:bg-slate-100 text-slate-600 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors">
+                    <i class="fa-solid fa-briefcase text-slate-400"></i> Empleos
+                </button>
+                <button class="flex items-center gap-2 px-4 py-2 bg-slate-50 hover:bg-slate-100 text-slate-600 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors">
+                    <i class="fa-solid fa-house text-slate-400"></i> Bienes Raíces
+                </button>
+                <button class="flex items-center gap-2 px-4 py-2 bg-slate-50 hover:bg-slate-100 text-slate-600 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors">
+                    <i class="fa-solid fa-mobile-screen text-slate-400"></i> Tecnología
+                </button>
+                <button class="flex items-center gap-2 px-4 py-2 bg-slate-50 hover:bg-slate-100 text-slate-600 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors">
+                    <i class="fa-solid fa-paw text-slate-400"></i> Mascotas & Campo
+                </button>
+                <button class="flex items-center gap-2 px-4 py-2 bg-slate-50 hover:bg-slate-100 text-slate-600 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors">
+                    <i class="fa-solid fa-couch text-slate-400"></i> Hogar
+                </button>
             </div>
-        </aside>
-
-        <main class="content-area">
-            <h2 id="feedTitle">Explorando Anuncios</h2>
-            <div class="ads-grid" id="cardsGrid">
-                <p>Cargando anuncios...</p>
-            </div>
-        </main>
-    </div>
-
-    <!-- Modal con Formulario de Publicación -->
-    <div class="modal-overlay" id="publishModal">
-        <div class="modal-card">
-            <button class="close-btn" onclick="cerrarModal()">&times;</button>
-            <h2 style="margin-bottom: 1rem; color: var(--primary-color);">Crear Publicación</h2>
-            
-            <form id="formPublicar" onsubmit="guardarAnuncio(event)">
-                <div class="form-group">
-                    <label>Título del Anuncio</label>
-                    <input type="text" id="titulo" required placeholder="Ej. iPhone 13, Apartamento...">
-                </div>
-
-                <div class="form-group">
-                    <label>Departamento / Categoría</label>
-                    <select id="categoria" required>
-                        <option value="De Aquí (Local)">De Aquí (Local)</option>
-                        <option value="Bienes Raíces">Bienes Raíces</option>
-                        <option value="Empleos Directos">Empleos Directos</option>
-                        <option value="Autos y Vehículos">Autos y Vehículos</option>
-                        <option value="Electrónica y Equipos">Electrónica y Equipos</option>
-                        <option value="Hogar y Muebles">Hogar y Muebles</option>
-                        <option value="Servicios Profesionales">Servicios Profesionales</option>
-                        <option value="Adopción de Mascotas">Adopción de Mascotas</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Precio / Salario</label>
-                    <input type="text" id="precio" required placeholder="Ej. $450 o $15/hr">
-                </div>
-
-                <div class="form-group">
-                    <label>Pueblo / Ubicación</label>
-                    <input type="text" id="ubicacion" required placeholder="Ej. Bayamón, PR">
-                </div>
-
-                <div class="form-group">
-                    <label>Foto (Selecciona 1 imagen)</label>
-                    <input type="file" id="fotos" accept="image/*">
-                </div>
-
-                <div class="form-group">
-                    <label>Descripción detallada</label>
-                    <textarea id="descripcion" rows="3" placeholder="Detalles del artículo o servicio..."></textarea>
-                </div>
-
-                <button type="submit" class="btn-block" id="btnGuardar">Publicar Anuncio</button>
-            </form>
         </div>
-    </div>
+    </nav>
 
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyBjLjNc7EGKXdCwc-VmI",
-            authDomain: "coqui-ventas.firebaseapp.com",
-            projectId: "coqui-ventas",
-            storageBucket: "coqui-ventas.appspot.com",
-            messagingSenderId: "425636251347",
-            appId: "1:425636251347:web:b96972a"
-        };
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
 
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
-        let anunciosTotales = [];
-
-        window.onload = function() {
-            cargarAnuncios();
-        };
-
-        function cargarAnuncios() {
-            db.collection("ads").orderBy("createdAt", "desc").onSnapshot(snapshot => {
-                anunciosTotales = [];
-                snapshot.forEach(doc => {
-                    const data = doc.data();
-                    if (data.titulo) { // Ignora documentos vacíos
-                        anunciosTotales.push({ id: doc.id, ...data });
-                    }
-                });
-                renderizarTarjetas(anunciosTotales);
-            }, error => {
-                console.error("Error al cargar de Firestore:", error);
-                document.getElementById('cardsGrid').innerHTML = '<p>Error al conectar con la base de datos.</p>';
-            });
-        }
-
-        function renderizarTarjetas(lista) {
-            const grid = document.getElementById('cardsGrid');
-            grid.innerHTML = '';
-
-            if (lista.length === 0) {
-                grid.innerHTML = '<p>No hay anuncios publicados todavía. ¡Sé el primero en publicar!</p>';
-                return;
-            }
-
-            lista.forEach(ad => {
-                const foto = (ad.fotos && ad.fotos.length > 0) 
-                    ? ad.fotos[0] 
-                    : 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=500&q=80';
-
-                const cardHTML = `
-                    <article class="card">
-                        <div class="card-img-wrapper">
-                            <img src="${foto}" class="card-img">
+        <!-- CARRUSEL / HERO BANNER MODERNO -->
+        <section class="relative rounded-3xl overflow-hidden bg-slate-900 shadow-xl min-h-[380px] sm:min-h-[420px] flex items-center">
+            <!-- Slider Background Images (Simulado dinámico) -->
+            <div id="carouselTrack" class="absolute inset-0 flex transition-transform duration-700 ease-out">
+                <!-- Slide 1 -->
+                <div class="min-w-full h-full relative flex items-center">
+                    <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/80 to-transparent z-10"></div>
+                    <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=1600&q=80" alt="Banner 1" class="absolute inset-w-full h-full object-cover opacity-60">
+                    <div class="relative z-20 max-w-xl p-8 sm:p-12 space-y-4">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-brand-500/20 text-brand-400 border border-brand-500/30">
+                            <i class="fa-solid fa-sparkles"></i> Destacado de la semana
+                        </span>
+                        <h1 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
+                            Compra y vende con total confianza en PR
+                        </h1>
+                        <p class="text-slate-300 text-sm sm:text-base">
+                            Conecta directamente con compradores y vendedores locales de forma rápida, segura y elegante.
+                        </p>
+                        <div class="pt-2 flex flex-wrap gap-3">
+                            <a href="#" class="bg-brand-600 hover:bg-brand-500 text-white font-bold px-6 py-3 rounded-xl text-sm transition-colors shadow-lg shadow-brand-600/30">
+                                Explorar Anuncios
+                            </a>
                         </div>
-                        <div class="card-body">
-                            <h3 class="card-title">${ad.titulo}</h3>
-                            <div class="card-price">${ad.precio}</div>
-                            <div class="card-location">${ad.ubicacion}</div>
-                        </div>
-                        <div class="card-footer">
-                            <button class="btn-block" onclick='verDetalle("${encodeURIComponent(ad.titulo)}", "${encodeURIComponent(ad.precio)}", "${encodeURIComponent(ad.ubicacion)}", "${encodeURIComponent(ad.categoria)}", "${encodeURIComponent(ad.descripcion || "Sin descripción")}", "${encodeURIComponent(foto)}")'>Ver Detalle</button>
-                        </div>
-                    </article>
-                `;
-                grid.innerHTML += cardHTML;
-            });
-        }
-
-        function filtrarCategoria(cat, elemento) {
-            document.querySelectorAll('.dept-item').forEach(el => el.classList.remove('active'));
-            elemento.classList.add('active');
-            document.getElementById('feedTitle').innerText = cat === 'Todos' ? 'Explorando Anuncios' : cat;
-
-            if (cat === 'Todos') {
-                renderizarTarjetas(anunciosTotales);
-            } else {
-                const filtrados = anunciosTotales.filter(ad => ad.categoria === cat);
-                renderizarTarjetas(filtrados);
-            }
-        }
-
-        async function guardarAnuncio(e) {
-            e.preventDefault();
-            const btn = document.getElementById('btnGuardar');
-            btn.innerText = 'Subiendo anuncio...';
-            btn.disabled = true;
-
-            const titulo = document.getElementById('titulo').value;
-            const categoria = document.getElementById('categoria').value;
-            const precio = document.getElementById('precio').value;
-            const ubicacion = document.getElementById('ubicacion').value;
-            const descripcion = document.getElementById('descripcion').value;
-            const archivoInput = document.getElementById('fotos');
-
-            let fotosURLs = [];
-
-            try {
-                if (archivoInput.files && archivoInput.files[0]) {
-                    const file = archivoInput.files[0];
-                    const base64 = await new Promise((resolve) => {
-                        const reader = new FileReader();
-                        reader.onload = (evt) => resolve(evt.target.result);
-                        reader.readAsDataURL(file);
-                    });
-                    fotosURLs.push(base64);
-                } else {
-                    fotosURLs.push('https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=500&q=80');
-                }
-
-                await db.collection("ads").add({
-                    titulo,
-                    categoria,
-                    precio,
-                    ubicacion,
-                    descripcion,
-                    fotos: fotosURLs,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
-                alert("¡Anuncio publicado con éxito!");
-                document.getElementById('formPublicar').reset();
-                cerrarModal();
-            } catch (err) {
-                console.error("Error al publicar:", err);
-                alert("Ocurrió un error al subir el anuncio.");
-            } finally {
-                btn.innerText = 'Publicar Anuncio';
-                btn.disabled = false;
-            }
-        }
-
-        function verDetalle(titulo, precio, ubicacion, categoria, descripcion, foto) {
-            const modalHTML = `
-                <div class="modal-overlay active" id="modalDetalle" onclick="if(event.target === this) cerrarDetalle()">
-                    <div class="modal-card">
-                        <button class="close-btn" onclick="cerrarDetalle()">&times;</button>
-                        <h2 style="margin-bottom: 1rem; color: var(--primary-color);">${decodeURIComponent(titulo)}</h2>
-                        <img src="${decodeURIComponent(foto)}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 6px; margin-bottom: 1rem;">
-                        <p style="font-size: 1.2rem; font-weight: bold; color: var(--primary-color); margin-bottom: 0.5rem;">${decodeURIComponent(precio)}</p>
-                        <p style="color: var(--gray); font-size: 0.9rem; margin-bottom: 0.5rem;">📍 <strong>Ubicación:</strong> ${decodeURIComponent(ubicacion)}</p>
-                        <p style="color: var(--gray); font-size: 0.9rem; margin-bottom: 1rem;">📂 <strong>Categoría:</strong> ${decodeURIComponent(categoria)}</p>
-                        <hr style="border: none; border-top: 1px solid var(--light-gray); margin-bottom: 1rem;">
-                        <p style="white-space: pre-wrap; font-size: 0.95rem;">${decodeURIComponent(descripcion)}</p>
                     </div>
                 </div>
-            `;
-            document.body.insertAdjacentHTML('beforeend', modalHTML);
+                <!-- Slide 2 -->
+                <div class="min-w-full h-full relative flex items-center">
+                    <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/80 to-transparent z-10"></div>
+                    <img src="https://images.unsplash.com/photo-1556742049-0a67d553c2a5?auto=format&fit=crop&w=1600&q=80" alt="Banner 2" class="absolute inset-w-full h-full object-cover opacity-60">
+                    <div class="relative z-20 max-w-xl p-8 sm:p-12 space-y-4">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                            <i class="fa-solid fa-shield-halved"></i> Pagos Flexibles
+                        </span>
+                        <h1 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
+                            Compra ahora y paga en plazos con Klarna
+                        </h1>
+                        <p class="text-slate-300 text-sm sm:text-base">
+                            Facilita tus transacciones grandes dividiendo tus pagos de manera cómoda y sin complicaciones.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controles del Carrusel -->
+            <button onclick="prevSlide()" class="absolute left-4 z-30 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center backdrop-blur-md transition-colors">
+                <i class="fa-solid fa-chevron-left text-sm"></i>
+            </button>
+            <button onclick="nextSlide()" class="absolute right-4 z-30 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center backdrop-blur-md transition-colors">
+                <i class="fa-solid fa-chevron-right text-sm"></i>
+            </button>
+        </section>
+
+        <!-- SECCIÓN DE ANUNCIOS RECIENTES -->
+        <section class="space-y-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Anuncios Recientes</h2>
+                    <p class="text-xs sm:text-sm text-slate-500">Lo más nuevo publicado en la plataforma</p>
+                </div>
+                <a href="#" class="text-sm font-bold text-brand-600 hover:text-brand-700 flex items-center gap-1 group">
+                    Ver todos <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
+                </a>
+            </div>
+
+            <!-- Grid de Productos / Anuncios -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                
+                <!-- Card 1 -->
+                <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col">
+                    <div class="relative aspect-[4/3] overflow-hidden bg-slate-100">
+                        <img src="https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=600&q=80" alt="Auto" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-xs text-slate-900 font-bold text-xs px-2.5 py-1 rounded-lg shadow-xs">
+                            Vehículos
+                        </span>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+                        <div>
+                            <div class="text-xs font-semibold text-brand-600 uppercase tracking-wider mb-1">San Juan, PR</div>
+                            <h3 class="font-bold text-slate-900 text-base leading-snug line-clamp-1 group-hover:text-brand-600 transition-colors">Toyota Tacoma TRD Sport 2022</h3>
+                            <div class="text-xl font-extrabold text-slate-900 mt-2">$35,900</div>
+                        </div>
+                        <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+                            <span><i class="fa-regular fa-clock mr-1"></i> Hace 2 horas</span>
+                            <span class="font-medium text-slate-600">Negociable</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col">
+                    <div class="relative aspect-[4/3] overflow-hidden bg-slate-100">
+                        <img src="https://images.unsplash.com/photo-1526738549149-8e07eca6c147?auto=format&fit=crop&w=600&q=80" alt="Laptop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-xs text-slate-900 font-bold text-xs px-2.5 py-1 rounded-lg shadow-xs">
+                            Tecnología
+                        </span>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+                        <div>
+                            <div class="text-xs font-semibold text-brand-600 uppercase tracking-wider mb-1">Bayamón, PR</div>
+                            <h3 class="font-bold text-slate-900 text-base leading-snug line-clamp-1 group-hover:text-brand-600 transition-colors">MacBook Pro M2 16" Impecable</h3>
+                            <div class="text-xl font-extrabold text-slate-900 mt-2">$1,450</div>
+                        </div>
+                        <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+                            <span><i class="fa-regular fa-clock mr-1"></i> Hace 5 horas</span>
+                            <span class="font-medium text-brand-600">Klarna Disponible</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col">
+                    <div class="relative aspect-[4/3] overflow-hidden bg-slate-100">
+                        <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=600&q=80" alt="Casa" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-xs text-slate-900 font-bold text-xs px-2.5 py-1 rounded-lg shadow-xs">
+                            Bienes Raíces
+                        </span>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+                        <div>
+                            <div class="text-xs font-semibold text-brand-600 uppercase tracking-wider mb-1">Carolina, PR</div>
+                            <h3 class="font-bold text-slate-900 text-base leading-snug line-clamp-1 group-hover:text-brand-600 transition-colors">Apartamento Céntrico 2 Hab</h3>
+                            <div class="text-xl font-extrabold text-slate-900 mt-2">$1,200 /mes</div>
+                        </div>
+                        <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+                            <span><i class="fa-regular fa-clock mr-1"></i> Hace 1 día</span>
+                            <span class="font-medium text-slate-600">Amueblado</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col">
+                    <div class="relative aspect-[4/3] overflow-hidden bg-slate-100">
+                        <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=600&q=80" alt="Mascota" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-xs text-slate-900 font-bold text-xs px-2.5 py-1 rounded-lg shadow-xs">
+                            Mascotas
+                        </span>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+                        <div>
+                            <div class="text-xs font-semibold text-brand-600 uppercase tracking-wider mb-1">Mayagüez, PR</div>
+                            <h3 class="font-bold text-slate-900 text-base leading-snug line-clamp-1 group-hover:text-brand-600 transition-colors">Adopción Responsable - Cachorros</h3>
+                            <div class="text-xl font-extrabold text-brand-600 mt-2">Gratis / Adopción</div>
+                        </div>
+                        <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+                            <span><i class="fa-regular fa-clock mr-1"></i> Hace 1 día</span>
+                            <span class="font-medium text-slate-600">Vacunados</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER MODERNO -->
+    <footer class="bg-slate-900 text-slate-400 mt-20 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center text-white">
+                            <i class="fa-solid fa-cochlea text-sm"></i>
+                        </div>
+                        <span class="text-lg font-bold text-white">CoquiVentas</span>
+                    </div>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        El mercado digital ágil, elegante y seguro hecho a la medida para Puerto Rico. Compra, vende y haz crecer tus oportunidades.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-white text-sm font-bold mb-4">Enlaces Rápidos</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li><a href="#" class="hover:text-white transition-colors">Publicar Anuncio</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Buscar Categorías</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Protección de Pagos (Klarna)</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white text-sm font-bold mb-4">Soporte</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li><a href="#" class="hover:text-white transition-colors">Ayuda y Contacto</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Reglas de Publicación</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Seguridad</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white text-sm font-bold mb-4">Síguenos</h4>
+                    <div class="flex gap-3 text-sm">
+                        <a href="#" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-brand-600 hover:text-white flex items-center justify-center transition-colors"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-brand-600 hover:text-white flex items-center justify-center transition-colors"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-brand-600 hover:text-white flex items-center justify-center transition-colors"><i class="fa-brands fa-x-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="pt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500">
+                <p>&copy; 2026 Coqui Ventas. Todos los derechos reservados.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a href="#" class="hover:text-slate-400">Privacidad</a>
+                    <a href="#" class="hover:text-slate-400">Términos de Uso</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- SCRIPT PARA EL CARRUSEL AUTOMÁTICO Y MANUAL -->
+    <script>
+        const track = document.getElementById('carouselTrack');
+        const slides = track.children;
+        let currentIndex = 0;
+        const totalSlides = slides.length;
+
+        function updateSlidePosition() {
+            track.style.transform = `translateX(-${currentIndex * 100}%)`;
         }
 
-        function cerrarDetalle() {
-            const modal = document.getElementById('modalDetalle');
-            if (modal) modal.remove();
+        function nextSlide() {
+            currentIndex = (currentIndex + 1) % totalSlides;
+            updateSlidePosition();
         }
 
-        function abrirModal() { document.getElementById('publishModal').classList.add('active'); }
-        function cerrarModal() { document.getElementById('publishModal').classList.remove('active'); }
+        function prevSlide() {
+            currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+            updateSlidePosition();
+        }
+
+        // Auto-avance cada 5 segundos
+        setInterval(nextSlide, 5000);
     </script>
 </body>
 </html>
