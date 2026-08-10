@@ -37,7 +37,7 @@
       line-height: 1.5;
     }
 
-    /* Encabezado Superior */
+    /* Header */
     header {
       background-color: var(--brand-green-coqui);
       color: white;
@@ -98,7 +98,7 @@
       background-color: rgba(255, 255, 255, 0.25);
     }
 
-    /* Estructura Principal con Sidebar Izquierdo */
+    /* Layout */
     .app-layout {
       display: flex;
       max-width: 1400px;
@@ -106,7 +106,7 @@
       min-height: calc(100vh - 60px);
     }
 
-    /* Sidebar Izquierdo Moderno */
+    /* Sidebar Izquierdo */
     .sidebar {
       width: 280px;
       background-color: var(--sidebar-bg);
@@ -184,7 +184,7 @@
       gap: 10px;
     }
 
-    /* Área Principal de Contenido */
+    /* Main Content */
     .main-content {
       flex: 1;
       padding: 25px;
@@ -199,7 +199,7 @@
       color: var(--text-dark);
     }
 
-    /* Grid de Anuncios */
+    /* Grid & Cards con Imágenes */
     .grid-ads {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
@@ -222,20 +222,31 @@
       box-shadow: 0 8px 20px rgba(0,0,0,0.08);
     }
 
-    .card.badge-de-aqui-border {
-      border: 2px solid var(--brand-sand-gold);
+    .card-img-container {
+      position: relative;
+      width: 100%;
+      height: 180px;
+      background-color: #e2e8f0;
+      overflow: hidden;
     }
 
-    .badge-de-aqui {
-      display: inline-block;
-      align-self: flex-start;
+    .card-img-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .badge-de-aqui-floating {
+      position: absolute;
+      top: 10px;
+      left: 10px;
       background-color: var(--brand-green-coqui);
       color: white;
       padding: 4px 10px;
       font-size: 0.75rem;
       font-weight: 700;
       border-radius: 12px;
-      margin-bottom: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     }
 
     .card-content {
@@ -447,25 +458,15 @@
     .badge-klarna { background: var(--brand-klarna-pink); color: #111; }
     .badge-ath { background: var(--brand-ath-orange); color: white; }
 
-    /* Responsivo para Móviles */
     @media (max-width: 850px) {
-      .app-layout {
-        flex-direction: column;
-      }
-      .sidebar {
-        width: 100%;
-        height: auto;
-        position: relative;
-        top: 0;
-        border-right: none;
-        border-bottom: 1px solid var(--border-color);
-      }
+      .app-layout { flex-direction: column; }
+      .sidebar { width: 100%; height: auto; position: relative; top: 0; border-right: none; border-bottom: 1px solid var(--border-color); }
     }
   </style>
 </head>
 <body>
 
-  <!-- Header Superior -->
+  <!-- Header -->
   <header>
     <div class="logo">🐸 Coquí Ventas</div>
     <div class="nav-links">
@@ -476,7 +477,7 @@
 
   <div class="app-layout">
     
-    <!-- MENU LATERAL IZQUIERDO (Listado de Categorías) -->
+    <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar-title">Departamentos y Filtros</div>
       <ul class="category-list">
@@ -538,7 +539,7 @@
       </ul>
     </aside>
 
-    <!-- ÁREA DE ANUNCIOS -->
+    <!-- Main Content -->
     <main class="main-content">
       <div class="section-header">
         <h1 id="tituloCategoria">Explorando Todos los Anuncios</h1>
@@ -546,26 +547,32 @@
 
       <div class="grid-ads" id="gridAnuncios">
         
-        <!-- Bienes Raíces -->
+        <!-- BIENES RAÍCES (Sin ofertas) -->
         <div class="card" data-cat="bienes-raices">
+          <div class="card-img-container">
+            <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80" alt="Apartamento" />
+          </div>
           <div class="card-content">
-            <h3 class="card-title">Apartamento en Alquiler (2 Cuartos)</h3>
+            <h3 class="card-title">Apartamento Moderno (2 Cuartos / 1 Baño)</h3>
             <p class="card-price">$850 / mes</p>
             <p class="card-location">📍 Mayagüez, PR</p>
             
             <div class="action-buttons">
               <div class="btn-row">
                 <button class="btn-secondary" onclick="abrirModal('modalContacto')">💬 Pregunta</button>
-                <button class="btn-submit" onclick="prepararPropuesta('Apartamento Mayagüez', 850)">🤝 Solicitar Info</button>
+                <button class="btn-submit" onclick="prepararContactoBienesRaices('Apartamento Mayagüez')">🔑 Solicitar Info / Cita</button>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Empleo -->
+        <!-- EMPLEO -->
         <div class="card" data-cat="empleos">
+          <div class="card-img-container">
+            <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80" alt="Restaurante Mesero" />
+          </div>
           <div class="card-content">
-            <h3 class="card-title">Mesero / Mesera</h3>
+            <h3 class="card-title">Mesero / Mesera (Restaurante Metro)</h3>
             <p class="card-salary">💵 $3/hr + Propinas y Comisiones</p>
             <p class="card-location">📍 San Juan, PR</p>
             
@@ -579,41 +586,50 @@
           </div>
         </div>
 
-        <!-- Jardinería -->
+        <!-- JARDINERÍA -->
         <div class="card" data-cat="jardineria">
+          <div class="card-img-container">
+            <img src="https://images.unsplash.com/photo-1558904541-efa8c196b27d?auto=format&fit=crop&w=600&q=80" alt="Jardinería" />
+          </div>
           <div class="card-content">
-            <h3 class="card-title">Mantenimiento de Patios y Jardines</h3>
+            <h3 class="card-title">Mantenimiento de Patios y Poda</h3>
             <p class="card-price">Cotización Gratis</p>
             <p class="card-location">📍 Carolina y Área Metro</p>
             
             <div class="action-buttons">
               <div class="btn-row">
                 <button class="btn-secondary" onclick="abrirModal('modalContacto')">💬 Mensaje</button>
-                <button class="btn-submit" onclick="prepararPropuesta('Mantenimiento de Patios y Jardines', 0)">🤝 Solicitar Servicio</button>
+                <button class="btn-submit" onclick="prepararContactoServicio('Mantenimiento de Patios')">🤝 Solicitar Servicio</button>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Producto De Aquí -->
-        <div class="card badge-de-aqui-border" data-cat="de-aqui">
+        <!-- PRODUCTO LOCAL "DE AQUÍ" (Con Ofertas) -->
+        <div class="card" data-cat="de-aqui">
+          <div class="card-img-container">
+            <span class="badge-de-aqui-floating">🇵🇷 100% De Aquí</span>
+            <img src="https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=600&q=80" alt="Café Artesanal" />
+          </div>
           <div class="card-content">
-            <span class="badge-de-aqui">🇵🇷 100% De Aquí</span>
-            <h3 class="card-title">Café Artesanal de Jayuya</h3>
+            <h3 class="card-title">Café Artesanal de Jayuya (1 lb)</h3>
             <p class="card-price">$12.00</p>
             <p class="card-location">📍 Jayuya, PR</p>
             
             <div class="action-buttons">
               <div class="btn-row">
                 <button class="btn-secondary" onclick="abrirModal('modalContacto')">💬 Mensaje</button>
-                <button class="btn-submit" onclick="prepararPropuesta('Café Artesanal de Jayuya', 12.00)">🤝 Hacer Propuesta</button>
+                <button class="btn-submit" onclick="prepararPropuesta('Café Artesanal de Jayuya', 12.00)">🤝 Enviar Oferta</button>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Mascotas -->
+        <!-- MASCOTAS -->
         <div class="card" data-cat="mascotas">
+          <div class="card-img-container">
+            <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=600&q=80" alt="Perro en Adopción" />
+          </div>
           <div class="card-content">
             <h3 class="card-title">Perrito Rescatado en Adopción</h3>
             <p class="card-price" style="color: var(--brand-green-coqui);">Gratis (Adopción Responsable)</p>
@@ -640,7 +656,7 @@
         <button class="close-btn" onclick="cerrarModal('modalPerfil')">&times;</button>
       </div>
       <p style="font-size:0.85rem; color: var(--text-muted); margin-bottom: 15px;">
-        Guarda tu información e historial en nuestra base de datos para aplicar a empleos en <strong>1 Click</strong>.
+        Guarda tu información para aplicar a empleos en <strong>1 Click</strong>.
       </p>
 
       <form id="formPerfil" onsubmit="guardarPerfilEnBaseDeDatos(event)">
@@ -667,15 +683,54 @@
         <div class="form-group">
           <label for="perfilArchivo">Subir Resume (PDF o WORD)</label>
           <input type="file" id="perfilArchivo" accept=".pdf,.doc,.docx" />
-          <p class="field-hint">Formatos soportados: .pdf, .doc, .docx (Max 5MB)</p>
         </div>
 
-        <button type="submit" class="btn-submit">💾 Guardar mi Resume en Coquí Ventas</button>
+        <button type="submit" class="btn-submit">💾 Guardar mi Resume</button>
       </form>
     </div>
   </div>
 
-  <!-- MODAL: Postulación Estándar a Empleo -->
+  <!-- MODAL: Contacto Bienes Raíces (Sin Ofertas) -->
+  <div class="modal-overlay" id="modalBienesRaices">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>🔑 Contactar por Propiedad</h2>
+        <button class="close-btn" onclick="cerrarModal('modalBienesRaices')">&times;</button>
+      </div>
+      
+      <form id="formBienesRaices" onsubmit="enviarContactoBR(event)">
+        <p id="tituloPropiedadBR" style="font-weight: bold; color: var(--brand-green-coqui); margin-bottom: 12px;"></p>
+
+        <div class="form-group">
+          <label for="nombreBR">Tu Nombre</label>
+          <input type="text" id="nombreBR" required placeholder="Tu nombre completo">
+        </div>
+
+        <div class="form-group">
+          <label for="contactoBR">Teléfono o Correo</label>
+          <input type="text" id="contactoBR" required placeholder="Ej. 787-000-0000">
+        </div>
+
+        <div class="form-group">
+          <label for="motivoBR">¿Qué deseas solicitar?</label>
+          <select id="motivoBR">
+            <option value="cita">📅 Agendar una cita para ver la propiedad</option>
+            <option value="requisitos">📋 Consultar requisitos de alquiler / compra</option>
+            <option value="disponibilidad">❓ Confirmar fecha de disponibilidad</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="mensajeBR">Mensaje para el Dueño / Bienes Raíces:</label>
+          <textarea id="mensajeBR" rows="3" placeholder="Ej. Hola, estoy interesado en ver el apartamento este sábado..." required></textarea>
+        </div>
+
+        <button type="submit" class="btn-submit">Enviar Solicitud Directa</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Postulación a Empleo -->
   <div class="modal-overlay" id="modalPostulacion">
     <div class="modal-content">
       <div class="modal-header">
@@ -684,7 +739,7 @@
       </div>
 
       <div class="profile-banner" id="bannerPerfilGuardado" style="display: none;">
-        ✨ <strong>Perfil Guardado Detectado:</strong> Hemos llenado previamente tus datos guardados.
+        ✨ <strong>Perfil Guardado Detectado:</strong> Datos rellenados automáticamente.
       </div>
 
       <form id="formPostulacion" onsubmit="enviarPostulacion(event)">
@@ -698,7 +753,7 @@
 
         <div class="form-group">
           <label for="contactoCandidato">Teléfono o Correo de Contacto</label>
-          <input type="text" id="contactoCandidato" required placeholder="Ej. 787-123-4567 o email@ejemplo.com">
+          <input type="text" id="contactoCandidato" required placeholder="Ej. 787-123-4567">
         </div>
 
         <div class="form-group">
@@ -707,12 +762,11 @@
             <option value="inmediata">Inmediata (Tiempo Completo)</option>
             <option value="parcial">Medio Tiempo / Turnos Parciales</option>
             <option value="fines-de-semana">Solo Fines de Semana</option>
-            <option value="noches">Turno Nocturno</option>
           </select>
         </div>
 
         <div class="form-group">
-          <label for="experiencia">Experiencia / Mensaje para el Patrono</label>
+          <label for="experiencia">Experiencia / Mensaje</label>
           <textarea id="experiencia" rows="3" placeholder="Describe por qué te interesa este trabajo..." required></textarea>
         </div>
 
@@ -721,7 +775,7 @@
     </div>
   </div>
 
-  <!-- MODAL: Pregunta General / Mensaje -->
+  <!-- MODAL: Pregunta General -->
   <div class="modal-overlay" id="modalContacto">
     <div class="modal-content">
       <div class="modal-header">
@@ -735,7 +789,7 @@
           <div class="radio-group">
             <label class="radio-option">
               <input type="radio" name="notificacion" value="whatsapp" checked>
-              <span>📱 WhatsApp (Canal Seguro Coquí Ventas)</span>
+              <span>📱 WhatsApp</span>
             </label>
             <label class="radio-option">
               <input type="radio" name="notificacion" value="sms">
@@ -763,11 +817,11 @@
     </div>
   </div>
 
-  <!-- MODAL: Oferta / Propuesta -->
+  <!-- MODAL: Oferta / Propuesta (Ventas Generales) -->
   <div class="modal-overlay" id="modalPropuesta">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>Enviar Propuesta / Solicitud</h2>
+        <h2>Enviar Oferta / Propuesta</h2>
         <button class="close-btn" onclick="cerrarModal('modalPropuesta')">&times;</button>
       </div>
       <form id="formPropuesta" onsubmit="enviarPropuesta(event)">
@@ -781,7 +835,7 @@
             <option value="10">-10% de Descuento</option>
             <option value="15">-15% de Descuento</option>
             <option value="20">-20% de Descuento</option>
-            <option value="personalizado">Monto / Oferta Personalizada</option>
+            <option value="personalizado">Monto Personalizado</option>
           </select>
         </div>
 
@@ -844,13 +898,12 @@
 
         <div class="form-group">
           <label for="titulo">Título de la Publicación</label>
-          <input type="text" id="titulo" placeholder="Ej. Alquiler de Apartamento / Mesero / Café" required />
+          <input type="text" id="titulo" placeholder="Ej. Apartamento / Mesero / Café" required />
         </div>
 
         <div class="form-group" id="grupoSalario" style="display: none;">
           <label for="salario">Salario / Compensación (Obligatorio)</label>
           <input type="text" id="salario" placeholder="Ej. $3/hr + propinas" />
-          <p class="field-hint">Detallar el salario es obligatorio en empleos.</p>
         </div>
 
         <div class="form-group" id="grupoPrecio">
@@ -903,6 +956,17 @@
       });
     }
 
+    function prepararContactoBienesRaices(titulo) {
+      document.getElementById('tituloPropiedadBR').innerText = 'Propiedad: ' + titulo;
+      abrirModal('modalBienesRaices');
+    }
+
+    function enviarContactoBR(e) {
+      e.preventDefault();
+      alert('¡Tu solicitud sobre la propiedad ha sido enviada al arrendador / vendedor!');
+      cerrarModal('modalBienesRaices');
+    }
+
     function guardarPerfilEnBaseDeDatos(e) {
       e.preventDefault();
       perfilUsuario = {
@@ -911,8 +975,7 @@
         email: document.getElementById('perfilEmail').value,
         experiencia: document.getElementById('perfilExperiencia').value
       };
-
-      alert('¡Perfil y Resume guardados exitosamente en Coquí Ventas!');
+      alert('¡Perfil y Resume guardados exitosamente!');
       cerrarModal('modalPerfil');
     }
 
@@ -939,7 +1002,7 @@
 
     function prepararPropuesta(titulo, precio) {
       precioOriginalGlobal = parseFloat(precio) || 0;
-      document.getElementById('propuestaArticulo').innerText = 'Propuesta para: ' + titulo;
+      document.getElementById('propuestaArticulo').innerText = 'Oferta para: ' + titulo;
       document.getElementById('montoOferta').value = precioOriginalGlobal;
       document.getElementById('resultadoOferta').innerText = precioOriginalGlobal.toFixed(2);
       abrirModal('modalPropuesta');
@@ -991,7 +1054,7 @@
 
     function enviarPropuesta(e) {
       e.preventDefault();
-      alert('Propuesta enviada.');
+      alert('Oferta enviada.');
       cerrarModal('modalPropuesta');
     }
 
