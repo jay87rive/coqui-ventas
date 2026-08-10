@@ -199,7 +199,7 @@
       color: var(--text-dark);
     }
 
-    /* Grid & Cards con Imágenes */
+    /* Grid & Cards */
     .grid-ads {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
@@ -215,6 +215,7 @@
       transition: transform 0.2s, box-shadow 0.2s;
       display: flex;
       flex-direction: column;
+      cursor: pointer;
     }
 
     .card:hover {
@@ -275,35 +276,6 @@
       margin-bottom: 14px;
     }
 
-    .action-buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-top: auto;
-    }
-
-    .btn-row {
-      display: flex;
-      gap: 8px;
-    }
-
-    .btn-secondary {
-      background: #f1f5f9;
-      color: var(--text-dark);
-      border: 1px solid var(--border-color);
-      padding: 9px 12px;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      flex: 1;
-      font-size: 0.85rem;
-      text-align: center;
-    }
-
-    .btn-secondary:hover {
-      background: #e2e8f0;
-    }
-
     .btn-submit {
       width: 100%;
       background: var(--brand-green-coqui);
@@ -314,38 +286,16 @@
       font-size: 0.92rem;
       font-weight: 700;
       cursor: pointer;
-      flex: 1;
+      margin-top: auto;
     }
 
-    .btn-quick-apply {
-      background: #E8F5E9;
-      color: var(--brand-green-coqui);
-      border: 1.5px dashed var(--brand-green-coqui);
-      padding: 9px 12px;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      font-weight: 700;
-      cursor: pointer;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-    }
-
-    .btn-quick-apply:hover {
-      background: var(--brand-green-coqui);
-      color: white;
-      border-style: solid;
-    }
-
-    /* Modales */
+    /* Modales General */
     .modal-overlay {
       display: none;
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5);
+      background: rgba(0,0,0,0.6);
       justify-content: center;
       align-items: center;
       z-index: 1000;
@@ -365,6 +315,16 @@
       overflow-y: auto;
     }
 
+    .modal-content-large {
+      background: white;
+      width: 90%;
+      max-width: 820px;
+      padding: 25px;
+      border-radius: 16px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
     .modal-header {
       display: flex;
       justify-content: space-between;
@@ -375,7 +335,7 @@
     .close-btn {
       background: none;
       border: none;
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       cursor: pointer;
     }
 
@@ -425,21 +385,6 @@
       color: var(--brand-green-coqui);
     }
 
-    .field-hint {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
-
-    .profile-banner {
-      background: #eaf3ea;
-      border-left: 4px solid var(--brand-green-coqui);
-      padding: 12px;
-      border-radius: 6px;
-      font-size: 0.88rem;
-      margin-bottom: 16px;
-    }
-
     .payment-badges {
       display: flex;
       flex-wrap: wrap;
@@ -457,6 +402,58 @@
     .badge-card { background: var(--brand-card-blue); color: white; }
     .badge-klarna { background: var(--brand-klarna-pink); color: #111; }
     .badge-ath { background: var(--brand-ath-orange); color: white; }
+
+    /* Galería de Detalle */
+    .detail-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+      margin: 15px 0;
+    }
+
+    .detail-gallery img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .detail-gallery img:hover {
+      transform: scale(1.03);
+    }
+
+    /* Visualizador Pantalla Completa (Lightbox) */
+    .fullscreen-viewer {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.95);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .fullscreen-viewer.active {
+      display: flex;
+    }
+
+    .fullscreen-viewer img {
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain;
+    }
+
+    .close-fullscreen {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      color: white;
+      font-size: 2.5rem;
+      cursor: pointer;
+    }
 
     @media (max-width: 850px) {
       .app-layout { flex-direction: column; }
@@ -547,27 +544,21 @@
 
       <div class="grid-ads" id="gridAnuncios">
         
-        <!-- BIENES RAÍCES (Sin ofertas) -->
-        <div class="card" data-cat="bienes-raices">
+        <!-- BIENES RAÍCES (Sin Ofertas) -->
+        <div class="card" data-cat="bienes-raices" onclick="abrirDetalleAnuncio('Apartamento Moderno (2 Cuartos / 1 Baño)', '$850 / mes', '📍 Mayagüez, PR', 'Apartamento remodelado. Incluye agua, estacionamiento privado y estufa. No se permiten mascotas. Requisitos: Fianza y primer mes.', ['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=800&q=80'], 'bienes-raices', 0)">
           <div class="card-img-container">
             <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80" alt="Apartamento" />
           </div>
           <div class="card-content">
-            <h3 class="card-title">Apartamento Moderno (2 Cuartos / 1 Baño)</h3>
+            <h3 class="card-title">Apartamento Moderno (2 Cuartos)</h3>
             <p class="card-price">$850 / mes</p>
             <p class="card-location">📍 Mayagüez, PR</p>
-            
-            <div class="action-buttons">
-              <div class="btn-row">
-                <button class="btn-secondary" onclick="abrirModal('modalContacto')">💬 Pregunta</button>
-                <button class="btn-submit" onclick="prepararContactoBienesRaices('Apartamento Mayagüez')">🔑 Solicitar Info / Cita</button>
-              </div>
-            </div>
+            <button class="btn-submit">🔑 Ver Anuncio Completo</button>
           </div>
         </div>
 
         <!-- EMPLEO -->
-        <div class="card" data-cat="empleos">
+        <div class="card" data-cat="empleos" onclick="abrirDetalleAnuncio('Mesero / Mesera (Restaurante Metro)', '💵 $3/hr + Propinas y Comisiones', '📍 San Juan, PR', 'Buscamos meseros con buena presencia y excelente trato al cliente. Turnos rotativos y ambiente muy dinámico.', ['https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80'], 'empleos', 0)">
           <div class="card-img-container">
             <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80" alt="Restaurante Mesero" />
           </div>
@@ -575,38 +566,12 @@
             <h3 class="card-title">Mesero / Mesera (Restaurante Metro)</h3>
             <p class="card-salary">💵 $3/hr + Propinas y Comisiones</p>
             <p class="card-location">📍 San Juan, PR</p>
-            
-            <div class="action-buttons">
-              <button class="btn-quick-apply" onclick="aplicarUnClick('Mesero / Mesera')">⚡ Aplicar en 1 Click</button>
-              <div class="btn-row">
-                <button class="btn-secondary" onclick="abrirModal('modalContacto')">💬 Pregunta</button>
-                <button class="btn-submit" onclick="prepararPostulacion('Mesero / Mesera', '$3/hr + Propinas y Comisiones')">📝 Postularse</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- JARDINERÍA -->
-        <div class="card" data-cat="jardineria">
-          <div class="card-img-container">
-            <img src="https://images.unsplash.com/photo-1558904541-efa8c196b27d?auto=format&fit=crop&w=600&q=80" alt="Jardinería" />
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">Mantenimiento de Patios y Poda</h3>
-            <p class="card-price">Cotización Gratis</p>
-            <p class="card-location">📍 Carolina y Área Metro</p>
-            
-            <div class="action-buttons">
-              <div class="btn-row">
-                <button class="btn-secondary" onclick="abrirModal('modalContacto')">💬 Mensaje</button>
-                <button class="btn-submit" onclick="prepararContactoServicio('Mantenimiento de Patios')">🤝 Solicitar Servicio</button>
-              </div>
-            </div>
+            <button class="btn-submit">📝 Ver Anuncio Completo</button>
           </div>
         </div>
 
         <!-- PRODUCTO LOCAL "DE AQUÍ" (Con Ofertas) -->
-        <div class="card" data-cat="de-aqui">
+        <div class="card" data-cat="de-aqui" onclick="abrirDetalleAnuncio('Café Artesanal de Jayuya (1 lb)', '$12.00', '📍 Jayuya, PR', 'Café 100% puro cosechado en la cordillera central. Tueste medio, notas chocolate y avellana. Envíos a todo Puerto Rico.', ['https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=800&q=80'], 'de-aqui', 12.00)">
           <div class="card-img-container">
             <span class="badge-de-aqui-floating">🇵🇷 100% De Aquí</span>
             <img src="https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=600&q=80" alt="Café Artesanal" />
@@ -615,18 +580,12 @@
             <h3 class="card-title">Café Artesanal de Jayuya (1 lb)</h3>
             <p class="card-price">$12.00</p>
             <p class="card-location">📍 Jayuya, PR</p>
-            
-            <div class="action-buttons">
-              <div class="btn-row">
-                <button class="btn-secondary" onclick="abrirModal('modalContacto')">💬 Mensaje</button>
-                <button class="btn-submit" onclick="prepararPropuesta('Café Artesanal de Jayuya', 12.00)">🤝 Enviar Oferta</button>
-              </div>
-            </div>
+            <button class="btn-submit">🛍️ Ver Anuncio Completo</button>
           </div>
         </div>
 
         <!-- MASCOTAS -->
-        <div class="card" data-cat="mascotas">
+        <div class="card" data-cat="mascotas" onclick="abrirDetalleAnuncio('Perrito Rescatado en Adopción', 'Gratis (Adopción Responsable)', '📍 Ponce, PR', 'Cachorro de 4 meses vacunado y desparasitado. Busca un hogar amoroso.', ['https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80'], 'mascotas', 0)">
           <div class="card-img-container">
             <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=600&q=80" alt="Perro en Adopción" />
           </div>
@@ -634,18 +593,33 @@
             <h3 class="card-title">Perrito Rescatado en Adopción</h3>
             <p class="card-price" style="color: var(--brand-green-coqui);">Gratis (Adopción Responsable)</p>
             <p class="card-location">📍 Ponce, PR</p>
-            
-            <div class="action-buttons">
-              <div class="btn-row">
-                <button class="btn-secondary" style="width:100%" onclick="abrirModal('modalContacto')">🐾 Preguntar por Adopción</button>
-              </div>
-            </div>
+            <button class="btn-submit">🐾 Ver Anuncio Completo</button>
           </div>
         </div>
 
       </div>
     </main>
 
+  </div>
+
+  <!-- MODAL: Vista Detallada del Anuncio -->
+  <div class="modal-overlay" id="modalDetalle">
+    <div class="modal-content-large">
+      <div class="modal-header">
+        <h2 id="detalleTitulo">Título</h2>
+        <button class="close-btn" onclick="cerrarDetalleAnuncio()">&times;</button>
+      </div>
+      <p id="detallePrecio" style="font-size:1.3rem; font-weight:bold; color:var(--brand-terracotta);"></p>
+      <p id="detalleUbicacion" style="color:var(--text-muted); margin-bottom:12px;"></p>
+      
+      <p style="font-size:0.85rem; font-weight:bold; color:var(--text-muted);">📷 Haz clic en cualquier foto para verla en pantalla completa:</p>
+      <div class="detail-gallery" id="detalleGaleria"></div>
+
+      <h3 style="margin-top:15px; margin-bottom:6px;">Descripción del Anuncio</h3>
+      <p id="detalleDescripcion" style="line-height:1.6; margin-bottom:20px;"></p>
+
+      <div id="contenedorBotonAccion"></div>
+    </div>
   </div>
 
   <!-- MODAL: Mi Perfil / Resume -->
@@ -655,36 +629,23 @@
         <h2>📄 Mi Perfil Laboral / Resume</h2>
         <button class="close-btn" onclick="cerrarModal('modalPerfil')">&times;</button>
       </div>
-      <p style="font-size:0.85rem; color: var(--text-muted); margin-bottom: 15px;">
-        Guarda tu información para aplicar a empleos en <strong>1 Click</strong>.
-      </p>
-
       <form id="formPerfil" onsubmit="guardarPerfilEnBaseDeDatos(event)">
         <div class="form-group">
           <label for="perfilNombre">Nombre Completo</label>
           <input type="text" id="perfilNombre" placeholder="Ej. Juan Pérez" required />
         </div>
-
         <div class="form-group">
           <label for="perfilTelefono">Teléfono de Contacto</label>
           <input type="tel" id="perfilTelefono" placeholder="787-000-0000" required />
         </div>
-
         <div class="form-group">
           <label for="perfilEmail">Correo Electrónico</label>
           <input type="email" id="perfilEmail" placeholder="juan.perez@email.com" required />
         </div>
-
         <div class="form-group">
           <label for="perfilExperiencia">Resumen de Experiencia Laboral</label>
-          <textarea id="perfilExperiencia" rows="3" placeholder="Ej. Experiencia como mesero, servicio al cliente..." required></textarea>
+          <textarea id="perfilExperiencia" rows="3" placeholder="Experiencia como mesero..." required></textarea>
         </div>
-
-        <div class="form-group">
-          <label for="perfilArchivo">Subir Resume (PDF o WORD)</label>
-          <input type="file" id="perfilArchivo" accept=".pdf,.doc,.docx" />
-        </div>
-
         <button type="submit" class="btn-submit">💾 Guardar mi Resume</button>
       </form>
     </div>
@@ -697,122 +658,24 @@
         <h2>🔑 Contactar por Propiedad</h2>
         <button class="close-btn" onclick="cerrarModal('modalBienesRaices')">&times;</button>
       </div>
-      
       <form id="formBienesRaices" onsubmit="enviarContactoBR(event)">
         <p id="tituloPropiedadBR" style="font-weight: bold; color: var(--brand-green-coqui); margin-bottom: 12px;"></p>
-
         <div class="form-group">
           <label for="nombreBR">Tu Nombre</label>
           <input type="text" id="nombreBR" required placeholder="Tu nombre completo">
         </div>
-
         <div class="form-group">
           <label for="contactoBR">Teléfono o Correo</label>
           <input type="text" id="contactoBR" required placeholder="Ej. 787-000-0000">
         </div>
-
         <div class="form-group">
           <label for="motivoBR">¿Qué deseas solicitar?</label>
           <select id="motivoBR">
-            <option value="cita">📅 Agendar una cita para ver la propiedad</option>
-            <option value="requisitos">📋 Consultar requisitos de alquiler / compra</option>
-            <option value="disponibilidad">❓ Confirmar fecha de disponibilidad</option>
+            <option value="cita">📅 Agendar cita para ver la propiedad</option>
+            <option value="requisitos">📋 Requisitos de alquiler / compra</option>
           </select>
         </div>
-
-        <div class="form-group">
-          <label for="mensajeBR">Mensaje para el Dueño / Bienes Raíces:</label>
-          <textarea id="mensajeBR" rows="3" placeholder="Ej. Hola, estoy interesado en ver el apartamento este sábado..." required></textarea>
-        </div>
-
         <button type="submit" class="btn-submit">Enviar Solicitud Directa</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- MODAL: Postulación a Empleo -->
-  <div class="modal-overlay" id="modalPostulacion">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>Postularse al Empleo</h2>
-        <button class="close-btn" onclick="cerrarModal('modalPostulacion')">&times;</button>
-      </div>
-
-      <div class="profile-banner" id="bannerPerfilGuardado" style="display: none;">
-        ✨ <strong>Perfil Guardado Detectado:</strong> Datos rellenados automáticamente.
-      </div>
-
-      <form id="formPostulacion" onsubmit="enviarPostulacion(event)">
-        <p id="puestoTitulo" style="font-weight: bold; color: var(--brand-green-coqui); font-size:1.1rem;"></p>
-        <p id="puestoSalario" style="color: var(--brand-terracotta); font-weight: bold; margin-bottom: 15px;"></p>
-
-        <div class="form-group">
-          <label for="nombreCandidato">Nombre Completo</label>
-          <input type="text" id="nombreCandidato" required placeholder="Tu nombre y apellidos">
-        </div>
-
-        <div class="form-group">
-          <label for="contactoCandidato">Teléfono o Correo de Contacto</label>
-          <input type="text" id="contactoCandidato" required placeholder="Ej. 787-123-4567">
-        </div>
-
-        <div class="form-group">
-          <label for="disponibilidad">Disponibilidad de Horario</label>
-          <select id="disponibilidad" required>
-            <option value="inmediata">Inmediata (Tiempo Completo)</option>
-            <option value="parcial">Medio Tiempo / Turnos Parciales</option>
-            <option value="fines-de-semana">Solo Fines de Semana</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="experiencia">Experiencia / Mensaje</label>
-          <textarea id="experiencia" rows="3" placeholder="Describe por qué te interesa este trabajo..." required></textarea>
-        </div>
-
-        <button type="submit" class="btn-submit">Enviar Solicitud de Empleo</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- MODAL: Pregunta General -->
-  <div class="modal-overlay" id="modalContacto">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>Enviar Consulta Segura</h2>
-        <button class="close-btn" onclick="cerrarModal('modalContacto')">&times;</button>
-      </div>
-      
-      <form id="formContacto" onsubmit="enviarMensaje(event)">
-        <div class="form-group">
-          <label>¿Cómo deseas recibir la respuesta?</label>
-          <div class="radio-group">
-            <label class="radio-option">
-              <input type="radio" name="notificacion" value="whatsapp" checked>
-              <span>📱 WhatsApp</span>
-            </label>
-            <label class="radio-option">
-              <input type="radio" name="notificacion" value="sms">
-              <span>💬 Mensaje de Texto (SMS)</span>
-            </label>
-            <label class="radio-option">
-              <input type="radio" name="notificacion" value="email">
-              <span>✉️ Correo Electrónico</span>
-            </label>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="contactoCliente">Tu Teléfono o Email:</label>
-          <input type="text" id="contactoCliente" required placeholder="Ingresa tu número o email">
-        </div>
-
-        <div class="form-group">
-          <label for="mensaje">Consulta o Pregunta:</label>
-          <textarea id="mensaje" rows="3" placeholder="Escribe tu consulta aquí..." required></textarea>
-        </div>
-
-        <button type="submit" class="btn-submit">Enviar Consulta Segura</button>
       </form>
     </div>
   </div>
@@ -826,47 +689,30 @@
       </div>
       <form id="formPropuesta" onsubmit="enviarPropuesta(event)">
         <p id="propuestaArticulo" style="font-weight: bold; color: var(--brand-green-coqui); margin-bottom: 12px;"></p>
-        
         <div class="form-group">
-          <label for="descuentoSelect">Seleccionar Descuento u Oferta Directa</label>
+          <label for="descuentoSelect">Descuento Sugerido</label>
           <select id="descuentoSelect" onchange="calcularOferta()">
-            <option value="0">Precio original (Sin descuento)</option>
-            <option value="5">-5% de Descuento</option>
-            <option value="10">-10% de Descuento</option>
-            <option value="15">-15% de Descuento</option>
-            <option value="20">-20% de Descuento</option>
-            <option value="personalizado">Monto Personalizado</option>
+            <option value="0">Precio original</option>
+            <option value="5">-5% Descuento</option>
+            <option value="10">-10% Descuento</option>
+            <option value="15">-15% Descuento</option>
           </select>
         </div>
-
-        <div class="form-group" id="grupoOfertaMonto">
+        <div class="form-group">
           <label for="montoOferta">Monto Propuesto ($)</label>
-          <input type="number" id="montoOferta" step="0.01" placeholder="Monto sugerido" oninput="actualizarCalculoDesdeInput()">
+          <input type="number" id="montoOferta" step="0.01" oninput="actualizarCalculoDesdeInput()">
         </div>
-
-        <div class="calculated-box" id="cajaCalculo">
+        <div class="calculated-box">
           Propuesta Total: $<span id="resultadoOferta">0.00</span>
         </div>
-
-        <div class="form-group" style="margin-top: 15px;">
-          <label for="detallesPropuesta">Detalles o Términos de tu Oferta</label>
-          <textarea id="detallesPropuesta" rows="3" placeholder="Ej. Pago inmediato por ATH Móvil" required></textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="contactoPropuesta">Tu Contacto:</label>
-          <input type="text" id="contactoPropuesta" required placeholder="Número o correo">
-        </div>
-
         <div class="form-group" style="margin-top:15px; border-top:1px solid var(--border-color); padding-top:12px;">
-          <label>Métodos de Pago Disponibles:</label>
+          <label>Acepta Pagos Con:</label>
           <div class="payment-badges">
             <span class="badge-payment badge-card">💳 Tarjeta</span>
             <span class="badge-payment badge-klarna">Klarna</span>
             <span class="badge-payment badge-ath">ATH Móvil</span>
           </div>
         </div>
-
         <button type="submit" class="btn-submit">Enviar Propuesta Formal</button>
       </form>
     </div>
@@ -881,52 +727,35 @@
       </div>
       <form id="formPublicar" onsubmit="guardarAnuncio(event)">
         <div class="form-group">
-          <label for="categoria">Categoría / Departamento</label>
-          <select id="categoria" name="categoria" onchange="cambiarFormularioPorCategoria()" required>
-            <option value="bienes-raices">🏠 Bienes Raíces (Alquiler / Venta)</option>
-            <option value="clasificados">Clasificados Generales</option>
-            <option value="de-aqui">🇵🇷 De Aquí (Productos / Negocios Locales)</option>
-            <option value="empleos">Empleos Directos</option>
-            <option value="agricola">Mercado Agrícola Local</option>
-            <option value="jardineria">🌱 Jardinería y Patios</option>
-            <option value="talleres">🔧 Talleres y Mecánica</option>
-            <option value="actividades">🎉 Actividades y Eventos</option>
-            <option value="mascotas">🐾 Adopción Gratis de Mascotas</option>
-            <option value="vehiculos">🚗 Vehículos y Piezas</option>
+          <label for="categoria">Categoría</label>
+          <select id="categoria" required>
+            <option value="bienes-raices">🏠 Bienes Raíces</option>
+            <option value="clasificados">📦 Clasificados Generales</option>
+            <option value="de-aqui">🇵🇷 De Aquí (Productos Locales)</option>
+            <option value="empleos">💼 Empleos Directos</option>
           </select>
         </div>
-
         <div class="form-group">
           <label for="titulo">Título de la Publicación</label>
-          <input type="text" id="titulo" placeholder="Ej. Apartamento / Mesero / Café" required />
+          <input type="text" id="titulo" placeholder="Ej. Apartamento / Café" required />
         </div>
-
-        <div class="form-group" id="grupoSalario" style="display: none;">
-          <label for="salario">Salario / Compensación (Obligatorio)</label>
-          <input type="text" id="salario" placeholder="Ej. $3/hr + propinas" />
-        </div>
-
-        <div class="form-group" id="grupoPrecio">
-          <label for="precio">Precio ($)</label>
-          <input type="number" id="precio" step="0.01" placeholder="0.00" />
-        </div>
-
         <div class="form-group">
           <label for="pueblo">Pueblo / Municipio</label>
-          <input type="text" id="pueblo" placeholder="Ej. Mayagüez, Ponce, San Juan" required />
+          <input type="text" id="pueblo" placeholder="Ej. Mayagüez" required />
         </div>
-
-        <div class="form-group">
-          <label for="descripcion">Descripción</label>
-          <textarea id="descripcion" rows="4" placeholder="Detalles del anuncio..."></textarea>
-        </div>
-
         <button type="submit" class="btn-submit">Publicar Anuncio</button>
       </form>
     </div>
   </div>
 
+  <!-- Viewer Pantalla Completa (Lightbox) -->
+  <div class="fullscreen-viewer" id="viewerPantallaCompleta" onclick="cerrarPantallaCompleta()">
+    <span class="close-fullscreen">&times;</span>
+    <img id="imgPantallaCompleta" src="" alt="Pantalla Completa">
+  </div>
+
   <script>
+    let posicionScrollGuardada = 0;
     let precioOriginalGlobal = 0;
     let perfilUsuario = null;
 
@@ -938,66 +767,63 @@
       document.getElementById(id).classList.remove('active');
     }
 
-    function filtrar(categoria, elemento) {
-      const btns = document.querySelectorAll('.category-item button');
-      btns.forEach(b => b.classList.remove('active'));
-      elemento.classList.add('active');
-
-      const titulo = document.getElementById('tituloCategoria');
-      titulo.innerText = 'Explorando: ' + elemento.innerText.trim();
-
-      const tarjetas = document.querySelectorAll('.card');
-      tarjetas.forEach(t => {
-        if (categoria === 'todos' || t.dataset.cat === categoria) {
-          t.style.display = 'flex';
-        } else {
-          t.style.display = 'none';
-        }
+    function filtrar(cat, el) {
+      document.querySelectorAll('.category-item button').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+      document.querySelectorAll('.card').forEach(c => {
+        c.style.display = (cat === 'todos' || c.dataset.cat === cat) ? 'flex' : 'none';
       });
+    }
+
+    function abrirDetalleAnuncio(titulo, precio, ubicacion, descripcion, fotos, categoria, precioNum) {
+      posicionScrollGuardada = window.scrollY;
+
+      document.getElementById('detalleTitulo').innerText = titulo;
+      document.getElementById('detallePrecio').innerText = precio;
+      document.getElementById('detalleUbicacion').innerText = ubicacion;
+      document.getElementById('detalleDescripcion').innerText = descripcion;
+
+      const galeria = document.getElementById('detalleGaleria');
+      galeria.innerHTML = '';
+      fotos.forEach(url => {
+        const img = document.createElement('img');
+        img.src = url;
+        img.onclick = (e) => {
+          e.stopPropagation();
+          abrirPantallaCompleta(url);
+        };
+        galeria.appendChild(img);
+      });
+
+      const btnAccion = document.getElementById('contenedorBotonAccion');
+      if (categoria === 'bienes-raices') {
+        btnAccion.innerHTML = `<button class="btn-submit" onclick="cerrarDetalleAnuncio(); prepararContactoBienesRaices('${titulo}')">🔑 Contactar por esta Propiedad</button>`;
+      } else if (categoria === 'empleos') {
+        btnAccion.innerHTML = `<button class="btn-submit" onclick="cerrarDetalleAnuncio(); abrirModal('modalPerfil')">📝 Postularse a este Empleo</button>`;
+      } else {
+        btnAccion.innerHTML = `<button class="btn-submit" onclick="cerrarDetalleAnuncio(); prepararPropuesta('${titulo}', ${precioNum})">🤝 Enviar Oferta / Hacer Propuesta</button>`;
+      }
+
+      document.getElementById('modalDetalle').classList.add('active');
+    }
+
+    function cerrarDetalleAnuncio() {
+      document.getElementById('modalDetalle').classList.remove('active');
+      window.scrollTo(0, posicionScrollGuardada);
+    }
+
+    function abrirPantallaCompleta(url) {
+      document.getElementById('imgPantallaCompleta').src = url;
+      document.getElementById('viewerPantallaCompleta').classList.add('active');
+    }
+
+    function cerrarPantallaCompleta() {
+      document.getElementById('viewerPantallaCompleta').classList.remove('active');
     }
 
     function prepararContactoBienesRaices(titulo) {
       document.getElementById('tituloPropiedadBR').innerText = 'Propiedad: ' + titulo;
       abrirModal('modalBienesRaices');
-    }
-
-    function enviarContactoBR(e) {
-      e.preventDefault();
-      alert('¡Tu solicitud sobre la propiedad ha sido enviada al arrendador / vendedor!');
-      cerrarModal('modalBienesRaices');
-    }
-
-    function guardarPerfilEnBaseDeDatos(e) {
-      e.preventDefault();
-      perfilUsuario = {
-        nombre: document.getElementById('perfilNombre').value,
-        telefono: document.getElementById('perfilTelefono').value,
-        email: document.getElementById('perfilEmail').value,
-        experiencia: document.getElementById('perfilExperiencia').value
-      };
-      alert('¡Perfil y Resume guardados exitosamente!');
-      cerrarModal('modalPerfil');
-    }
-
-    function aplicarUnClick(puesto) {
-      if (!perfilUsuario) {
-        alert('Por favor guarda tu perfil primero.');
-        abrirModal('modalPerfil');
-        return;
-      }
-      alert(`⚡ ¡Postulación enviada en 1 Click para "${puesto}"!`);
-    }
-
-    function prepararPostulacion(puesto, salario) {
-      document.getElementById('puestoTitulo').innerText = 'Puesto: ' + puesto;
-      document.getElementById('puestoSalario').innerText = 'Salario: ' + salario;
-      if (perfilUsuario) {
-        document.getElementById('bannerPerfilGuardado').style.display = 'block';
-        document.getElementById('nombreCandidato').value = perfilUsuario.nombre;
-        document.getElementById('contactoCandidato').value = perfilUsuario.telefono || perfilUsuario.email;
-        document.getElementById('experiencia').value = perfilUsuario.experiencia;
-      }
-      abrirModal('modalPostulacion');
     }
 
     function prepararPropuesta(titulo, precio) {
@@ -1009,15 +835,9 @@
     }
 
     function calcularOferta() {
-      const descuento = document.getElementById('descuentoSelect').value;
-      const inputMonto = document.getElementById('montoOferta');
-      if (descuento === 'personalizado') {
-        inputMonto.focus();
-        return;
-      }
-      const porcentaje = parseFloat(descuento) || 0;
-      const precioFinal = precioOriginalGlobal * (1 - porcentaje / 100);
-      inputMonto.value = precioFinal.toFixed(2);
+      const descuento = parseFloat(document.getElementById('descuentoSelect').value) || 0;
+      const precioFinal = precioOriginalGlobal * (1 - descuento / 100);
+      document.getElementById('montoOferta').value = precioFinal.toFixed(2);
       document.getElementById('resultadoOferta').innerText = precioFinal.toFixed(2);
     }
 
@@ -1026,42 +846,28 @@
       document.getElementById('resultadoOferta').innerText = valor.toFixed(2);
     }
 
-    function cambiarFormularioPorCategoria() {
-      const cat = document.getElementById('categoria').value;
-      const grupoSalario = document.getElementById('grupoSalario');
-      const grupoPrecio = document.getElementById('grupoPrecio');
+    function guardarPerfilEnBaseDeDatos(e) {
+      e.preventDefault();
+      alert('¡Perfil y Resume guardados exitosamente!');
+      cerrarModal('modalPerfil');
+    }
 
-      if (cat === 'empleos') {
-        grupoSalario.style.display = 'block';
-        grupoPrecio.style.display = 'none';
-      } else {
-        grupoSalario.style.display = 'none';
-        grupoPrecio.style.display = 'block';
-      }
+    function enviarContactoBR(e) {
+      e.preventDefault();
+      alert('¡Tu solicitud sobre la propiedad ha sido enviada!');
+      cerrarModal('modalBienesRaices');
+    }
+
+    function enviarPropuesta(e) {
+      e.preventDefault();
+      alert('Oferta enviada exitosamente.');
+      cerrarModal('modalPropuesta');
     }
 
     function guardarAnuncio(e) {
       e.preventDefault();
       alert('¡Anuncio publicado exitosamente!');
       cerrarModal('modalPublicar');
-    }
-
-    function enviarMensaje(e) {
-      e.preventDefault();
-      alert('Tu consulta ha sido enviada.');
-      cerrarModal('modalContacto');
-    }
-
-    function enviarPropuesta(e) {
-      e.preventDefault();
-      alert('Oferta enviada.');
-      cerrarModal('modalPropuesta');
-    }
-
-    function enviarPostulacion(e) {
-      e.preventDefault();
-      alert('Solicitud enviada.');
-      cerrarModal('modalPostulacion');
     }
   </script>
 </body>
