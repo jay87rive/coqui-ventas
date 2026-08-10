@@ -358,20 +358,20 @@
 
     <!-- Lista de Anuncios -->
     <div class="grid-ads" id="gridAnuncios">
-      <!-- Ejemplo de Empleo -->
+      <!-- Tarjeta de Empleo -->
       <div class="card">
         <div class="card-content">
           <h3 class="card-title">Mesero / Mesera</h3>
           <p class="card-salary">💵 $3/hr + Propinas y Comisiones</p>
           <p class="card-location">📍 San Juan, PR</p>
           <div class="action-buttons">
-            <button class="btn-secondary" onclick="abrirModal('modalContacto')">💬 Mensaje</button>
-            <button class="btn-submit" onclick="prepararPropuesta('Mesero / Mesera', 0)">📝 Postularse</button>
+            <button class="btn-secondary" onclick="abrirModal('modalContacto')">💬 Pregunta</button>
+            <button class="btn-submit" onclick="prepararPostulacion('Mesero / Mesera', '$3/hr + Propinas y Comisiones')">📝 Postularse</button>
           </div>
         </div>
       </div>
 
-      <!-- Ejemplo de producto local "De Aquí" -->
+      <!-- Tarjeta de Producto Local "De Aquí" -->
       <div class="card badge-de-aqui-border">
         <div class="card-content">
           <span class="badge-de-aqui">🇵🇷 100% De Aquí</span>
@@ -424,16 +424,7 @@
 
         <div class="form-group">
           <label for="mensaje">Consulta o Pregunta:</label>
-          <textarea id="mensaje" rows="3" placeholder="Ej. ¿Todavía está disponible? / ¿En qué horario se puede pasar a buscar?" required></textarea>
-        </div>
-
-        <div class="form-group" style="margin-top:20px; border-top:1px solid var(--border-color); padding-top:15px;">
-          <label>Métodos de Pago Aceptados:</label>
-          <div class="payment-badges">
-            <span class="badge-payment badge-card">💳 Tarjeta Débito / Crédito</span>
-            <span class="badge-payment badge-klarna">Klarna (Paga en 4)</span>
-            <span class="badge-payment badge-ath">ATH Móvil</span>
-          </div>
+          <textarea id="mensaje" rows="3" placeholder="Ej. ¿Aún está disponible la plaza / producto?" required></textarea>
         </div>
 
         <button type="submit" class="btn-submit">Enviar Mensaje Seguro</button>
@@ -441,7 +432,7 @@
     </div>
   </div>
 
-  <!-- MODAL 2: Propuesta / Oferta -->
+  <!-- MODAL 2: Oferta / Propuesta para Compras y Ventas -->
   <div class="modal-overlay" id="modalPropuesta">
     <div class="modal-content">
       <div class="modal-header">
@@ -464,7 +455,7 @@
         </div>
 
         <div class="form-group" id="grupoOfertaMonto">
-          <label for="montoOferta">Monto Propuesto ($ / salario / pago)</label>
+          <label for="montoOferta">Monto Propuesto ($)</label>
           <input type="number" id="montoOferta" step="0.01" placeholder="Monto sugerido" oninput="actualizarCalculoDesdeInput()">
         </div>
 
@@ -473,8 +464,8 @@
         </div>
 
         <div class="form-group" style="margin-top: 15px;">
-          <label for="detallesPropuesta">Detalles o Términos de tu Propuesta</label>
-          <textarea id="detallesPropuesta" rows="3" placeholder="Ej. Te pago hoy mismo en efectivo / Disponible para comenzar de inmediato" required></textarea>
+          <label for="detallesPropuesta">Detalles o Términos de tu Oferta</label>
+          <textarea id="detallesPropuesta" rows="3" placeholder="Ej. Te pago hoy mismo en efectivo" required></textarea>
         </div>
 
         <div class="form-group">
@@ -514,7 +505,66 @@
     </div>
   </div>
 
-  <!-- MODAL 3: Publicar Anuncio -->
+  <!-- MODAL 3: Postulación a Empleo (Sección Exclusiva de Empleos) -->
+  <div class="modal-overlay" id="modalPostulacion">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Postularse al Empleo</h2>
+        <button class="close-btn" onclick="cerrarModal('modalPostulacion')">&times;</button>
+      </div>
+      <form id="formPostulacion" onsubmit="enviarPostulacion(event)">
+        <p id="puestoTitulo" style="font-weight: bold; color: var(--brand-green-coqui); font-size:1.1rem;"></p>
+        <p id="puestoSalario" style="color: var(--brand-terracotta); font-weight: bold; margin-bottom: 15px;"></p>
+
+        <div class="form-group">
+          <label for="nombreCandidato">Nombre Completo</label>
+          <input type="text" id="nombreCandidato" required placeholder="Tu nombre y apellidos">
+        </div>
+
+        <div class="form-group">
+          <label for="contactoCandidato">Teléfono o Correo de Contacto</label>
+          <input type="text" id="contactoCandidato" required placeholder="Ej. 787-123-4567 o email@ejemplo.com">
+        </div>
+
+        <div class="form-group">
+          <label for="disponibilidad">Disponibilidad de Horario</label>
+          <select id="disponibilidad" required>
+            <option value="inmediata">Inmediata (Tiempo Completo)</option>
+            <option value="parcial">Medio Tiempo / Turnos Parciales</option>
+            <option value="fines-de-semana">Solo Fines de Semana</option>
+            <option value="noches">Turno Nocturno</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="experiencia">Resumen de Experiencia / Mensaje para el Patrono</label>
+          <textarea id="experiencia" rows="4" placeholder="Describe brevemente tu experiencia laboral previa relevante..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Canal Preferido para Entrevista o Respuesta:</label>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="notifEmpleo" value="whatsapp" checked>
+              <span>📱 WhatsApp</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="notifEmpleo" value="sms">
+              <span>💬 SMS</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="notifEmpleo" value="email">
+              <span>✉️ Email</span>
+            </label>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit">Enviar Solicitud de Empleo</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 4: Publicar Anuncio -->
   <div class="modal-overlay" id="modalPublicar">
     <div class="modal-content">
       <div class="modal-header">
@@ -575,6 +625,7 @@
       document.getElementById(id).classList.remove('active');
     }
 
+    /* Preparar Modal de Oferta (Productos) */
     function prepararPropuesta(titulo, precio) {
       precioOriginalGlobal = parseFloat(precio) || 0;
       document.getElementById('propuestaArticulo').innerText = 'Propuesta para: ' + titulo;
@@ -582,6 +633,13 @@
       document.getElementById('montoOferta').value = precioOriginalGlobal;
       document.getElementById('resultadoOferta').innerText = precioOriginalGlobal.toFixed(2);
       abrirModal('modalPropuesta');
+    }
+
+    /* Preparar Modal Exclusivo de Empleo (Postulación) */
+    function prepararPostulacion(puesto, salario) {
+      document.getElementById('puestoTitulo').innerText = 'Puesto: ' + puesto;
+      document.getElementById('puestoSalario').innerText = 'Salario publicado: ' + salario;
+      abrirModal('modalPostulacion');
     }
 
     function calcularOferta() {
@@ -636,7 +694,7 @@
 
     function enviarMensaje(e) {
       e.preventDefault();
-      alert('Tu consulta ha sido enviada. El vendedor te responderá por el canal seleccionado sin exponer números directos.');
+      alert('Tu consulta ha sido enviada. Se te responderá por el canal seleccionado sin exponer números directos.');
       cerrarModal('modalContacto');
     }
 
@@ -645,6 +703,12 @@
       const monto = document.getElementById('montoOferta').value;
       alert('Tu propuesta por $' + monto + ' ha sido enviada al anunciante de forma segura.');
       cerrarModal('modalPropuesta');
+    }
+
+    function enviarPostulacion(e) {
+      e.preventDefault();
+      alert('¡Tu solicitud de empleo ha sido enviada con éxito al patrono!');
+      cerrarModal('modalPostulacion');
     }
   </script>
 </body>
