@@ -180,7 +180,7 @@
             font-weight: bold;
         }
 
-        /* Modal */
+        /* Modales */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0;
@@ -272,7 +272,7 @@
         </main>
     </div>
 
-    <!-- Modal con Formulario Directo -->
+    <!-- Modal con Formulario de Publicación -->
     <div class="modal-overlay" id="publishModal">
         <div class="modal-card">
             <button class="close-btn" onclick="cerrarModal()">&times;</button>
@@ -309,7 +309,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Foto (Selecciona 1 imagen ligera)</label>
+                    <label>Foto (Selecciona 1 imagen)</label>
                     <input type="file" id="fotos" accept="image/*">
                 </div>
 
@@ -346,7 +346,10 @@
             db.collection("ads").orderBy("createdAt", "desc").onSnapshot(snapshot => {
                 anunciosTotales = [];
                 snapshot.forEach(doc => {
-                    anunciosTotales.push({ id: doc.id, ...doc.data() });
+                    const data = doc.data();
+                    if (data.titulo) { // Ignora documentos vacíos
+                        anunciosTotales.push({ id: doc.id, ...data });
+                    }
                 });
                 renderizarTarjetas(anunciosTotales);
             }, error => {
@@ -380,7 +383,7 @@
                             <div class="card-location">${ad.ubicacion}</div>
                         </div>
                         <div class="card-footer">
-                            <button class="btn-block">Ver Detalle</button>
+                            <button class="btn-block" onclick='verDetalle("${encodeURIComponent(ad.titulo)}", "${encodeURIComponent(ad.precio)}", "${encodeURIComponent(ad.ubicacion)}", "${encodeURIComponent(ad.categoria)}", "${encodeURIComponent(ad.descripcion || "Sin descripción")}", "${encodeURIComponent(foto)}")'>Ver Detalle</button>
                         </div>
                     </article>
                 `;
@@ -449,6 +452,29 @@
                 btn.innerText = 'Publicar Anuncio';
                 btn.disabled = false;
             }
+        }
+
+        function verDetalle(titulo, precio, ubicacion, categoria, descripcion, foto) {
+            const modalHTML = `
+                <div class="modal-overlay active" id="modalDetalle" onclick="if(event.target === this) cerrarDetalle()">
+                    <div class="modal-card">
+                        <button class="close-btn" onclick="cerrarDetalle()">&times;</button>
+                        <h2 style="margin-bottom: 1rem; color: var(--primary-color);">${decodeURIComponent(titulo)}</h2>
+                        <img src="${decodeURIComponent(foto)}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 6px; margin-bottom: 1rem;">
+                        <p style="font-size: 1.2rem; font-weight: bold; color: var(--primary-color); margin-bottom: 0.5rem;">${decodeURIComponent(precio)}</p>
+                        <p style="color: var(--gray); font-size: 0.9rem; margin-bottom: 0.5rem;">📍 <strong>Ubicación:</strong> ${decodeURIComponent(ubicacion)}</p>
+                        <p style="color: var(--gray); font-size: 0.9rem; margin-bottom: 1rem;">📂 <strong>Categoría:</strong> ${decodeURIComponent(categoria)}</p>
+                        <hr style="border: none; border-top: 1px solid var(--light-gray); margin-bottom: 1rem;">
+                        <p style="white-space: pre-wrap; font-size: 0.95rem;">${decodeURIComponent(descripcion)}</p>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+
+        function cerrarDetalle() {
+            const modal = document.getElementById('modalDetalle');
+            if (modal) modal.remove();
         }
 
         function abrirModal() { document.getElementById('publishModal').classList.add('active'); }
