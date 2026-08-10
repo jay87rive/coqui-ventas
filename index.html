@@ -59,7 +59,7 @@
 
     .nav-links {
       display: flex;
-      gap: 15px;
+      gap: 12px;
       align-items: center;
     }
 
@@ -76,6 +76,24 @@
 
     .btn-publicar:hover {
       background-color: #b04b27;
+    }
+
+    .btn-perfil {
+      background-color: rgba(255, 255, 255, 0.15);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      padding: 9px 16px;
+      border-radius: 20px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.9rem;
+    }
+
+    .btn-perfil:hover {
+      background-color: rgba(255, 255, 255, 0.25);
     }
 
     main {
@@ -121,7 +139,7 @@
     /* Grid de Anuncios */
     .grid-ads {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 20px;
     }
 
@@ -160,6 +178,9 @@
 
     .card-content {
       padding: 15px;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
     }
 
     .card-title {
@@ -177,12 +198,19 @@
     .card-location {
       font-size: 0.85rem;
       color: var(--text-muted);
+      margin-bottom: 12px;
     }
 
     .action-buttons {
       display: flex;
+      flex-direction: column;
       gap: 8px;
-      margin-top: 12px;
+      margin-top: auto;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 8px;
     }
 
     .btn-secondary {
@@ -195,6 +223,7 @@
       cursor: pointer;
       flex: 1;
       font-size: 0.85rem;
+      text-align: center;
     }
 
     .btn-submit {
@@ -208,6 +237,29 @@
       font-weight: bold;
       cursor: pointer;
       flex: 1;
+    }
+
+    .btn-quick-apply {
+      background: #E8F5E9;
+      color: var(--brand-green-coqui);
+      border: 1.5px dashed var(--brand-green-coqui);
+      padding: 9px 12px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-quick-apply:hover {
+      background: var(--brand-green-coqui);
+      color: white;
+      border-style: solid;
     }
 
     /* Modales */
@@ -229,7 +281,7 @@
     .modal-content {
       background: white;
       width: 100%;
-      max-width: 500px;
+      max-width: 520px;
       padding: 25px;
       border-radius: 16px;
       max-height: 90vh;
@@ -302,6 +354,15 @@
       margin-top: 4px;
     }
 
+    .profile-banner {
+      background: #eaf3ea;
+      border-left: 4px solid var(--brand-green-coqui);
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      margin-bottom: 16px;
+    }
+
     /* Badges de métodos de pago */
     .payment-badges {
       display: flex;
@@ -341,6 +402,7 @@
   <header>
     <div class="logo">🐸 Coquí Ventas</div>
     <div class="nav-links">
+      <button class="btn-perfil" onclick="abrirModal('modalPerfil')">📄 Mi Resume / Perfil</button>
       <button class="btn-publicar" onclick="abrirModal('modalPublicar')">+ Publicar Anuncio</button>
     </div>
   </header>
@@ -358,53 +420,177 @@
 
     <!-- Lista de Anuncios -->
     <div class="grid-ads" id="gridAnuncios">
-      <!-- Tarjeta de Empleo -->
+      
+      <!-- Anuncio de Empleo -->
       <div class="card">
         <div class="card-content">
           <h3 class="card-title">Mesero / Mesera</h3>
           <p class="card-salary">💵 $3/hr + Propinas y Comisiones</p>
           <p class="card-location">📍 San Juan, PR</p>
+          
           <div class="action-buttons">
-            <button class="btn-secondary" onclick="abrirModal('modalContacto')">💬 Pregunta</button>
-            <button class="btn-submit" onclick="prepararPostulacion('Mesero / Mesera', '$3/hr + Propinas y Comisiones')">📝 Postularse</button>
+            <!-- Botón Aplicar en 1-Click (Solo si ya tiene resume guardado en DB) -->
+            <button class="btn-quick-apply" onclick="aplicarUnClick('Mesero / Mesera')">⚡ Aplicar en 1 Click</button>
+            
+            <div class="btn-row">
+              <button class="btn-secondary" onclick="abrirModal('modalContacto')">💬 Pregunta</button>
+              <button class="btn-submit" onclick="prepararPostulacion('Mesero / Mesera', '$3/hr + Propinas y Comisiones')">📝 Postularse</button>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Tarjeta de Producto Local "De Aquí" -->
+      <!-- Anuncio Producto Local "De Aquí" -->
       <div class="card badge-de-aqui-border">
         <div class="card-content">
           <span class="badge-de-aqui">🇵🇷 100% De Aquí</span>
           <h3 class="card-title">Café Artesanal de Jayuya</h3>
           <p class="card-price">$12.00</p>
           <p class="card-location">📍 Jayuya, PR</p>
+          
           <div class="action-buttons">
-            <button class="btn-secondary" onclick="abrirModal('modalContacto')">💬 Mensaje</button>
-            <button class="btn-submit" onclick="prepararPropuesta('Café Artesanal de Jayuya', 12.00)">🤝 Hacer Propuesta</button>
+            <div class="btn-row">
+              <button class="btn-secondary" onclick="abrirModal('modalContacto')">💬 Mensaje</button>
+              <button class="btn-submit" onclick="prepararPropuesta('Café Artesanal de Jayuya', 12.00)">🤝 Hacer Propuesta</button>
+            </div>
           </div>
         </div>
       </div>
+
     </div>
   </main>
 
-  <!-- MODAL 1: Mensaje General -->
+  <!-- MODAL: Mi Perfil / Guardar Resume en Base de Datos -->
+  <div class="modal-overlay" id="modalPerfil">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>📄 Mi Perfil Laboral / Resume</h2>
+        <button class="close-btn" onclick="cerrarModal('modalPerfil')">&times;</button>
+      </div>
+      <p style="font-size:0.85rem; color: var(--text-muted); margin-bottom: 15px;">
+        Guarda tu información e historial en nuestra base de datos para que puedas aplicar a cualquier empleo en <strong>1 Click</strong>.
+      </p>
+
+      <form id="formPerfil" onsubmit="guardarPerfilEnBaseDeDatos(event)">
+        <div class="form-group">
+          <label for="perfilNombre">Nombre Completo</label>
+          <input type="text" id="perfilNombre" placeholder="Ej. Juan Pérez" required />
+        </div>
+
+        <div class="form-group">
+          <label for="perfilTelefono">Teléfono de Contacto</label>
+          <input type="tel" id="perfilTelefono" placeholder="787-000-0000" required />
+        </div>
+
+        <div class="form-group">
+          <label for="perfilEmail">Correo Electrónico</label>
+          <input type="email" id="perfilEmail" placeholder="juan.perez@email.com" required />
+        </div>
+
+        <div class="form-group">
+          <label for="perfilExperiencia">Resumen de Experiencia Laboral</label>
+          <textarea id="perfilExperiencia" rows="3" placeholder="Ej. 3 años de experiencia como mesero en servicio al cliente y caja..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="perfilArchivo">Subir Resume (PDF o WORD)</label>
+          <input type="file" id="perfilArchivo" accept=".pdf,.doc,.docx" />
+          <p class="field-hint">Formatos soportados: .pdf, .doc, .docx (Max 5MB)</p>
+        </div>
+
+        <button type="submit" class="btn-submit">💾 Guardar mi Resume en Coquí Ventas</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Postulación Estándar a Empleo (Con mensaje/resume personalizado) -->
+  <div class="modal-overlay" id="modalPostulacion">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Postularse al Empleo</h2>
+        <button class="close-btn" onclick="cerrarModal('modalPostulacion')">&times;</button>
+      </div>
+
+      <div class="profile-banner" id="bannerPerfilGuardado" style="display: none;">
+        ✨ <strong>Perfil Guardado Detectado:</strong> Hemos llenado previamente tus datos guardados en la plataforma.
+      </div>
+
+      <form id="formPostulacion" onsubmit="enviarPostulacion(event)">
+        <p id="puestoTitulo" style="font-weight: bold; color: var(--brand-green-coqui); font-size:1.1rem;"></p>
+        <p id="puestoSalario" style="color: var(--brand-terracotta); font-weight: bold; margin-bottom: 15px;"></p>
+
+        <div class="form-group">
+          <label for="nombreCandidato">Nombre Completo</label>
+          <input type="text" id="nombreCandidato" required placeholder="Tu nombre y apellidos">
+        </div>
+
+        <div class="form-group">
+          <label for="contactoCandidato">Teléfono o Correo de Contacto</label>
+          <input type="text" id="contactoCandidato" required placeholder="Ej. 787-123-4567 o email@ejemplo.com">
+        </div>
+
+        <div class="form-group">
+          <label for="disponibilidad">Disponibilidad de Horario</label>
+          <select id="disponibilidad" required>
+            <option value="inmediata">Inmediata (Tiempo Completo)</option>
+            <option value="parcial">Medio Tiempo / Turnos Parciales</option>
+            <option value="fines-de-semana">Solo Fines de Semana</option>
+            <option value="noches">Turno Nocturno</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="experiencia">Experiencia / Mensaje Personalizado para este Patrono</label>
+          <textarea id="experiencia" rows="3" placeholder="Describe por qué te interesa este trabajo en particular..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="adjuntoEspecifico">Adjuntar Nuevo Resume (Opcional)</label>
+          <input type="file" id="adjuntoEspecifico" accept=".pdf,.doc,.docx" />
+          <p class="field-hint">Si dejas este espacio en blanco, se enviará el resume guardado en tu perfil.</p>
+        </div>
+
+        <div class="form-group">
+          <label>Canal Preferido para Entrevista o Respuesta:</label>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="notifEmpleo" value="whatsapp" checked>
+              <span>📱 WhatsApp</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="notifEmpleo" value="sms">
+              <span>💬 SMS</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="notifEmpleo" value="email">
+              <span>✉️ Email</span>
+            </label>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit">Enviar Solicitud de Empleo</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Pregunta General / Mensaje -->
   <div class="modal-overlay" id="modalContacto">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>Enviar Mensaje</h2>
+        <h2>Enviar Consulta Segura</h2>
         <button class="close-btn" onclick="cerrarModal('modalContacto')">&times;</button>
       </div>
       <p style="font-size:0.85rem; color: var(--text-muted); margin-bottom: 15px;">
-        Haz una pregunta general sobre la publicación. Tu contacto se gestiona de forma segura a través de nuestra plataforma.
+        Haz una pregunta directa sin revelar tu número telefónico a terceros.
       </p>
       
       <form id="formContacto" onsubmit="enviarMensaje(event)">
         <div class="form-group">
-          <label>¿Cómo deseas recibir las respuestas?</label>
+          <label>¿Cómo deseas recibir la respuesta?</label>
           <div class="radio-group">
             <label class="radio-option">
               <input type="radio" name="notificacion" value="whatsapp" checked>
-              <span>📱 WhatsApp (Servicio seguro vía Coquí Ventas)</span>
+              <span>📱 WhatsApp (Canal Seguro Coquí Ventas)</span>
             </label>
             <label class="radio-option">
               <input type="radio" name="notificacion" value="sms">
@@ -424,19 +610,19 @@
 
         <div class="form-group">
           <label for="mensaje">Consulta o Pregunta:</label>
-          <textarea id="mensaje" rows="3" placeholder="Ej. ¿Aún está disponible la plaza / producto?" required></textarea>
+          <textarea id="mensaje" rows="3" placeholder="Ej. ¿Tienen vacantes disponibles para turno nocturno?" required></textarea>
         </div>
 
-        <button type="submit" class="btn-submit">Enviar Mensaje Seguro</button>
+        <button type="submit" class="btn-submit">Enviar Consulta Segura</button>
       </form>
     </div>
   </div>
 
-  <!-- MODAL 2: Oferta / Propuesta para Compras y Ventas -->
+  <!-- MODAL: Oferta / Propuesta para Productos -->
   <div class="modal-overlay" id="modalPropuesta">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>Enviar Propuesta / Oferta</h2>
+        <h2>Enviar Propuesta de Compra</h2>
         <button class="close-btn" onclick="cerrarModal('modalPropuesta')">&times;</button>
       </div>
       <form id="formPropuesta" onsubmit="enviarPropuesta(event)">
@@ -465,25 +651,7 @@
 
         <div class="form-group" style="margin-top: 15px;">
           <label for="detallesPropuesta">Detalles o Términos de tu Oferta</label>
-          <textarea id="detallesPropuesta" rows="3" placeholder="Ej. Te pago hoy mismo en efectivo" required></textarea>
-        </div>
-
-        <div class="form-group">
-          <label>Canal Preferido para Recibir Respuesta:</label>
-          <div class="radio-group">
-            <label class="radio-option">
-              <input type="radio" name="notifPropuesta" value="whatsapp" checked>
-              <span>📱 WhatsApp</span>
-            </label>
-            <label class="radio-option">
-              <input type="radio" name="notifPropuesta" value="sms">
-              <span>💬 SMS</span>
-            </label>
-            <label class="radio-option">
-              <input type="radio" name="notifPropuesta" value="email">
-              <span>✉️ Email</span>
-            </label>
-          </div>
+          <textarea id="detallesPropuesta" rows="3" placeholder="Ej. Pago inmediato por ATH Móvil" required></textarea>
         </div>
 
         <div class="form-group">
@@ -505,70 +673,11 @@
     </div>
   </div>
 
-  <!-- MODAL 3: Postulación a Empleo (Sección Exclusiva de Empleos) -->
-  <div class="modal-overlay" id="modalPostulacion">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>Postularse al Empleo</h2>
-        <button class="close-btn" onclick="cerrarModal('modalPostulacion')">&times;</button>
-      </div>
-      <form id="formPostulacion" onsubmit="enviarPostulacion(event)">
-        <p id="puestoTitulo" style="font-weight: bold; color: var(--brand-green-coqui); font-size:1.1rem;"></p>
-        <p id="puestoSalario" style="color: var(--brand-terracotta); font-weight: bold; margin-bottom: 15px;"></p>
-
-        <div class="form-group">
-          <label for="nombreCandidato">Nombre Completo</label>
-          <input type="text" id="nombreCandidato" required placeholder="Tu nombre y apellidos">
-        </div>
-
-        <div class="form-group">
-          <label for="contactoCandidato">Teléfono o Correo de Contacto</label>
-          <input type="text" id="contactoCandidato" required placeholder="Ej. 787-123-4567 o email@ejemplo.com">
-        </div>
-
-        <div class="form-group">
-          <label for="disponibilidad">Disponibilidad de Horario</label>
-          <select id="disponibilidad" required>
-            <option value="inmediata">Inmediata (Tiempo Completo)</option>
-            <option value="parcial">Medio Tiempo / Turnos Parciales</option>
-            <option value="fines-de-semana">Solo Fines de Semana</option>
-            <option value="noches">Turno Nocturno</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="experiencia">Resumen de Experiencia / Mensaje para el Patrono</label>
-          <textarea id="experiencia" rows="4" placeholder="Describe brevemente tu experiencia laboral previa relevante..." required></textarea>
-        </div>
-
-        <div class="form-group">
-          <label>Canal Preferido para Entrevista o Respuesta:</label>
-          <div class="radio-group">
-            <label class="radio-option">
-              <input type="radio" name="notifEmpleo" value="whatsapp" checked>
-              <span>📱 WhatsApp</span>
-            </label>
-            <label class="radio-option">
-              <input type="radio" name="notifEmpleo" value="sms">
-              <span>💬 SMS</span>
-            </label>
-            <label class="radio-option">
-              <input type="radio" name="notifEmpleo" value="email">
-              <span>✉️ Email</span>
-            </label>
-          </div>
-        </div>
-
-        <button type="submit" class="btn-submit">Enviar Solicitud de Empleo</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- MODAL 4: Publicar Anuncio -->
+  <!-- MODAL: Publicar Anuncio -->
   <div class="modal-overlay" id="modalPublicar">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>Publicar en Coquí Ventas</h2>
+        <h2>Publicar Anuncio en Coquí Ventas</h2>
         <button class="close-btn" onclick="cerrarModal('modalPublicar')">&times;</button>
       </div>
       <form id="formPublicar" onsubmit="guardarAnuncio(event)">
@@ -589,9 +698,9 @@
         </div>
 
         <div class="form-group" id="grupoSalario" style="display: none;">
-          <label for="salario">Salario / Compensación (Requerido)</label>
+          <label for="salario">Salario / Compensación (Obligatorio)</label>
           <input type="text" id="salario" placeholder="Ej. $3/hr + propinas, ó $10.50/hr fijo" />
-          <p class="field-hint">Es obligatorio detallar el salario para ir directo al grano y evitar preguntas innecesarias.</p>
+          <p class="field-hint">Detallar el salario es obligatorio para evitar preguntas innecesarias y agilizar el proceso.</p>
         </div>
 
         <div class="form-group" id="grupoPrecio">
@@ -601,21 +710,24 @@
 
         <div class="form-group">
           <label for="pueblo">Pueblo / Municipio</label>
-          <input type="text" id="pueblo" placeholder="Ej. Ponce, Mayagüez, Carolina" required />
+          <input type="text" id="pueblo" placeholder="Ej. Ponce, Mayagüez, San Juan" required />
         </div>
 
         <div class="form-group">
           <label for="descripcion">Descripción</label>
-          <textarea id="descripcion" rows="4" placeholder="Detalles de la oferta o producto..."></textarea>
+          <textarea id="descripcion" rows="4" placeholder="Detalles del puesto o producto..."></textarea>
         </div>
 
-        <button type="submit" class="btn-submit">Publicar Ahora</button>
+        <button type="submit" class="btn-submit">Publicar Anuncio</button>
       </form>
     </div>
   </div>
 
   <script>
     let precioOriginalGlobal = 0;
+
+    // Simulación de Estado de Base de Datos de Perfil de Usuario
+    let perfilUsuario = null;
 
     function abrirModal(id) {
       document.getElementById(id).classList.add('active');
@@ -625,7 +737,54 @@
       document.getElementById(id).classList.remove('active');
     }
 
-    /* Preparar Modal de Oferta (Productos) */
+    /* Guardar datos del Candidato en Base de Datos */
+    function guardarPerfilEnBaseDeDatos(e) {
+      e.preventDefault();
+      perfilUsuario = {
+        nombre: document.getElementById('perfilNombre').value,
+        telefono: document.getElementById('perfilTelefono').value,
+        email: document.getElementById('perfilEmail').value,
+        experiencia: document.getElementById('perfilExperiencia').value,
+        tieneResumeSubido: document.getElementById('perfilArchivo').files.length > 0
+      };
+
+      alert('¡Perfil y Resume guardados exitosamente en la base de datos de Coquí Ventas!\nAhora puedes aplicar a empleos en 1 Click.');
+      cerrarModal('modalPerfil');
+    }
+
+    /* Aplicar en 1 Click */
+    function aplicarUnClick(puesto) {
+      if (!perfilUsuario) {
+        alert('Aún no tienes un Resume guardado en tu perfil.\nPor favor guarda tu perfil e historial laboral para habilitar la postulación en 1 Click.');
+        abrirModal('modalPerfil');
+        return;
+      }
+
+      const confirmacion = confirm(`¿Deseas enviar tu perfil guardado (${perfilUsuario.nombre}) para la plaza de "${puesto}"?`);
+      if (confirmacion) {
+        alert(`⚡ ¡Postulación enviada en 1 Click!\n\nEl patrono de la vacante "${puesto}" ha recibido tu resumen laboral (${perfilUsuario.email}) e historial.`);
+      }
+    }
+
+    /* Preparar Formulario Manual de Postulación */
+    function prepararPostulacion(puesto, salario) {
+      document.getElementById('puestoTitulo').innerText = 'Puesto: ' + puesto;
+      document.getElementById('puestoSalario').innerText = 'Salario publicado: ' + salario;
+
+      // Autorrellenar si el usuario ya tiene perfil en la base de datos
+      if (perfilUsuario) {
+        document.getElementById('bannerPerfilGuardado').style.display = 'block';
+        document.getElementById('nombreCandidato').value = perfilUsuario.nombre;
+        document.getElementById('contactoCandidato').value = perfilUsuario.telefono || perfilUsuario.email;
+        document.getElementById('experiencia').value = perfilUsuario.experiencia;
+      } else {
+        document.getElementById('bannerPerfilGuardado').style.display = 'none';
+      }
+
+      abrirModal('modalPostulacion');
+    }
+
+    /* Preparar Oferta para Productos */
     function prepararPropuesta(titulo, precio) {
       precioOriginalGlobal = parseFloat(precio) || 0;
       document.getElementById('propuestaArticulo').innerText = 'Propuesta para: ' + titulo;
@@ -633,13 +792,6 @@
       document.getElementById('montoOferta').value = precioOriginalGlobal;
       document.getElementById('resultadoOferta').innerText = precioOriginalGlobal.toFixed(2);
       abrirModal('modalPropuesta');
-    }
-
-    /* Preparar Modal Exclusivo de Empleo (Postulación) */
-    function prepararPostulacion(puesto, salario) {
-      document.getElementById('puestoTitulo').innerText = 'Puesto: ' + puesto;
-      document.getElementById('puestoSalario').innerText = 'Salario publicado: ' + salario;
-      abrirModal('modalPostulacion');
     }
 
     function calcularOferta() {
@@ -694,14 +846,14 @@
 
     function enviarMensaje(e) {
       e.preventDefault();
-      alert('Tu consulta ha sido enviada. Se te responderá por el canal seleccionado sin exponer números directos.');
+      alert('Tu consulta ha sido enviada. Se te responderá de forma segura.');
       cerrarModal('modalContacto');
     }
 
     function enviarPropuesta(e) {
       e.preventDefault();
       const monto = document.getElementById('montoOferta').value;
-      alert('Tu propuesta por $' + monto + ' ha sido enviada al anunciante de forma segura.');
+      alert('Tu propuesta por $' + monto + ' ha sido enviada al vendedor.');
       cerrarModal('modalPropuesta');
     }
 
