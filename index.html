@@ -151,33 +151,6 @@
             object-fit: cover;
         }
 
-        .img-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0,0,0,0.5);
-            color: white;
-            border: none;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .img-btn.prev { left: 8px; }
-        .img-btn.next { right: 8px; }
-
-        .img-counter {
-            position: absolute;
-            bottom: 8px;
-            right: 8px;
-            background: rgba(0,0,0,0.6);
-            color: white;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-        }
-
         .card-body {
             padding: 1rem;
             display: flex;
@@ -336,8 +309,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Fotos (Opcional, puedes elegir varias)</label>
-                    <input type="file" id="fotos" multiple accept="image/*">
+                    <label>Foto (Selecciona 1 imagen ligera)</label>
+                    <input type="file" id="fotos" accept="image/*">
                 </div>
 
                 <div class="form-group">
@@ -392,19 +365,14 @@
             }
 
             lista.forEach(ad => {
-                const fotos = ad.fotos && ad.fotos.length > 0 
-                    ? ad.fotos 
-                    : ['https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=500&q=80'];
+                const foto = (ad.fotos && ad.fotos.length > 0) 
+                    ? ad.fotos[0] 
+                    : 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=500&q=80';
 
                 const cardHTML = `
                     <article class="card">
-                        <div class="card-img-wrapper" id="wrapper-${ad.id}">
-                            <img src="${fotos[0]}" class="card-img" id="img-${ad.id}">
-                            ${fotos.length > 1 ? `
-                                <button class="img-btn prev" onclick="cambiarFoto('${ad.id}', -1)">‹</button>
-                                <button class="img-btn next" onclick="cambiarFoto('${ad.id}', 1)">›</button>
-                                <div class="img-counter" id="counter-${ad.id}">1 / ${fotos.length}</div>
-                            ` : ''}
+                        <div class="card-img-wrapper">
+                            <img src="${foto}" class="card-img">
                         </div>
                         <div class="card-body">
                             <h3 class="card-title">${ad.titulo}</h3>
@@ -417,30 +385,7 @@
                     </article>
                 `;
                 grid.innerHTML += cardHTML;
-                
-                setTimeout(() => {
-                    const el = document.getElementById(`wrapper-${ad.id}`);
-                    if (el) {
-                        el.dataset.fotos = JSON.stringify(fotos);
-                        el.dataset.index = 0;
-                    }
-                }, 50);
             });
-        }
-
-        function cambiarFoto(id, direccion) {
-            const wrapper = document.getElementById(`wrapper-${id}`);
-            if (!wrapper) return;
-            const fotos = JSON.parse(wrapper.dataset.fotos);
-            let currentIndex = parseInt(wrapper.dataset.index);
-
-            currentIndex += direccion;
-            if (currentIndex < 0) currentIndex = fotos.length - 1;
-            if (currentIndex >= fotos.length) currentIndex = 0;
-
-            wrapper.dataset.index = currentIndex;
-            document.getElementById(`img-${id}`).src = fotos[currentIndex];
-            document.getElementById(`counter-${id}`).innerText = `${currentIndex + 1} / ${fotos.length}`;
         }
 
         function filtrarCategoria(cat, elemento) {
@@ -467,18 +412,21 @@
             const precio = document.getElementById('precio').value;
             const ubicacion = document.getElementById('ubicacion').value;
             const descripcion = document.getElementById('descripcion').value;
-            const archivos = document.getElementById('fotos').files;
+            const archivoInput = document.getElementById('fotos');
 
             let fotosURLs = [];
 
             try {
-                for (let file of archivos) {
+                if (archivoInput.files && archivoInput.files[0]) {
+                    const file = archivoInput.files[0];
                     const base64 = await new Promise((resolve) => {
                         const reader = new FileReader();
-                        reader.onload = (e) => resolve(e.target.result);
+                        reader.onload = (evt) => resolve(evt.target.result);
                         reader.readAsDataURL(file);
                     });
                     fotosURLs.push(base64);
+                } else {
+                    fotosURLs.push('https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=500&q=80');
                 }
 
                 await db.collection("ads").add({
@@ -487,7 +435,7 @@
                     precio,
                     ubicacion,
                     descripcion,
-                    fotos: fotosURLs.length > 0 ? fotosURLs : ['https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=500&q=80'],
+                    fotos: fotosURLs,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
