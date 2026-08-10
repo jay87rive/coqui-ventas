@@ -1,562 +1,390 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Coquí Ventas - Mercado, Bienes Raíces y Empleos en Puerto Rico</title>
-  
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coquí Ventas - Mercado, Bienes Raíces y Empleos en Puerto Rico</title>
+    <style>
+        :root {
+            --primary-color: #1b4332;
+            --accent-color: #2d6a4f;
+            --bg-color: #f4f6f4;
+            --text-color: #212529;
+            --white: #ffffff;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+        }
 
-  <style>
-    :root {
-      --primary: #1b4332;
-      --primary-hover: #2d6a4f;
-      --accent: #d97706;
-      --accent-hover: #b45309;
-      --bg: #f8fafc;
-      --card-bg: #ffffff;
-      --text: #1e293b;
-      --text-muted: #64748b;
-      --border: #e2e8f0;
-    }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
 
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-    }
+        /* Header */
+        header {
+            background-color: var(--white);
+            border-bottom: 1px solid var(--light-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
 
-    header {
-      background-color: var(--primary);
-      color: white;
-      padding: 1rem 2rem;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
 
-    .nav-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
 
-    .logo {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: white;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
+        .btn {
+            background-color: var(--light-gray);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            color: var(--text-color);
+            transition: background 0.2s;
+        }
 
-    .nav-actions {
-      display: flex;
-      gap: 0.75rem;
-      align-items: center;
-    }
+        .btn:hover {
+            opacity: 0.85;
+        }
 
-    .btn-nav {
-      background: rgba(255, 255, 255, 0.15);
-      color: white;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.9rem;
-    }
+        .btn-primary {
+            background-color: #d4a373;
+            color: var(--white);
+        }
 
-    .btn-publish {
-      background-color: var(--accent);
-      color: white;
-      border: none;
-      padding: 0.5rem 1.25rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 700;
-      font-size: 0.9rem;
-    }
+        /* Layout Principal */
+        .main-container {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
 
-    .main-layout {
-      max-width: 1200px;
-      margin: 2rem auto;
-      padding: 0 1rem;
-      display: grid;
-      grid-template-columns: 260px 1fr;
-      gap: 2rem;
-    }
+        /* Sidebar Departamentos */
+        aside h3 {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            color: var(--gray);
+            margin-bottom: 1rem;
+        }
 
-    .sidebar {
-      background: var(--card-bg);
-      border-radius: 12px;
-      padding: 1.25rem;
-      border: 1px solid var(--border);
-      height: fit-content;
-    }
+        .department-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
 
-    .sidebar-title {
-      font-size: 0.8rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-muted);
-      margin-bottom: 1rem;
-    }
+        .dept-item {
+            background: transparent;
+            border: none;
+            text-align: left;
+            padding: 10px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            color: var(--text-color);
+            transition: background 0.2s;
+        }
 
-    .category-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-    }
+        .dept-item:hover, .dept-item.active {
+            background-color: #e2e8f0;
+            font-weight: bold;
+        }
 
-    .category-item {
-      padding: 0.65rem 0.85rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 500;
-      color: var(--text);
-      transition: background 0.2s;
-    }
+        .dept-item.highlight {
+            background-color: #fef3c7;
+        }
 
-    .category-item:hover, .category-item.active {
-      background-color: #e8f5e9;
-      color: var(--primary);
-      font-weight: 600;
-    }
+        /* Contenido Principal */
+        .content-area h2 {
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
 
-    .category-item.local {
-      background-color: #fef3c7;
-      color: #92400e;
-    }
+        .ads-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
 
-    .feed-header {
-      margin-bottom: 1.5rem;
-    }
+        .ad-card {
+            background: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--light-gray);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            display: flex;
+            flex-direction: column;
+        }
 
-    .cards-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 1.5rem;
-    }
+        .ad-img-placeholder {
+            height: 160px;
+            background-color: #cbd5e1;
+        }
 
-    /* Galería en Tarjeta */
-    .card {
-      background: var(--card-bg);
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      position: relative;
-    }
+        .ad-body {
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex-grow: 1;
+        }
 
-    .card-img-wrapper {
-      position: relative;
-      width: 100%;
-      height: 220px;
-      background-color: #f1f5f9;
-    }
+        .ad-title {
+            font-size: 1.05rem;
+            font-weight: bold;
+        }
 
-    .card-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+        .ad-price {
+            font-size: 1.1rem;
+            color: var(--accent-color);
+            font-weight: bold;
+        }
 
-    .img-btn {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(0,0,0,0.5);
-      color: white;
-      border: none;
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-weight: bold;
-    }
+        .ad-location {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
 
-    .img-btn.prev { left: 8px; }
-    .img-btn.next { right: 8px; }
+        .ad-footer {
+            padding: 1rem;
+            border-top: 1px solid var(--light-gray);
+            background-color: #fafafa;
+        }
 
-    .img-counter {
-      position: absolute;
-      bottom: 8px;
-      right: 8px;
-      background: rgba(0,0,0,0.6);
-      color: white;
-      padding: 2px 8px;
-      border-radius: 12px;
-      font-size: 0.75rem;
-    }
+        .btn-block {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
 
-    .card-body {
-      padding: 1.25rem;
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-    }
+        .btn-block:hover {
+            background-color: var(--accent-color);
+        }
 
-    .card-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-    }
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+        }
 
-    .card-price {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--primary);
-      margin-bottom: 0.25rem;
-    }
+        .modal-overlay.active {
+            display: flex;
+        }
 
-    .card-location {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-bottom: 1.25rem;
-    }
+        .modal-card {
+            background: var(--white);
+            width: 100%;
+            max-width: 500px;
+            border-radius: 12px;
+            padding: 2rem;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
 
-    .btn-card {
-      margin-top: auto;
-      background-color: var(--primary);
-      color: white;
-      border: none;
-      padding: 0.65rem;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      width: 100%;
-      text-align: center;
-    }
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
 
-    /* Modales */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5);
-      z-index: 200;
-      justify-content: center;
-      align-items: center;
-    }
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
 
-    .modal-overlay.active { display: flex; }
+        .modal-desc {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+        }
 
-    .modal-content {
-      background: white;
-      padding: 2rem;
-      border-radius: 12px;
-      width: 100%;
-      max-width: 550px;
-      position: relative;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
+        /* Opciones de Publicación dentro del Modal */
+        .publish-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
 
-    .modal-close {
-      position: absolute;
-      top: 1rem; right: 1rem;
-      border: none; background: none;
-      font-size: 1.5rem; cursor: pointer;
-    }
+        .btn-option {
+            background: var(--bg-color);
+            border: 1px solid var(--light-gray);
+            padding: 12px 16px;
+            border-radius: 8px;
+            text-align: left;
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
 
-    .form-group {
-      margin-bottom: 1rem;
-    }
+        .btn-option:hover {
+            background-color: #e2e8f0;
+            border-color: var(--accent-color);
+        }
 
-    .form-group label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 0.4rem;
-      font-size: 0.9rem;
-    }
-
-    .form-group input, .form-group select, .form-group textarea {
-      width: 100%;
-      padding: 0.65rem;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 0.95rem;
-    }
-
-    .btn-submit {
-      width: 100%;
-      background: var(--accent);
-      color: white;
-      border: none;
-      padding: 0.75rem;
-      border-radius: 8px;
-      font-weight: 700;
-      cursor: pointer;
-      font-size: 1rem;
-    }
-
-    @media (max-width: 768px) {
-      .main-layout { grid-template-columns: 1fr; }
-    }
-  </style>
+        @media(max-width: 768px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
 
-  <header>
-    <div class="nav-container">
-      <a href="index.html" class="logo"><span>🐸</span> Coquí Ventas</a>
-      <div class="nav-actions">
-        <button class="btn-nav" onclick="abrirModal('modalResume')">👤 Mi Resume</button>
-        <a href="empleador.html" class="btn-nav">💼 Panel Empleador</a>
-        <button class="btn-publish" onclick="abrirModal('modalPublicar')">+ Publicar</button>
-      </div>
+    <!-- Header -->
+    <header>
+        <div class="logo-area">
+            🐸 Coquí Ventas
+        </div>
+        <div class="header-actions">
+            <button class="btn">Mi Resume</button>
+            <button class="btn">Panel Empleador</button>
+            <button class="btn btn-primary" id="openModalBtn">+ Publicar</button>
+        </div>
+    </header>
+
+    <!-- Contenido Principal -->
+    <div class="main-container">
+        <aside>
+            <h3>Departamentos</h3>
+            <div class="department-list">
+                <button class="dept-item active">Todos los Anuncios</button>
+                <button class="dept-item highlight">De Aquí (Local)</button>
+                <button class="dept-item">Bienes Raíces</button>
+                <button class="dept-item">Empleos Directos</button>
+                <button class="dept-item">Autos y Vehículos</button>
+                <button class="dept-item">Electrónica y Equipos</button>
+                <button class="dept-item">Hogar y Muebles</button>
+                <button class="dept-item">Servicios Profesionales</button>
+                <button class="dept-item">Adopción de Mascotas</button>
+            </div>
+        </aside>
+
+        <main class="content-area">
+            <h2>Explorando Anuncios</h2>
+            <div class="ads-grid">
+                <!-- Tarjeta Ejemplo 1 -->
+                <div class="ad-card">
+                    <div class="ad-img-placeholder"></div>
+                    <div class="ad-body">
+                        <div class="ad-title">Apartamento Moderno (2 Cuartos)</div>
+                        <div class="ad-price">$850 / mes</div>
+                        <div class="ad-location">Mayagüez, PR</div>
+                    </div>
+                    <div class="ad-footer">
+                        <button class="btn-block">Ver Propiedad</button>
+                    </div>
+                </div>
+
+                <!-- Tarjeta Ejemplo 2 -->
+                <div class="ad-card">
+                    <div class="ad-img-placeholder"></div>
+                    <div class="ad-body">
+                        <div class="ad-title">Mesero / Mesera (Restaurante Metro)</div>
+                        <div class="ad-price">$3/hr + Propinas y Comisiones</div>
+                        <div class="ad-location">San Juan, PR</div>
+                    </div>
+                    <div class="ad-footer">
+                        <button class="btn-block">Ver Empleo y Postularse</button>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
-  </header>
 
-  <main class="main-layout">
-    <aside class="sidebar">
-      <div class="sidebar-title">Departamentos</div>
-      <ul class="category-list" id="categoryList">
-        <li class="category-item active" onclick="filtrarCategoria('Todos', this)">Todos los Anuncios</li>
-        <li class="category-item local" onclick="filtrarCategoria('De Aquí (Local)', this)">De Aquí (Local)</li>
-        <li class="category-item" onclick="filtrarCategoria('Bienes Raíces', this)">Bienes Raíces</li>
-        <li class="category-item" onclick="filtrarCategoria('Empleos Directos', this)">Empleos Directos</li>
-        <li class="category-item" onclick="filtrarCategoria('Autos y Vehículos', this)">Autos y Vehículos</li>
-        <li class="category-item" onclick="filtrarCategoria('Electrónica y Equipos', this)">Electrónica y Equipos</li>
-        <li class="category-item" onclick="filtrarCategoria('Hogar y Muebles', this)">Hogar y Muebles</li>
-        <li class="category-item" onclick="filtrarCategoria('Servicios Profesionales', this)">Servicios Profesionales</li>
-        <li class="category-item" onclick="filtrarCategoria('Adopción de Mascotas', this)">Adopción de Mascotas</li>
-      </ul>
-    </aside>
-
-    <section>
-      <div class="feed-header">
-        <h1 class="feed-title" id="feedTitle">Explorando Anuncios</h1>
-      </div>
-
-      <div class="cards-grid" id="cardsGrid">
-        <p>Cargando anuncios reales de Firestore...</p>
-      </div>
-    </section>
-  </main>
-
-  <!-- Modal Publicar Anuncio -->
-  <div id="modalPublicar" class="modal-overlay">
-    <div class="modal-content">
-      <button class="modal-close" onclick="cerrarModal('modalPublicar')">&times;</button>
-      <h2 style="margin-bottom: 1rem;">+ Crear Publicación Real</h2>
-      
-      <form id="formPublicar" onsubmit="guardarAnuncio(event)">
-        <div class="form-group">
-          <label>Título del Anuncio</label>
-          <input type="text" id="titulo" required placeholder="Ej. Casa en Mayagüez / iPhone 13">
+    <!-- Modal para Publicar Nuevo Anuncio -->
+    <div class="modal-overlay" id="publishModal">
+        <div class="modal-card">
+            <button class="close-btn" id="closeModalBtn">&times;</button>
+            <div class="modal-title">+ Publicar Nuevo Anuncio</div>
+            <div class="modal-desc">Selecciona el tipo de producto, propiedad o vacante de empleo que deseas publicar.</div>
+            
+            <div class="publish-options">
+                <button class="btn-option" onclick="selectCategory('producto')">📦 Artículo / Producto General</button>
+                <button class="btn-option" onclick="selectCategory('propiedad')">🏠 Bienes Raíces / Alquiler</button>
+                <button class="btn-option" onclick="selectCategory('empleo')">💼 Vacante de Empleo</button>
+                <button class="btn-option" onclick="selectCategory('vehiculo')">🚗 Auto o Vehículo</button>
+                <button class="btn-option" onclick="selectCategory('mascota')">🐾 Adopción de Mascota</button>
+            </div>
         </div>
-
-        <div class="form-group">
-          <label>Departamento</label>
-          <select id="categoria" required>
-            <option value="Bienes Raíces">Bienes Raíces</option>
-            <option value="Empleos Directos">Empleos Directos</option>
-            <option value="De Aquí (Local)">De Aquí (Local - Cosecha/Artesanías)</option>
-            <option value="Autos y Vehículos">Autos y Vehículos</option>
-            <option value="Electrónica y Equipos">Electrónica y Equipos</option>
-            <option value="Hogar y Muebles">Hogar y Muebles</option>
-            <option value="Servicios Profesionales">Servicios Profesionales</option>
-            <option value="Adopción de Mascotas">Adopción de Mascotas</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>Precio / Salario</label>
-          <input type="text" id="precio" required placeholder="Ej. $850 / mes o $12/hr">
-        </div>
-
-        <div class="form-group">
-          <label>Pueblo / Ubicación</label>
-          <input type="text" id="ubicacion" required placeholder="Ej. San Juan, PR">
-        </div>
-
-        <div class="form-group">
-          <label>Fotos (Puedes seleccionar varias)</label>
-          <input type="file" id="fotos" multiple accept="image/*">
-        </div>
-
-        <div class="form-group">
-          <label>Descripción detallada</label>
-          <textarea id="descripcion" rows="3" placeholder="Detalles de la propiedad, artículo o vacante..."></textarea>
-        </div>
-
-        <button type="submit" class="btn-submit" id="btnGuardar">Publicar Anuncio</button>
-      </form>
     </div>
-  </div>
 
-  <script>
-    // Configuración con tus credenciales reales
-    const firebaseConfig = {
-      apiKey: "AIzaSyBjLjNc7EGKXdCwc-VmI",
-      authDomain: "coqui-ventas.firebaseapp.com",
-      projectId: "coqui-ventas",
-      storageBucket: "coqui-ventas.appspot.com",
-      messagingSenderId: "425636251347",
-      appId: "1:425636251347:web:b96972a"
-    };
+    <!-- Script de Interactividad -->
+    <script>
+        const modal = document.getElementById('publishModal');
+        const openBtn = document.getElementById('openModalBtn');
+        const closeBtn = document.getElementById('closeModalBtn');
 
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-    const storage = firebase.storage();
-
-    let anunciosTotales = [];
-
-    window.onload = function() {
-      cargarAnuncios();
-    };
-
-    function cargarAnuncios() {
-      db.collection("ads").orderBy("createdAt", "desc").onSnapshot(snapshot => {
-        anunciosTotales = [];
-        snapshot.forEach(doc => {
-          anunciosTotales.push({ id: doc.id, ...doc.data() });
+        // Abrir Modal
+        openBtn.addEventListener('click', () => {
+            modal.classList.add('active');
         });
-        renderizarTarjetas(anunciosTotales);
-      });
-    }
 
-    function renderizarTarjetas(lista) {
-      const grid = document.getElementById('cardsGrid');
-      grid.innerHTML = '';
+        // Cerrar Modal con botón X
+        closeBtn.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
 
-      if (lista.length === 0) {
-        grid.innerHTML = '<p>No hay anuncios en esta categoría aún.</p>';
-        return;
-      }
+        // Cerrar Modal haciendo clic fuera del cuadro
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
 
-      lista.forEach(ad => {
-        const fotos = ad.fotos && ad.fotos.length > 0 
-          ? ad.fotos 
-          : ['https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=500&q=80'];
-
-        const cardHTML = `
-          <article class="card">
-            <div class="card-img-wrapper" id="wrapper-${ad.id}">
-              <img src="${fotos[0]}" class="card-img" id="img-${ad.id}">
-              ${fotos.length > 1 ? `
-                <button class="img-btn prev" onclick="cambiarFoto('${ad.id}', -1)">‹</button>
-                <button class="img-btn next" onclick="cambiarFoto('${ad.id}', 1)">›</button>
-                <div class="img-counter" id="counter-${ad.id}">1 / ${fotos.length}</div>
-              ` : ''}
-            </div>
-            <div class="card-body">
-              <h2 class="card-title">${ad.titulo}</h2>
-              <div class="card-price">${ad.precio}</div>
-              <div class="card-location">${ad.ubicacion}</div>
-              <button class="btn-card">Ver Detalle</button>
-            </div>
-          </article>
-        `;
-        grid.innerHTML += cardHTML;
-        
-        setTimeout(() => {
-          const el = document.getElementById(`wrapper-${ad.id}`);
-          if (el) {
-            el.dataset.fotos = JSON.stringify(fotos);
-            el.dataset.index = 0;
-          }
-        }, 50);
-      });
-    }
-
-    function cambiarFoto(id, direccion) {
-      const wrapper = document.getElementById(`wrapper-${id}`);
-      const fotos = JSON.parse(wrapper.dataset.fotos);
-      let currentIndex = parseInt(wrapper.dataset.index);
-
-      currentIndex += direccion;
-      if (currentIndex < 0) currentIndex = fotos.length - 1;
-      if (currentIndex >= fotos.length) currentIndex = 0;
-
-      wrapper.dataset.index = currentIndex;
-      document.getElementById(`img-${id}`).src = fotos[currentIndex];
-      document.getElementById(`counter-${id}`).innerText = `${currentIndex + 1} / ${fotos.length}`;
-    }
-
-    function filtrarCategoria(cat, elemento) {
-      document.querySelectorAll('.category-item').forEach(el => el.classList.remove('active'));
-      elemento.classList.add('active');
-      document.getElementById('feedTitle').innerText = cat === 'Todos' ? 'Explorando Anuncios' : cat;
-
-      if (cat === 'Todos') {
-        renderizarTarjetas(anunciosTotales);
-      } else {
-        const filtrados = anunciosTotales.filter(ad => ad.categoria === cat);
-        renderizarTarjetas(filtrados);
-      }
-    }
-
-    async function guardarAnuncio(e) {
-      e.preventDefault();
-      const btn = document.getElementById('btnGuardar');
-      btn.innerText = 'Subiendo anuncio...';
-      btn.disabled = true;
-
-      const titulo = document.getElementById('titulo').value;
-      const categoria = document.getElementById('categoria').value;
-      const precio = document.getElementById('precio').value;
-      const ubicacion = document.getElementById('ubicacion').value;
-      const descripcion = document.getElementById('descripcion').value;
-      const archivos = document.getElementById('fotos').files;
-
-      let fotosURLs = [];
-
-      try {
-        for (let file of archivos) {
-          const storageRef = storage.ref(`anuncios/${Date.now()}_${file.name}`);
-          await storageRef.put(file);
-          const url = await storageRef.getDownloadURL();
-          fotosURLs.push(url);
+        // Función al seleccionar una opción de categoría
+        function selectCategory(type) {
+            console.log("Categoría seleccionada:", type);
+            alert("Has seleccionado: " + type.toUpperCase() + ". Aquí se abrirá el formulario correspondiente.");
+            modal.classList.remove('active');
         }
-
-        await db.collection("ads").add({
-          titulo,
-          categoria,
-          precio,
-          ubicacion,
-          descripcion,
-          fotos: fotosURLs,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-
-        alert("¡Anuncio publicado exitosamente!");
-        document.getElementById('formPublicar').reset();
-        cerrarModal('modalPublicar');
-      } catch (err) {
-        console.error(err);
-        alert("Ocurrió un error al guardar el anuncio.");
-      } finally {
-        btn.innerText = 'Publicar Anuncio';
-        btn.disabled = false;
-      }
-    }
-
-    function abrirModal(id) { document.getElementById(id).classList.add('active'); }
-    function cerrarModal(id) { document.getElementById(id).classList.remove('active'); }
-  </script>
+    </script>
 </body>
 </html>
