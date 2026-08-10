@@ -3,203 +3,238 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Coquí Ventas - Clasificados de Puerto Rico</title>
+  <title>Coquí Ventas - Mercado y Empleos en Puerto Rico</title>
   <style>
     :root {
-      --primary-color: #2D5A27;
-      --bg-color: #f4f6f8;
-      --card-bg: #ffffff;
-      --text-color: #333333;
-      --border-color: #e0e0e0;
-    }
+      --brand-green-coqui: #2D5A27;
+      --brand-green-light: #4A8539;
+      --brand-terracotta:  #C85A32;
+      --brand-sand-gold:   #E6A817;
+      --bg-light:          #FAFAF7;
+      --text-primary:      #1A201C;
+      --text-muted:        #5A655D;
+      --border-color:      #E2E8E4;
+    } 
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg-light); color: var(--text-primary); }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    }
+    .navbar { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 2rem; background: #fff; border-bottom: 1px solid var(--border-color); gap: 1rem; }
+    .logo { display: flex; align-items: center; text-decoration: none; font-weight: bold; color: var(--brand-green-coqui); font-size: 1.2rem; }
+    .logo img { height: 40px; width: auto; object-fit: contain; margin-right: 8px; }
+    .nav-links { display: flex; gap: 1.5rem; }
+    .nav-links a { text-decoration: none; color: var(--text-muted); font-weight: 500; white-space: nowrap; }
+    .nav-links a:hover { color: var(--brand-green-coqui); }
+    .nav-actions { display: flex; align-items: center; white-space: nowrap; }
 
-    body {
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      padding: 20px;
-    }
+    .btn-primary { background: var(--brand-green-coqui); color: #fff; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+    .btn-primary:hover { background: var(--brand-green-light); }
 
-    header {
-      text-align: center;
-      margin-bottom: 30px;
-    }
+    .hero { text-align: center; padding: 3rem 1rem 2rem 1rem; background: linear-gradient(180deg, #FFFFFF 0%, var(--bg-light) 100%); }
+    .hero h1 { font-size: 2.2rem; margin-bottom: 0.5rem; }
+    .hero p { color: var(--text-muted); margin-bottom: 1.5rem; }
 
-    header h1 {
-      color: var(--primary-color);
-      font-size: 2.2rem;
-    }
+    .search-bar { display: flex; justify-content: center; gap: 0.5rem; max-width: 650px; margin: 0 auto; flex-wrap: wrap; }
+    .search-bar input, .search-bar select { padding: 0.8rem 1rem; border: 1px solid var(--border-color); border-radius: 8px; outline: none; }
+    .search-bar input { flex: 1; min-width: 200px; }
+    .btn-search { background: var(--brand-terracotta); color: #fff; border: none; padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 1rem 4rem 1rem; }
 
-    .card {
-      background-color: var(--card-bg);
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      margin-bottom: 30px;
-    }
+    .categories-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 3rem; }
+    .card-cat { background: #fff; padding: 1.2rem; border-radius: 12px; border: 1px solid var(--border-color); text-align: center; font-weight: 600; cursor: pointer; transition: transform 0.2s; }
+    .card-cat:hover { transform: translateY(-3px); border-color: var(--brand-green-light); }
 
-    h2 {
-      margin-bottom: 15px;
-      font-size: 1.4rem;
-      color: var(--primary-color);
-    }
+    .section-title { font-size: 1.5rem; margin-bottom: 1.5rem; color: var(--brand-green-coqui); }
+    .listings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
 
-    .form-group {
-      margin-bottom: 15px;
-    }
+    .card-item { background: #fff; border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden; display: flex; flex-direction: column; }
+    .card-img { height: 160px; background: #e2e8e4; display: flex; align-items: center; justify-content: center; font-size: 3rem; }
+    .card-body { padding: 1rem; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+    .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.75rem; font-weight: bold; margin-bottom: 0.5rem; }
+    .badge-agricola { background: #E8F5E9; color: var(--brand-green-coqui); }
+    .badge-mascotas { background: #FFEBEE; color: var(--brand-terracotta); }
+    .badge-empleo { background: #FFF8E1; color: #B78103; }
+    .badge-clasificado { background: #F3E5F5; color: #7B1FA2; }
 
-    label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: 600;
-    }
+    .card-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 0.4rem; }
+    .card-price { font-size: 1.1rem; font-weight: bold; color: var(--brand-terracotta); margin-bottom: 0.4rem; }
+    .card-location { font-size: 0.85rem; color: var(--text-muted); }
 
-    input, select, textarea, button {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      font-size: 1rem;
-    }
+    /* Modal Flotante */
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; z-index: 1000; padding: 1rem; }
+    .modal-overlay.active { display: flex; }
+    .modal-content { background: #fff; width: 100%; max-width: 550px; border-radius: 16px; padding: 2rem; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.15); max-height: 90vh; overflow-y: auto; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .modal-header h3 { color: var(--brand-green-coqui); font-size: 1.4rem; }
+    .close-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); }
 
-    textarea {
-      resize: vertical;
-      min-height: 80px;
-    }
+    .form-group { margin-bottom: 1.2rem; }
+    .form-group label { display: block; font-weight: 600; margin-bottom: 0.4rem; font-size: 0.9rem; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.8rem; border: 1px solid var(--border-color); border-radius: 8px; outline: none; font-family: inherit; }
+    .form-group textarea { resize: vertical; min-height: 80px; }
+    .dynamic-section { background: #F4F7F5; padding: 1rem; border-radius: 8px; margin-bottom: 1.2rem; display: none; }
 
-    button {
-      background-color: var(--primary-color);
-      color: white;
-      border: none;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-
-    button:hover {
-      background-color: #1e3d1a;
-    }
-
-    button:disabled {
-      background-color: #ccc;
-      cursor: not-allowed;
-    }
-
-    .grid-ads {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 20px;
-    }
-
-    .ad-card {
-      background: var(--card-bg);
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-      display: flex;
-      flex-direction: column;
-    }
-
-    .ad-card img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      background-color: #eee;
-    }
-
-    .ad-content {
-      padding: 15px;
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .ad-title {
-      font-size: 1.1rem;
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
-
-    .ad-price {
-      color: #C85A32;
-      font-weight: bold;
-      font-size: 1.2rem;
-      margin-bottom: 10px;
-    }
-
-    .ad-info {
-      font-size: 0.85rem;
-      color: #666;
-      margin-bottom: 8px;
-    }
-
-    .ad-description {
-      font-size: 0.9rem;
-      margin-bottom: 15px;
-      flex-grow: 1;
-    }
-
-    .ad-contact {
-      display: inline-block;
-      text-align: center;
-      background-color: #25D366;
-      color: white;
-      text-decoration: none;
-      padding: 8px;
-      border-radius: 5px;
-      font-weight: bold;
-      font-size: 0.9rem;
-    }
+    .btn-submit { width: 100%; background: var(--brand-green-coqui); color: #fff; border: none; padding: 0.9rem; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; margin-top: 0.5rem; }
+    .btn-submit:hover { background: var(--brand-green-light); }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <header>
-      <h1>Coquí Ventas 🐸</h1>
-      <p>Tu plataforma de clasificados en Puerto Rico</p>
-    </header>
+  <!-- Encabezado -->
+  <header class="navbar">
+    <a href="#" class="logo">
+      <img src="logo.png" alt="Coquí Ventas" onerror="this.style.display='none'" />
+      Coquí Ventas
+    </a>
+    <nav class="nav-links">
+      <a href="#">Clasificados</a>
+      <a href="#">Empleos</a>
+      <a href="#">Agrícola Local</a>
+      <a href="#">Mascotas</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="btn-primary" id="btnOpenModal">+ Publicar Anuncio</button>
+    </div>
+  </header>
 
-    <!-- Formulario de Publicación -->
-    <div class="card">
-      <h2>Publicar un Anuncio</h2>
-      <form id="adForm">
-        <div class="form-group">
-          <label for="title">Título del artículo / servicio</label>
-          <input type="text" id="title" placeholder="Ej. Toyota Corolla 2018" required />
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>El mercado digital de Puerto Rico 🐸</h1>
+    <p>Encuentra productos, empleos transparentes, cosechas locales y adopción de mascotas.</p>
+    <div class="search-bar">
+      <input type="text" placeholder="¿Qué estás buscando hoy?" />
+      <select>
+        <option value="">Cualquier pueblo</option>
+        <option value="Arecibo">Arecibo</option>
+        <option value="Caguas">Caguas</option>
+        <option value="Mayagüez">Mayagüez</option>
+        <option value="Ponce">Ponce</option>
+        <option value="San Juan">San Juan</option>
+      </select>
+      <button class="btn-search">Buscar</button>
+    </div>
+  </section>
+
+  <!-- Categorías Principales -->
+  <main class="container">
+    <div class="categories-grid">
+      <div class="card-cat">📦 Clasificados</div>
+      <div class="card-cat">💼 Empleos Directos</div>
+      <div class="card-cat">🌾 Mercado Agrícola</div>
+      <div class="card-cat">🐾 Adopción Gratis</div>
+    </div>
+
+    <h2 class="section-title">Publicaciones Recientes</h2>
+    <section class="listings-grid">
+      <article class="card-item">
+        <div class="card-img">🍌</div>
+        <div class="card-body">
+          <div>
+            <span class="badge badge-agricola">Agrícola Local</span>
+            <div class="card-title">Plátanos Verdes Frescos</div>
+            <div class="card-price">$25.00 / ciento</div>
+          </div>
+          <div class="card-location">📍 Arecibo, PR</div>
         </div>
+      </article>
 
-        <div class="form-group">
-          <label for="price">Precio ($ USD)</label>
-          <input type="number" id="price" step="0.01" placeholder="Ej. 1500" required />
+      <article class="card-item">
+        <div class="card-img">🐶</div>
+        <div class="card-body">
+          <div>
+            <span class="badge badge-mascotas">Adopción Gratis</span>
+            <div class="card-title">Perrita Sato Busca Hogar</div>
+            <div class="card-price" style="color: var(--brand-green-coqui);">Gratis / Adopción</div>
+          </div>
+          <div class="card-location">📍 Ponce, PR</div>
         </div>
+      </article>
 
+      <article class="card-item">
+        <div class="card-img">💼</div>
+        <div class="card-body">
+          <div>
+            <span class="badge badge-empleo">Empleo</span>
+            <div class="card-title">Mesero / Mesera</div>
+            <div class="card-price">$3.00/hr + Propinas</div>
+          </div>
+          <div class="card-location">📍 San Juan, PR</div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <!-- Modal para Publicar Anuncio -->
+  <div class="modal-overlay" id="modalPublish">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Publicar Nuevo Anuncio</h3>
+        <button class="close-btn" id="btnCloseModal">&times;</button>
+      </div>
+
+      <form id="publishForm">
         <div class="form-group">
-          <label for="town">Pueblo</label>
-          <select id="town" required>
-            <option value="">Selecciona tu pueblo</option>
+          <label for="category">Categoría *</label>
+          <select id="category" required>
+            <option value="">Selecciona una categoría</option>
+            <option value="clasificado">📦 Clasificados Generales</option>
+            <option value="empleo">💼 Empleo / Trabajo</option>
+            <option value="agricola">🌾 Mercado Agrícola Local</option>
+            <option value="mascotas">🐾 Mascotas en Adopción (Gratis)</option>
           </select>
         </div>
 
         <div class="form-group">
-          <label for="phone">Teléfono / WhatsApp</label>
-          <input type="tel" id="phone" placeholder="Ej. 7875551234" required />
+          <label for="title">Título del Anuncio *</label>
+          <input type="text" id="title" placeholder="Ej. Plátanos verdes, Mesero/a, Perrita en adopción..." required />
+        </div>
+
+        <!-- Campos Requeridos para Empleo -->
+        <div class="dynamic-section" id="sectionJob">
+          <div class="form-group">
+            <label for="jobSalary">Salario Requerido *</label>
+            <input type="text" id="jobSalary" placeholder="Ej. $3.00/hr + propinas, $12/hr fijo, $500/semana" />
+          </div>
+        </div>
+
+        <!-- Campos de Precio Estándar -->
+        <div class="form-group" id="sectionPrice">
+          <label for="price">Precio ($ USD) *</label>
+          <input type="text" id="price" placeholder="Ej. 25.00 o Gratis" />
         </div>
 
         <div class="form-group">
-          <label for="imageInput">Foto del producto (Opcional)</label>
-          <input type="file" id="imageInput" accept="image/*" />
+          <label for="town">Pueblo de Puerto Rico *</label>
+          <select id="town" required>
+            <option value="">Selecciona tu pueblo</option>
+            <option value="Arecibo">Arecibo</option>
+            <option value="Bayamón">Bayamón</option>
+            <option value="Caguas">Caguas</option>
+            <option value="Carolina">Carolina</option>
+            <option value="Mayagüez">Mayagüez</option>
+            <option value="Ponce">Ponce</option>
+            <option value="San Juan">San Juan</option>
+          </select>
+        </div>
+
+        <!-- Preferencias de Notificación Seguras -->
+        <div class="form-group">
+          <label for="notifyPref">¿Cómo prefieres recibir los mensajes de interesados? *</label>
+          <select id="notifyPref" required>
+            <option value="whatsapp">💬 WhatsApp (Mensaje Interno Protegido)</option>
+            <option value="sms">📱 Mensaje de Texto / SMS</option>
+            <option value="email">📧 Correo Electrónico</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="contactInfo">Número de Teléfono o Email *</label>
+          <input type="text" id="contactInfo" placeholder="Tu contacto (permanecerá privado para seguridad)" required />
+        </div>
+
+        <div class="form-group">
+          <label for="photo">Foto del Anuncio (Opcional - Se comprimirá automáticamente)</label>
+          <input type="file" id="photo" accept="image/*" />
         </div>
 
         <div class="form-group">
@@ -207,186 +242,83 @@
           <textarea id="description" placeholder="Escribe los detalles de tu anuncio..."></textarea>
         </div>
 
-        <button type="submit" id="btnSubmit">Publicar Anuncio</button>
+        <button type="submit" class="btn-submit">Publicar Anuncio</button>
       </form>
-    </div>
-
-    <!-- Lista de Anuncios -->
-    <h2>Anuncios Recientes</h2>
-    <div class="grid-ads" id="adsContainer">
-      <p>Cargando anuncios...</p>
     </div>
   </div>
 
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-
   <script>
-    // 1. Firebase Config
-    const firebaseConfig = {
-      projectId: "coqui-ventas"
-    };
+    const modal = document.getElementById('modalPublish');
+    const btnOpen = document.getElementById('btnOpenModal');
+    const btnClose = document.getElementById('btnCloseModal');
+    const form = document.getElementById('publishForm');
+    const selectCategory = document.getElementById('category');
+    const sectionJob = document.getElementById('sectionJob');
+    const sectionPrice = document.getElementById('sectionPrice');
 
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-
-    // 2. Municipios PR
-    const municipiosPR = [
-      "Adjuntas", "Aguada", "Aguadilla", "Aguas Buenas", "Aibonito", "Añasco", "Arecibo", "Arroyo",
-      "Barceloneta", "Barranquitas", "Bayamón", "Cabo Rojo", "Caguas", "Camuy", "Canóvanas", "Carolina",
-      "Cataño", "Cayey", "Ceiba", "Ciales", "Cidra", "Coamo", "Comerío", "Corozal", "Culebra",
-      "Dorado", "Fajardo", "Florida", "Guánica", "Guayama", "Guayanilla", "Guaynabo", "Gurabo",
-      "Hatillo", "Hormigueros", "Humacao", "Isabela", "Jayuya", "Juana Díaz", "Juncos", "Lajas",
-      "Lares", "Las Marías", "Las Piedras", "Loíza", "Luquillo", "Manatí", "Maricao", "Maunabo",
-      "Mayagüez", "Moca", "Morovis", "Naguabo", "Naranjito", "Orocovis", "Patillas", "Peñuelas",
-      "Ponce", "Quebradillas", "Rincón", "Río Grande", "Sabana Grande", "Salinas", "San Germán",
-      "San Juan", "San Lorenzo", "San Sebastián", "Santa Isabel", "Toa Alta", "Toa Baja",
-      "Trujillo Alto", "Utuado", "Vega Alta", "Vega Baja", "Vieques", "Villalba", "Yabucoa", "Yauco"
-    ];
-
-    const townSelect = document.getElementById("town");
-    municipiosPR.forEach(pueblo => {
-      const option = document.createElement("option");
-      option.value = pueblo;
-      option.textContent = pueblo;
-      townSelect.appendChild(option);
+    // Cambiar campos dinámicamente según la categoría
+    selectCategory.addEventListener('change', (e) => {
+      const val = e.target.value;
+      if (val === 'empleo') {
+        sectionJob.style.display = 'block';
+        sectionPrice.style.display = 'none';
+      } else if (val === 'mascotas') {
+        sectionJob.style.display = 'none';
+        sectionPrice.style.display = 'block';
+        document.getElementById('price').value = 'Gratis';
+      } else {
+        sectionJob.style.display = 'none';
+        sectionPrice.style.display = 'block';
+      }
     });
 
-    // 3. Subida directa con Filestack (sin necesidad de API Keys ni registros extra)
-    async function uploadImage(file) {
-      const formData = new FormData();
-      formData.append('fileUpload', file);
+    // Abrir/Cerrar Modal
+    btnOpen.addEventListener('click', () => modal.classList.add('active'));
+    btnClose.addEventListener('click', () => modal.classList.remove('active'));
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
 
-      const response = await fetch('https://www.filestackapi.com/api/store/S3?key=A5G3C9O5sR4yt1bN2xT83z', {
-        method: 'POST',
-        body: file
+    // Función de compresión de imágenes
+    function comprimirImagen(file, maxWidth = 800, quality = 0.7) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (event) => {
+          const img = new Image();
+          img.src = event.target.result;
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            let width = img.width;
+            let height = img.height;
+            if (width > maxWidth) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+            }
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            resolve(canvas.toDataURL('image/jpeg', quality));
+          };
+          img.onerror = (err) => reject(err);
+        };
+        reader.onerror = (err) => reject(err);
       });
-
-      const data = await response.json();
-
-      if (!response.ok || !data.url) {
-        throw new Error('No se pudo procesar la imagen.');
-      }
-
-      return data.url;
     }
 
-    // 4. Guardar Anuncio
-    const adForm = document.getElementById("adForm");
-    const btnSubmit = document.getElementById("btnSubmit");
-
-    adForm.addEventListener("submit", async (e) => {
+    // Evento al enviar formulario
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      btnSubmit.disabled = true;
-      btnSubmit.textContent = "Subiendo y publicando...";
+      const fileInput = document.getElementById('photo');
+      let imageBase64 = '';
 
-      try {
-        const title = document.getElementById("title").value;
-        const price = parseFloat(document.getElementById("price").value);
-        const town = document.getElementById("town").value;
-        const phone = document.getElementById("phone").value;
-        const description = document.getElementById("description").value;
-        const imageFile = document.getElementById("imageInput").files[0];
-
-        let imageUrl = "";
-
-        if (imageFile) {
-          imageUrl = await uploadImage(imageFile);
-        }
-
-        await db.collection("ads").add({
-          title: title,
-          price: price,
-          town: town,
-          phone: phone,
-          description: description,
-          imageUrl: imageUrl,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-
-        alert("¡Anuncio publicado exitosamente!");
-        adForm.reset();
-      } catch (error) {
-        console.error("Detalle del error:", error);
-        alert("Error al publicar: " + error.message);
-      } finally {
-        btnSubmit.disabled = false;
-        btnSubmit.textContent = "Publicar Anuncio";
+      if (fileInput.files.length > 0) {
+        imageBase64 = await comprimirImagen(fileInput.files[0]);
       }
+
+      alert('¡Anuncio preparado para publicar con éxito!');
+      modal.classList.remove('active');
+      form.reset();
     });
-
-    // 5. Cargar Anuncios
-    const adsContainer = document.getElementById("adsContainer");
-
-    db.collection("ads")
-      .orderBy("createdAt", "desc")
-      .onSnapshot((snapshot) => {
-        adsContainer.innerHTML = "";
-
-        if (snapshot.empty) {
-          adsContainer.innerHTML = "<p>No hay anuncios publicados aún.</p>";
-          return;
-        }
-
-        snapshot.forEach((doc) => {
-          const ad = doc.data();
-          const adCard = document.createElement("div");
-          adCard.className = "ad-card";
-
-          const imgSrc = ad.imageUrl || "https://via.placeholder.com/300x200?text=Sin+Imagen";
-
-          adCard.innerHTML = `
-            <img src="${imgSrc}" alt="${ad.title}">
-            <div class="ad-content">
-              <div class="ad-title">${ad.title}</div>
-              <div class="ad-price">$${ad.price.toFixed(2)}</div>
-              <div class="ad-info">📍 ${ad.town}</div>
-              <div class="ad-description">${ad.description || 'Sin descripción.'}</div>
-              <a href="https://wa.me/1${ad.phone.replace(/\D/g, '')}" target="_blank" class="ad-contact">Contactar por WhatsApp</a>
-            </div>
-          `;
-
-          adsContainer.appendChild(adCard);
-        });
-      }, (error) => {
-        console.error("Error al cargar anuncios:", error);
-        adsContainer.innerHTML = "<p>Error al cargar los anuncios.</p>";
-      });
   </script>
 </body>
 </html>
-
-function comprimirImagen(file, maxWidth = 800, quality = 0.7) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = (event) => {
-      const img = new Image();
-      img.src = event.target.result;
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        let width = img.width;
-        let height = img.height;
-
-        // Redimensionar proporcionalmente
-        if (width > maxWidth) {
-          height = Math.round((height * maxWidth) / width);
-          width = maxWidth;
-        }
-
-        canvas.width = width;
-        canvas.height = height;
-
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, width, height);
-
-        // Exportar como String Base64 comprimido (JPEG)
-        const base64Comprimido = canvas.toDataURL('image/jpeg', quality);
-        resolve(base64Comprimido);
-      };
-      img.onerror = (error) => reject(error);
-    };
-    reader.onerror = (error) => reject(error);
-  });
-}
