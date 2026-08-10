@@ -1,1 +1,335 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel de Control del Empleador - Coquí Ventas</title>
+  
+  <style>
+    :root {
+      --brand-green: #1b4332;
+      --brand-green-hover: #2d6a4f;
+      --bg-body: #f8fafc;
+      --bg-surface: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --radius: 12px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.05);
+    }
 
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: var(--bg-body); color: var(--text-main); line-height: 1.5; }
+
+    header {
+      background-color: var(--brand-green);
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .logo { font-size: 1.2rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .btn-back { color: white; text-decoration: none; font-size: 0.9rem; opacity: 0.9; font-weight: 500; }
+    .btn-back:hover { opacity: 1; text-decoration: underline; }
+
+    .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+
+    .page-title { margin-bottom: 24px; }
+    .page-title h1 { font-size: 1.6rem; font-weight: 700; color: var(--text-main); }
+    .page-title p { color: var(--text-muted); font-size: 0.9rem; }
+
+    /* Filtros */
+    .filters-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .form-group label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.82rem; color: var(--text-muted); text-transform: uppercase; }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      outline: none;
+      background: #fff;
+    }
+
+    /* Layout Principal del Panel */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 24px;
+    }
+
+    /* Lista de Candidatos */
+    .candidates-list { display: flex; flex-direction: column; gap: 12px; }
+
+    .applicant-card {
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--shadow-sm);
+      transition: border-color 0.2s;
+      cursor: pointer;
+    }
+
+    .applicant-card:hover { border-color: var(--brand-green); }
+    .applicant-card.active { border-color: var(--brand-green); background-color: #f0fdf4; }
+
+    .applicant-info h3 { font-size: 1rem; font-weight: 700; color: var(--text-main); }
+    .applicant-info p { font-size: 0.85rem; color: var(--text-muted); margin-top: 2px; }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-weight: 600;
+      margin-top: 6px;
+    }
+    .badge-1click { background: #dcfce7; color: #166534; }
+    .badge-custom { background: #e0f2fe; color: #075985; }
+
+    /* Panel Lateral de Detalle del Candidato */
+    .detail-panel {
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 24px;
+      position: sticky;
+      top: 20px;
+      height: fit-content;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .detail-header { border-bottom: 1px solid var(--border-color); padding-bottom: 16px; margin-bottom: 16px; }
+    .detail-header h2 { font-size: 1.25rem; font-weight: 700; }
+    .detail-header p { font-size: 0.88rem; color: var(--brand-green); font-weight: 600; margin-top: 4px; }
+
+    .skill-badge {
+      background: #f1f5f9;
+      color: #334155;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      display: inline-block;
+      margin: 2px;
+    }
+
+    .btn-call {
+      display: block;
+      width: 100%;
+      text-align: center;
+      background: #16a34a;
+      color: white;
+      text-decoration: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 600;
+      margin-top: 20px;
+      transition: background 0.2s;
+    }
+
+    .btn-call:hover { background: #15803d; }
+
+    @media (max-width: 900px) {
+      .dashboard-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">🏢 Coquí Ventas - Panel de Reclutamiento</div>
+    <a href="index.html" class="btn-back">← Volver al Mercado</a>
+  </header>
+
+  <div class="container">
+    <div class="page-title">
+      <h1>Gestión de Candidatos y Postulaciones</h1>
+      <p>Revisa solicitudes en tiempo real y contacta directamente a los postulantes.</p>
+    </div>
+
+    <!-- Filtros de Búsqueda -->
+    <div class="filters-card">
+      <div class="form-group">
+        <label>Buscar Candidato</label>
+        <input type="text" id="filtroTexto" oninput="filtrarCandidatos()" placeholder="Nombre o correo...">
+      </div>
+      <div class="form-group">
+        <label>Experiencia Mínima</label>
+        <select id="filtroExperiencia" onchange="filtrarCandidatos()">
+          <option value="todas">Todas</option>
+          <option value="0-1">0 a 1 año</option>
+          <option value="2-5">2 a 5 años</option>
+          <option value="5+">Más de 5 años</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Tipo de Aplicación</label>
+        <select id="filtroTipo" onchange="filtrarCandidatos()">
+          <option value="todos">Todos</option>
+          <option value="1-click">1-Click Apply</option>
+          <option value="propuesta">Propuesta Custom</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Contenido en 2 columnas -->
+    <div class="dashboard-grid">
+      <!-- Columna Izquierda: Lista -->
+      <div class="candidates-list" id="listaCandidatos">
+        <p style="color:var(--text-muted);">Cargando candidatos desde Firebase...</p>
+      </div>
+
+      <!-- Columna Derecha: Vista Detallada Limpia -->
+      <div class="detail-panel" id="panelDetalle">
+        <p style="text-align: center; color: var(--text-muted); padding: 40px 0;">
+          Selecciona un candidato de la lista para ver su perfil completo.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+    import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBjLJnC7EGKXdCwc-VmI",
+      authDomain: "coqui-ventas.firebaseapp.com",
+      projectId: "coqui-ventas",
+      storageBucket: "coqui-ventas.firebasestorage.app",
+      messagingSenderId: "425636251347",
+      appId: "1:425636251347:web:b96972a",
+      measurementId: "G-BZJ2BZLRMS"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.baseDatosCandidatos = [];
+
+    async function cargarCandidatos() {
+      try {
+        const q = query(collection(db, "candidatos"), orderBy("fecha", "desc"));
+        const snapshot = await getDocs(q);
+        window.baseDatosCandidatos = [];
+
+        snapshot.forEach((doc) => {
+          const data = doc.data();
+          window.baseDatosCandidatos.push({
+            id: doc.id,
+            nombre: data.nombre || "Candidato",
+            telefono: data.telefono || "Sin teléfono",
+            email: data.email || "Sin email",
+            tipo: data.tipo || "1-click",
+            fecha: data.fechaFormateada || "Reciente",
+            experienciaAnos: Number(data.experienciaAnos) || 0,
+            skills: data.skills || [],
+            historialLaboral: data.historialLaboral || [],
+            propuesta: data.propuesta || null
+          });
+        });
+
+        renderLista(window.baseDatosCandidatos);
+      } catch (err) {
+        console.error("Error al cargar candidatos:", err);
+      }
+    }
+
+    window.renderLista = function(lista) {
+      const cont = document.getElementById('listaCandidatos');
+      if(lista.length === 0) {
+        cont.innerHTML = '<div style="background:white; padding:20px; border-radius:12px; text-align:center; color:var(--text-muted);">No hay postulantes registrados.</div>';
+        return;
+      }
+
+      cont.innerHTML = lista.map(c => `
+        <div class="applicant-card" onclick="verDetalle('${c.id}')">
+          <div class="applicant-info">
+            <h3>${c.nombre}</h3>
+            <p>📧 ${c.email} • ⏱️ ${c.experienciaAnos} años exp.</p>
+            <span class="badge ${c.tipo === '1-click' ? 'badge-1click' : 'badge-custom'}">
+              ${c.tipo === '1-click' ? '1-Click Apply' : 'Propuesta Custom'}
+            </span>
+          </div>
+          <span style="font-size:0.8rem; color:var(--text-muted);">${c.fecha}</span>
+        </div>
+      `).join('');
+    };
+
+    window.verDetalle = function(id) {
+      const c = window.baseDatosCandidatos.find(item => item.id === id);
+      if(!c) return;
+
+      const panel = document.getElementById('panelDetalle');
+      const telLimpio = c.telefono.replace(/\D/g, '');
+
+      panel.innerHTML = `
+        <div class="detail-header">
+          <h2>${c.nombre}</h2>
+          <p>📞 ${c.telefono}</p>
+          <p style="font-size:0.82rem; color:var(--text-muted); margin-top:2px;">✉️ ${c.email}</p>
+        </div>
+
+        <div style="margin-bottom: 16px;">
+          <h4 style="font-size:0.85rem; font-weight:700; margin-bottom:8px;">HABILIDADES</h4>
+          <div>${(c.skills || []).map(s => `<span class="skill-badge">${s}</span>`).join('') || '<p style="font-size:0.8rem; color:var(--text-muted);">Sin especificar</p>'}</div>
+        </div>
+
+        <div style="margin-bottom: 16px;">
+          <h4 style="font-size:0.85rem; font-weight:700; margin-bottom:8px;">HISTORIAL Y NOTAS</h4>
+          ${(c.historialLaboral || []).map(h => `
+            <div style="background:#f8fafc; padding:10px; border-radius:8px; margin-bottom:6px; border-left:3px solid var(--brand-green);">
+              <strong style="font-size:0.85rem;">${h.puesto}</strong>
+              <p style="font-size:0.8rem; color:var(--text-muted);">${h.descripcion}</p>
+            </div>
+          `).join('')}
+        </div>
+
+        <a href="tel:${telLimpio}" class="btn-call">📞 Llamar al Candidato</a>
+      `;
+    };
+
+    window.filtrarCandidatos = function() {
+      const texto = document.getElementById('filtroTexto').value.toLowerCase();
+      const exp = document.getElementById('filtroExperiencia').value;
+      const tipo = document.getElementById('filtroTipo').value;
+
+      let res = window.baseDatosCandidatos.filter(c => {
+        const cTexto = c.nombre.toLowerCase().includes(texto) || c.email.toLowerCase().includes(texto);
+        const cTipo = (tipo === 'todos') || (c.tipo === tipo);
+        let cExp = true;
+        if(exp === '0-1') cExp = c.experienciaAnos <= 1;
+        if(exp === '2-5') cExp = c.experienciaAnos >= 2 && c.experienciaAnos <= 5;
+        if(exp === '5+') cExp = c.experienciaAnos > 5;
+
+        return cTexto && cTipo && cExp;
+      });
+
+      renderLista(res);
+    };
+
+    cargarCandidatos();
+  </script>
+</body>
+</html>
