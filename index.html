@@ -8,7 +8,6 @@
     <!-- Firebase SDKs (Compat) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
 
     <style>
         :root {
@@ -363,7 +362,6 @@
 
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-        const storage = firebase.storage();
 
         let anunciosTotales = [];
 
@@ -475,10 +473,12 @@
 
             try {
                 for (let file of archivos) {
-                    const storageRef = storage.ref(`anuncios/${Date.now()}_${file.name}`);
-                    await storageRef.put(file);
-                    const url = await storageRef.getDownloadURL();
-                    fotosURLs.push(url);
+                    const base64 = await new Promise((resolve) => {
+                        const reader = new FileReader();
+                        reader.onload = (e) => resolve(e.target.result);
+                        reader.readAsDataURL(file);
+                    });
+                    fotosURLs.push(base64);
                 }
 
                 await db.collection("ads").add({
@@ -487,7 +487,7 @@
                     precio,
                     ubicacion,
                     descripcion,
-                    fotos: fotosURLs,
+                    fotos: fotosURLs.length > 0 ? fotosURLs : ['https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=500&q=80'],
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
@@ -496,7 +496,7 @@
                 cerrarModal();
             } catch (err) {
                 console.error("Error al publicar:", err);
-                alert("Ocurrió un error al subir el anuncio. Revisa la consola o las reglas de Firebase.");
+                alert("Ocurrió un error al subir el anuncio.");
             } finally {
                 btn.innerText = 'Publicar Anuncio';
                 btn.disabled = false;
