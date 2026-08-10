@@ -4,12 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Coquí Ventas - Mercado y Empleos en Puerto Rico</title>
+  <!-- SDK de Klarna -->
+  <script src="https://x.klarnacdn.net/kp/lib/v1/api.js" async></script>
   <style>
     :root {
       --brand-green-coqui: #2D5A27;
       --brand-green-light: #4A8539;
       --brand-terracotta:  #C85A32;
       --brand-sand-gold:   #E6A817;
+      --brand-klarna-pink: #FFB3C7;
+      --brand-ath-orange:  #FF6600;
       --bg-light:          #FAFAF7;
       --text-primary:      #1A201C;
       --text-muted:        #5A655D;
@@ -82,14 +86,36 @@
     .btn-submit { width: 100%; background: var(--brand-green-coqui); color: #fff; border: none; padding: 0.9rem; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; margin-top: 0.5rem; }
     .btn-submit:hover { background: var(--brand-green-light); }
 
-    /* Modal Detalle de Anuncio */
+    /* Modal Detalle */
     .detail-img { width: 100%; height: 240px; border-radius: 12px; background: #e2e8e4; object-fit: cover; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; font-size: 4rem; overflow: hidden; }
     .detail-img img { width: 100%; height: 100%; object-fit: cover; }
     .detail-price { font-size: 1.5rem; font-weight: bold; color: var(--brand-terracotta); margin: 0.5rem 0; }
     .detail-meta { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem; }
     .detail-desc { font-size: 1rem; line-height: 1.5; color: #333; background: #f9f9f9; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; }
-    .contact-box { background: #e8f5e9; border: 1px solid #c8e6c9; padding: 1.2rem; border-radius: 12px; text-align: center; }
+    
+    .contact-box { background: #e8f5e9; border: 1px solid #c8e6c9; padding: 1.2rem; border-radius: 12px; text-align: center; margin-bottom: 1rem; }
     .contact-box h4 { color: var(--brand-green-coqui); margin-bottom: 0.5rem; }
+    
+    /* Sección Métodos de Pago (Klarna, Tarjeta, ATH Móvil) */
+    .payment-section { background: #FAFAF7; border: 1px solid var(--border-color); padding: 1.2rem; border-radius: 12px; margin-top: 1rem; }
+    .payment-section h4 { color: var(--text-primary); margin-bottom: 0.8rem; font-size: 1.05rem; }
+    
+    .payment-options { display: flex; flex-direction: column; gap: 0.8rem; }
+    
+    .btn-pay-option { display: flex; align-items: center; justify-content: space-between; padding: 0.85rem 1rem; border-radius: 8px; border: 1px solid var(--border-color); background: #fff; cursor: pointer; font-weight: bold; font-size: 0.95rem; transition: all 0.2s; }
+    .btn-pay-option:hover { border-color: var(--brand-green-coqui); transform: translateY(-1px); }
+
+    .btn-pay-klarna { background: #FFF0F5; border-color: #FFD1DC; color: #111; }
+    .btn-pay-klarna:hover { background: #FFE4EC; }
+    .badge-klarna { background: #FFB3C7; color: #111; padding: 0.2rem 0.5rem; border-radius: 6px; font-weight: bold; font-size: 0.8rem; }
+
+    .btn-pay-ath { background: #FFF5EE; border-color: #FFD8CC; color: #D64500; }
+    .btn-pay-ath:hover { background: #FFEBDC; }
+    .badge-ath { background: var(--brand-ath-orange); color: #fff; padding: 0.2rem 0.5rem; border-radius: 6px; font-weight: bold; font-size: 0.8rem; }
+
+    .btn-pay-card { background: #F8F9FA; border-color: #DEE2E6; color: #212529; }
+    .btn-pay-card:hover { background: #E9ECEF; }
+
     .btn-contact { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 0.8rem; border-radius: 8px; font-weight: bold; text-decoration: none; color: white; margin-top: 0.5rem; }
     .btn-whatsapp { background: #25D366; }
     .btn-sms { background: #007AFF; }
@@ -243,9 +269,7 @@
         <button class="close-btn" id="btnCloseDetailModal">&times;</button>
       </div>
 
-      <div class="detail-img" id="detailImgBox">
-        <!-- Imagen o Emoji -->
-      </div>
+      <div class="detail-img" id="detailImgBox"></div>
 
       <h2 id="detailTitle" style="font-size: 1.5rem; margin-bottom: 0.2rem;"></h2>
       <div class="detail-price" id="detailPrice"></div>
@@ -258,10 +282,35 @@
       <div class="contact-box">
         <h4>🔒 Contacta al Anunciante</h4>
         <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.8rem;">Tu contacto se canaliza de forma segura mediante Coquí Ventas.</p>
-        <div id="contactButtonContainer">
-          <!-- Botón de contacto dinámico -->
+        <div id="contactButtonContainer"></div>
+      </div>
+
+      <!-- Módulo de Métodos de Pago: Klarna, Tarjetas, ATH Móvil -->
+      <div class="payment-section" id="paymentBox">
+        <h4>💳 Opciones de Pago y Financiamiento</h4>
+        <div class="payment-options">
+          
+          <!-- Klarna -->
+          <button class="btn-pay-option btn-pay-klarna" id="btnPayKlarna">
+            <span>Pagar en 4 cuotas</span>
+            <span class="badge-klarna">Klarna.</span>
+          </button>
+
+          <!-- ATH Móvil -->
+          <button class="btn-pay-option btn-pay-ath" id="btnPayATH">
+            <span>Pagar al instante con</span>
+            <span class="badge-ath">ATH Móvil</span>
+          </button>
+
+          <!-- Tarjetas Visa/Mastercard -->
+          <button class="btn-pay-option btn-pay-card" id="btnPayCard">
+            <span>Tarjeta de Crédito / Débito</span>
+            <span style="font-size:1.1rem;">💳</span>
+          </button>
+
         </div>
       </div>
+
     </div>
   </div>
 
@@ -281,6 +330,7 @@
 
     let todosLosAnuncios = [];
     let filtroCategoria = 'all';
+    let anuncioSeleccionado = null;
 
     // Referencias DOM
     const modalPublish = document.getElementById('modalPublish');
@@ -294,6 +344,11 @@
     const sectionPrice = document.getElementById('sectionPrice');
     const listingsGrid = document.getElementById('listingsGrid');
 
+    // Botones de Pago
+    const btnPayKlarna = document.getElementById('btnPayKlarna');
+    const btnPayATH = document.getElementById('btnPayATH');
+    const btnPayCard = document.getElementById('btnPayCard');
+
     // Filtros DOM
     const searchInput = document.getElementById('searchInput');
     const townFilter = document.getElementById('townFilter');
@@ -301,7 +356,6 @@
     const btnResetFilter = document.getElementById('btnResetFilter');
     const gridTitle = document.getElementById('gridTitle');
 
-    // Categoría dinámica en el formulario
     selectCategory.addEventListener('change', (e) => {
       const val = e.target.value;
       if (val === 'empleo') {
@@ -317,14 +371,12 @@
       }
     });
 
-    // Modales
     btnOpen.addEventListener('click', () => modalPublish.classList.add('active'));
     btnCloseModal.addEventListener('click', () => modalPublish.classList.remove('active'));
     btnCloseDetailModal.addEventListener('click', () => modalDetail.classList.remove('active'));
     modalPublish.addEventListener('click', (e) => { if (e.target === modalPublish) modalPublish.classList.remove('active'); });
     modalDetail.addEventListener('click', (e) => { if (e.target === modalDetail) modalDetail.classList.remove('active'); });
 
-    // Compresión de imágenes
     function comprimirImagen(file, maxWidth = 800, quality = 0.7) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -352,7 +404,6 @@
       });
     }
 
-    // Publicar en Firebase
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const btnSubmit = form.querySelector('.btn-submit');
@@ -401,7 +452,6 @@
       }
     });
 
-    // Cargar Anuncios
     async function cargarAnuncios() {
       try {
         const q = query(collection(db, "anuncios"), orderBy("createdAt", "desc"));
@@ -419,7 +469,6 @@
       }
     }
 
-    // Renderizar lista en pantalla
     function renderizarAnuncios(lista) {
       if (lista.length === 0) {
         listingsGrid.innerHTML = '<p style="text-align:center; width:100%; color: var(--text-muted);">No se encontraron anuncios con este criterio.</p>';
@@ -458,8 +507,8 @@
       });
     }
 
-    // Abrir Modal de Detalle y Contacto
     function abrirDetalleAnuncio(data, badgeText, emoji) {
+      anuncioSeleccionado = data;
       document.getElementById('detailCategoryBadge').textContent = badgeText;
       document.getElementById('detailTitle').textContent = data.title;
       document.getElementById('detailPrice').textContent = data.priceOrSalary || 'Consulte';
@@ -473,11 +522,17 @@
         imgBox.innerHTML = emoji;
       }
 
-      // Generar botón de contacto seguro
+      // Ocultar sección de pagos si es empleo o adopción gratis
+      const paymentBox = document.getElementById('paymentBox');
+      if (data.category === 'empleo' || data.category === 'mascotas' || data.priceOrSalary === 'Gratis') {
+        paymentBox.style.display = 'none';
+      } else {
+        paymentBox.style.display = 'block';
+      }
+
       const contactContainer = document.getElementById('contactButtonContainer');
       const mensajeBase = encodeURIComponent(`Hola, vi tu anuncio "${data.title}" en Coquí Ventas y me interesa obtener más información.`);
       let contactHtml = '';
-
       const contactoLimpio = (data.contactInfo || '').replace(/[^0-9]/g, '');
 
       if (data.notifyPref === 'whatsapp' && contactoLimpio) {
@@ -494,7 +549,19 @@
       modalDetail.classList.add('active');
     }
 
-    // Lógica de Filtros y Búsqueda (Paso 1)
+    // Handlers para las 3 opciones de pago
+    btnPayKlarna.addEventListener('click', () => {
+      alert(`Iniciando pago en 4 plazos con Klarna para "${anuncioSeleccionado.title}".\n\n(Se conecta mediante la API de Klarna)`);
+    });
+
+    btnPayATH.addEventListener('click', () => {
+      alert(`Iniciando pago con ATH Móvil Business para "${anuncioSeleccionado.title}".\n\n(Abre la app de ATH Móvil en el teléfono del comprador)`);
+    });
+
+    btnPayCard.addEventListener('click', () => {
+      alert(`Iniciando checkout de Tarjeta de Crédito/Débito (Stripe) para "${anuncioSeleccionado.title}".`);
+    });
+
     function aplicarFiltros() {
       const texto = searchInput.value.toLowerCase().trim();
       const pueblo = townFilter.value;
@@ -518,12 +585,10 @@
       renderizarAnuncios(filtrados);
     }
 
-    // Eventos de búsqueda y categoría
     btnSearch.addEventListener('click', aplicarFiltros);
     searchInput.addEventListener('keyup', (e) => { if (e.key === 'Enter') aplicarFiltros(); });
     townFilter.addEventListener('change', aplicarFiltros);
 
-    // Filtros por Categoría en el Menú y Tarjetas
     document.querySelectorAll('[data-cat]').forEach(elem => {
       elem.addEventListener('click', (e) => {
         filtroCategoria = e.currentTarget.getAttribute('data-cat');
