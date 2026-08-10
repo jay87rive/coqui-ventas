@@ -247,7 +247,23 @@
     </div>
   </div>
 
-  <script>
+  <!-- Firebase SDK Integration -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // Configuración de Firebase para coqui-ventas
+    const firebaseConfig = {
+      projectId: "coqui-ventas",
+      authDomain: "coqui-ventas.firebaseapp.com",
+      storageBucket: "coqui-ventas.appspot.com"
+    };
+
+    // Inicializar Firebase y Firestore
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Referencias DOM
     const modal = document.getElementById('modalPublish');
     const btnOpen = document.getElementById('btnOpenModal');
     const btnClose = document.getElementById('btnCloseModal');
@@ -255,6 +271,7 @@
     const selectCategory = document.getElementById('category');
     const sectionJob = document.getElementById('sectionJob');
     const sectionPrice = document.getElementById('sectionPrice');
+    const listingsGrid = document.querySelector('.listings-grid');
 
     // Cambiar campos dinámicamente según la categoría
     selectCategory.addEventListener('change', (e) => {
@@ -277,7 +294,7 @@
     btnClose.addEventListener('click', () => modal.classList.remove('active'));
     modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
 
-    // Función de compresión de imágenes
+    // Compresión de imágenes
     function comprimirImagen(file, maxWidth = 800, quality = 0.7) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -305,197 +322,103 @@
       });
     }
 
-    // Evento al enviar formulario
+    // Guardar Anuncio en Firebase Firestore
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const fileInput = document.getElementById('photo');
-      let imageBase64 = '';
+      const btnSubmit = form.querySelector('.btn-submit');
+      btnSubmit.disabled = true;
+      btnSubmit.textContent = 'Publicando...';
 
-      if (fileInput.files.length > 0) {
-        imageBase64 = await comprimirImagen(fileInput.files[0]);
+      try {
+        const fileInput = document.getElementById('photo');
+        let imageBase64 = '';
+
+        if (fileInput.files.length > 0) {
+          imageBase64 = await comprimirImagen(fileInput.files[0]);
+        }
+
+        const category = document.getElementById('category').value;
+        const title = document.getElementById('title').value;
+        const town = document.getElementById('town').value;
+        const notifyPref = document.getElementById('notifyPref').value;
+        const contactInfo = document.getElementById('contactInfo').value;
+        const description = document.getElementById('description').value;
+
+        let priceOrSalary = '';
+        if (category === 'empleo') {
+          priceOrSalary = document.getElementById('jobSalary').value;
+        } else {
+          priceOrSalary = document.getElementById('price').value;
+        }
+
+        await addDoc(collection(db, "anuncios"), {
+          category,
+          title,
+          priceOrSalary,
+          town,
+          notifyPref,
+          contactInfo,
+          description,
+          imageBase64,
+          createdAt: serverTimestamp()
+        });
+
+        alert('¡Anuncio publicado exitosamente en Firebase!');
+        modal.classList.remove('active');
+        form.reset();
+        cargarAnuncios();
+      } catch (error) {
+        console.error("Error al publicar: ", error);
+        alert("Ocurrió un error al guardar el anuncio.");
+      } finally {
+        btnSubmit.disabled = false;
+        btnSubmit.textContent = 'Publicar Anuncio';
       }
-
-      alert('¡Anuncio preparado para publicar con éxito!');
-      modal.classList.remove('active');
-      form.reset();
     });
+
+    // Cargar Anuncios desde Firestore
+    async function cargarAnuncios() {
+      try {
+        const q = query(collection(db, "anuncios"), orderBy("createdAt", "desc"));
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) return;
+
+        listingsGrid.innerHTML = '';
+
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          let badgeClass = 'badge-clasificado';
+          let badgeText = 'Clasificado';
+          let emoji = '📦';
+
+          if (data.category === 'agricola') { badgeClass = 'badge-agricola'; badgeText = 'Agrícola Local'; emoji = '🌾'; }
+          else if (data.category === 'mascotas') { badgeClass = 'badge-mascotas'; badgeText = 'Adopción Gratis'; emoji = '🐾'; }
+          else if (data.category === 'empleo') { badgeClass = 'badge-empleo'; badgeText = 'Empleo'; emoji = '💼'; }
+
+          const card = document.createElement('article');
+          card.className = 'card-item';
+          card.innerHTML = `
+            <div class="card-img">
+              ${data.imageBase64 ? `<img src="${data.imageBase64}" style="width:100%; height:100%; object-fit:cover;" />` : emoji}
+            </div>
+            <div class="card-body">
+              <div>
+                <span class="badge ${badgeClass}">${badgeText}</span>
+                <div class="card-title">${data.title}</div>
+                <div class="card-price">${data.priceOrSalary}</div>
+              </div>
+              <div class="card-location">📍 ${data.town}, PR</div>
+            </div>
+          `;
+          listingsGrid.appendChild(card);
+        });
+      } catch (error) {
+        console.error("Error cargando anuncios: ", error);
+      }
+    }
+
+    cargarAnuncios();
   </script>
 </body>
-</<!-- Firebase SDK Modules -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, getDocs, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-  // 1. REEMPLAZA ESTO CON TUS CREDENCIALES DE FIREBASE
-  const firebaseConfig = {
-    apiKey: "TU_API_KEY",
-    authDomain: "coqui-ventas.firebaseapp.com",
-    projectId: "coqui-ventas",
-    storageBucket: "coqui-ventas.appspot.com",
-    messagingSenderId: "TU_MESSAGING_SENDER_ID",
-    appId: "TU_APP_ID"
-  };
-
-  // Inicializar Firebase y Firestore
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-
-  // Referencias DOM
-  const modal = document.getElementById('modalPublish');
-  const btnOpen = document.getElementById('btnOpenModal');
-  const btnClose = document.getElementById('btnCloseModal');
-  const form = document.getElementById('publishForm');
-  const selectCategory = document.getElementById('category');
-  const sectionJob = document.getElementById('sectionJob');
-  const sectionPrice = document.getElementById('sectionPrice');
-  const listingsGrid = document.querySelector('.listings-grid');
-
-  // Lógica del modal y campos dinámicos
-  selectCategory.addEventListener('change', (e) => {
-    const val = e.target.value;
-    if (val === 'empleo') {
-      sectionJob.style.display = 'block';
-      sectionPrice.style.display = 'none';
-    } else if (val === 'mascotas') {
-      sectionJob.style.display = 'none';
-      sectionPrice.style.display = 'block';
-      document.getElementById('price').value = 'Gratis';
-    } else {
-      sectionJob.style.display = 'none';
-      sectionPrice.style.display = 'block';
-    }
-  });
-
-  btnOpen.addEventListener('click', () => modal.classList.add('active'));
-  btnClose.addEventListener('click', () => modal.classList.remove('active'));
-  modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
-
-  // Compresión de imágenes
-  function comprimirImagen(file, maxWidth = 800, quality = 0.7) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = (event) => {
-        const img = new Image();
-        img.src = event.target.result;
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          let width = img.width;
-          let height = img.height;
-          if (width > maxWidth) {
-            height = Math.round((height * maxWidth) / width);
-            width = maxWidth;
-          }
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, width, height);
-          resolve(canvas.toDataURL('image/jpeg', quality));
-        };
-        img.onerror = (err) => reject(err);
-      };
-      reader.onerror = (err) => reject(err);
-    });
-  }
-
-  // Guardar Anuncio en Firebase Firestore
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const btnSubmit = form.querySelector('.btn-submit');
-    btnSubmit.disabled = true;
-    btnSubmit.textContent = 'Publicando...';
-
-    try {
-      const fileInput = document.getElementById('photo');
-      let imageBase64 = '';
-
-      if (fileInput.files.length > 0) {
-        imageBase64 = await comprimirImagen(fileInput.files[0]);
-      }
-
-      const category = document.getElementById('category').value;
-      const title = document.getElementById('title').value;
-      const town = document.getElementById('town').value;
-      const notifyPref = document.getElementById('notifyPref').value;
-      const contactInfo = document.getElementById('contactInfo').value;
-      const description = document.getElementById('description').value;
-
-      let priceOrSalary = '';
-      if (category === 'empleo') {
-        priceOrSalary = document.getElementById('jobSalary').value;
-      } else {
-        priceOrSalary = document.getElementById('price').value;
-      }
-
-      // Guardar en la colección 'anuncios'
-      await addDoc(collection(db, "anuncios"), {
-        category,
-        title,
-        priceOrSalary,
-        town,
-        notifyPref,
-        contactInfo,
-        description,
-        imageBase64,
-        createdAt: serverTimestamp()
-      });
-
-      alert('¡Anuncio publicado exitosamente en Firebase!');
-      modal.classList.remove('active');
-      form.reset();
-      cargarAnuncios(); // Recargar la lista
-    } catch (error) {
-      console.error("Error al publicar: ", error);
-      alert("Ocurrió un error al guardar el anuncio.");
-    } finally {
-      btnSubmit.disabled = false;
-      btnSubmit.textContent = 'Publicar Anuncio';
-    }
-  });
-
-  // Cargar Anuncios desde Firestore
-  async function cargarAnuncios() {
-    try {
-      const q = query(collection(db, "anuncios"), orderBy("createdAt", "desc"));
-      const querySnapshot = await getDocs(q);
-      
-      if (querySnapshot.empty) return;
-
-      listingsGrid.innerHTML = ''; // Limpiar publicaciones de prueba
-
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        let badgeClass = 'badge-clasificado';
-        let badgeText = 'Clasificado';
-        let emoji = '📦';
-
-        if (data.category === 'agricola') { badgeClass = 'badge-agricola'; badgeText = 'Agrícola Local'; emoji = '🌾'; }
-        else if (data.category === 'mascotas') { badgeClass = 'badge-mascotas'; badgeText = 'Adopción Gratis'; emoji = '🐾'; }
-        else if (data.category === 'empleo') { badgeClass = 'badge-empleo'; badgeText = 'Empleo'; emoji = '💼'; }
-
-        const card = document.createElement('article');
-        card.className = 'card-item';
-        card.innerHTML = `
-          <div class="card-img">
-            ${data.imageBase64 ? `<img src="${data.imageBase64}" style="width:100%; height:100%; object-fit:cover;" />` : emoji}
-          </div>
-          <div class="card-body">
-            <div>
-              <span class="badge ${badgeClass}">${badgeText}</span>
-              <div class="card-title">${data.title}</div>
-              <div class="card-price">${data.priceOrSalary}</div>
-            </div>
-            <div class="card-location">📍 ${data.town}, PR</div>
-          </div>
-        `;
-        listingsGrid.appendChild(card);
-      });
-    } catch (error) {
-      console.error("Error cargando anuncios: ", error);
-    }
-  }
-
-  // Cargar los anuncios guardados al iniciar la página
-  cargarAnuncios();
-</script>>
 </html>
