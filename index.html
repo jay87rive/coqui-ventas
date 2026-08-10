@@ -3,370 +3,765 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coqui Ventas - Compra • Vende • Confía</title>
-    <link rel="icon" href="logo.png.PNG" type="image/png">
+    <title>Coquí Ventas - Mercado, Bienes Raíces y Empleos en Puerto Rico</title>
+    
+    <!-- Firebase SDKs (Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
     <style>
         :root {
-            --primary: #127369;
-            --secondary: #10403B;
-            --dark-slate: #2B4C6F;
-            --light-bg: #F4F7F6;
-            --accent: #4C9A2A;
-            --white: #FFFFFF;
-            --text-color: #333333;
-            --gray-border: #E0E0E0;
+            --primary-color: #1b4332;
+            --accent-color: #d97706;
+            --bg-color: #f4f6f4;
+            --text-color: #212529;
+            --white: #ffffff;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
         }
 
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: Arial, sans-serif;
         }
 
         body {
-            background-color: var(--light-bg);
+            background-color: var(--bg-color);
             color: var(--text-color);
-            line-height: 1.6;
-            overflow-x: hidden; /* Evita desbordamientos horizontales */
         }
 
-        /* HEADER RESPONSIVO */
         header {
             background-color: var(--white);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-            padding: 12px 4%;
+            border-bottom: 1px solid var(--light-gray);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 1rem 2rem;
             position: sticky;
             top: 0;
-            z-index: 1000;
-            flex-wrap: wrap;
-            gap: 10px;
+            z-index: 100;
         }
 
-        .logo-container {
+        .logo-area {
             display: flex;
             align-items: center;
             gap: 10px;
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: var(--primary-color);
         }
 
-        .logo-container img {
-            height: 40px;
-            width: auto;
-        }
-
-        .logo-text h1 {
-            font-size: 1.1rem;
-            color: var(--dark-slate);
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            line-height: 1.1;
-        }
-
-        .logo-text p {
-            font-size: 0.65rem;
-            color: var(--primary);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        nav {
+        .header-actions {
             display: flex;
             gap: 15px;
-            align-items: center;
-            flex-wrap: wrap;
         }
 
-        nav a {
-            text-decoration: none;
-            color: var(--dark-slate);
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: color 0.3s;
-        }
-
-        nav a:hover {
-            color: var(--primary);
-        }
-
-        .btn-primary {
-            background-color: var(--primary);
-            color: var(--white);
+        .btn {
+            background-color: var(--light-gray);
+            border: none;
             padding: 8px 16px;
             border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            color: var(--text-color);
             text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: background 0.3s;
-            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
         }
 
-        .btn-primary:hover {
-            background-color: var(--secondary);
-        }
+        .btn:hover { opacity: 0.85; }
 
-        /* HERO SECTION */
-        .hero {
-            background: linear-gradient(135deg, var(--dark-slate), var(--secondary));
+        .btn-primary {
+            background-color: var(--accent-color);
             color: var(--white);
-            text-align: center;
-            padding: 60px 20px;
         }
 
-        .hero h2 {
-            font-size: 2rem;
-            margin-bottom: 12px;
-            font-weight: 700;
-        }
-
-        .hero p {
-            font-size: 1rem;
-            margin-bottom: 25px;
-            opacity: 0.9;
-        }
-
-        .search-bar {
-            max-width: 580px;
+        .main-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1400px;
             margin: 0 auto;
+        }
+
+        aside {
+            background: var(--white);
+            padding: 1.2rem;
+            border-radius: 8px;
+            border: 1px solid var(--light-gray);
+            height: fit-content;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: sticky;
+            top: 90px;
+        }
+
+        aside h3 {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            color: var(--gray);
+            margin-bottom: 1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .department-list {
             display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .category-group {
+            border-radius: 6px;
+            overflow: hidden;
+            background: #fafafa;
+            border: 1px solid var(--light-gray);
+        }
+
+        .dept-item {
+            width: 100%;
+            background: transparent;
+            border: none;
+            text-align: left;
+            padding: 10px 12px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--text-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+        }
+
+        .dept-item:hover, .dept-item.active {
+            background-color: #e2e8f0;
+            color: var(--primary-color);
+        }
+
+        .sub-categories {
+            display: none;
+            flex-direction: column;
+            padding: 4px 8px 8px 16px;
+            gap: 4px;
+            background: var(--white);
+            border-top: 1px solid var(--light-gray);
+        }
+
+        .category-group.open .sub-categories {
+            display: flex;
+        }
+
+        .sub-item {
+            background: transparent;
+            border: none;
+            text-align: left;
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            color: var(--gray);
+            transition: all 0.2s;
+        }
+
+        .sub-item:hover, .sub-item.active {
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .content-area h2 {
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .ads-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
             background: var(--white);
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-        }
-
-        .search-bar input {
-            flex: 1;
-            padding: 12px 15px;
-            border: none;
-            outline: none;
-            font-size: 0.95rem;
-            min-width: 0;
-        }
-
-        .search-bar button {
-            background-color: var(--accent);
-            color: var(--white);
-            border: none;
-            padding: 0 20px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.3s;
-            white-space: nowrap;
-        }
-
-        .search-bar button:hover {
-            background-color: #3b7c20;
-        }
-
-        /* CONTAINER GENERAL */
-        .container {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            border-bottom: 2px solid var(--gray-border);
-            padding-bottom: 10px;
-        }
-
-        .section-title {
-            font-size: 1.4rem;
-            color: var(--dark-slate);
-            font-weight: 700;
-        }
-
-        /* GRID DE PRODUCTOS ORGANIZADO */
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-
-        .product-card {
-            background: var(--white);
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-            border: 1px solid var(--gray-border);
+            border: 1px solid var(--light-gray);
             display: flex;
             flex-direction: column;
         }
 
-        .product-image {
-            height: 160px;
-            background-color: #e2e8f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #64748b;
-            font-weight: 600;
-            font-size: 0.85rem;
+        .card-img-wrapper {
+            position: relative;
+            width: 100%;
+            height: 180px;
+            background-color: #cbd5e1;
         }
 
-        .product-info {
-            padding: 15px;
+        .card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-body {
+            padding: 1rem;
             display: flex;
             flex-direction: column;
             gap: 6px;
             flex-grow: 1;
         }
 
-        .product-title {
-            font-size: 1rem;
-            color: var(--dark-slate);
-            font-weight: 700;
+        .card-title { font-size: 1.05rem; font-weight: bold; }
+        .card-price { font-size: 1.1rem; color: var(--primary-color); font-weight: bold; }
+        .card-location { font-size: 0.85rem; color: var(--gray); }
+
+        .card-footer {
+            padding: 1rem;
+            border-top: 1px solid var(--light-gray);
+            background-color: #fafafa;
         }
 
-        .product-price {
-            font-size: 1.1rem;
-            color: var(--primary);
-            font-weight: 800;
-        }
-
-        .product-desc {
-            font-size: 0.8rem;
-            color: #666;
-            margin-bottom: 8px;
-        }
-
-        .btn-card {
-            display: block;
-            text-align: center;
-            background-color: var(--light-bg);
-            color: var(--dark-slate);
-            padding: 8px;
+        .btn-block {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 10px;
+            border: none;
             border-radius: 6px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.85rem;
-            transition: background 0.3s, color 0.3s;
-            margin-top: auto;
+            cursor: pointer;
+            font-weight: bold;
         }
 
-        .btn-card:hover {
-            background-color: var(--primary);
-            color: var(--white);
+        /* Modales */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
         }
 
-        /* FOOTER */
-        footer {
-            background-color: var(--dark-slate);
-            color: var(--white);
-            text-align: center;
-            padding: 30px 20px;
-            margin-top: 40px;
+        .modal-overlay.active { display: flex; }
+
+        .modal-card {
+            background: var(--white);
+            width: 100%;
+            max-width: 500px;
+            border-radius: 12px;
+            padding: 2rem;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
-        footer p {
-            font-size: 0.85rem;
-            opacity: 0.85;
+        .close-btn {
+            position: absolute;
+            top: 1rem; right: 1rem;
+            background: none; border: none;
+            font-size: 1.25rem; cursor: pointer;
+            color: var(--gray);
         }
 
-        /* MEDIA QUERY PARA CELULARES PEQUEÑOS */
-        @media (max-width: 768px) {
-            header {
-                justify-content: center;
-                padding: 12px 10px;
-            }
-            nav {
-                justify-content: center;
-                gap: 12px;
-                font-size: 0.85rem;
-            }
-            .hero h2 {
-                font-size: 1.6rem;
-            }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 0.4rem;
+            font-size: 0.9rem;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 0.65rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+
+        @media(max-width: 768px) {
+            .main-container { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo-container">
-            <img src="logo.png.PNG" alt="Coqui Ventas Logo">
-            <div class="logo-text">
-                <h1>COQUI VENTAS</h1>
-                <p>Compra • Vende • Confía</p>
-            </div>
+        <div class="logo-area">🐸 Coquí Ventas</div>
+        <div class="header-actions">
+            <button class="btn">Mi Resume</button>
+            <button class="btn">Panel Empleador</button>
+            <button class="btn btn-primary" onclick="abrirModal()">+ Publicar</button>
         </div>
-        <nav>
-            <a href="#inicio">Inicio</a>
-            <a href="#productos">Explorar</a>
-            <a href="#vender">Vender</a>
-            <a href="#login" class="btn-primary">Iniciar Sesión</a>
-        </nav>
     </header>
 
-    <section class="hero" id="inicio">
-        <h2>El mercado digital donde encuentras de todo</h2>
-        <p>Publica tus productos gratis, conecta con compradores y haz transacciones seguras.</p>
-        <div class="search-bar">
-            <input type="text" placeholder="¿Qué estás buscando hoy?">
-            <button>Buscar</button>
-        </div>
-    </section>
-
-    <div class="container" id="productos">
-        <div class="section-header">
-            <h3 class="section-title">Productos Destacados</h3>
-        </div>
-
-        <div class="products-grid">
-            <div class="product-card">
-                <div class="product-image">Foto del Artículo</div>
-                <div class="product-info">
-                    <h4 class="product-title">Smartphone de Gama Media</h4>
-                    <div class="product-price">$250.00</div>
-                    <p class="product-desc">En excelente estado, liberado para cualquier compañía y con garantía.</p>
-                    <a href="#" class="btn-card">Ver Detalles</a>
+    <div class="main-container">
+        <aside>
+            <h3>Departamentos</h3>
+            <div class="department-list" id="categoryList">
+                <button class="dept-item" style="margin-bottom: 8px; border-radius: 6px; background: #e2e8f0; color: var(--primary-color);" onclick="filtrarCategoria('Todos', this)">✨ Ver Todos los Anuncios</button>
+                
+                <!-- De Aquí (Local) -->
+                <div class="category-group">
+                    <button class="dept-item" onclick="toggleCategoria(this, 'De Aquí (Local)')">
+                        🌱 De Aquí (Local) <span>▾</span>
+                    </button>
+                    <div class="sub-categories">
+                        <button class="sub-item" onclick="filtrarSub('Frutas y Vegetales Frescos', this)">Frutas y Vegetales</button>
+                        <button class="sub-item" onclick="filtrarSub('Café y Cacao', this)">Café y Cacao</button>
+                        <button class="sub-item" onclick="filtrarSub('Artesanías y Productos Locales', this)">Artesanías y Locales</button>
+                    </div>
                 </div>
-            </div>
 
-            <div class="product-card">
-                <div class="product-image">Foto del Artículo</div>
-                <div class="product-info">
-                    <h4 class="product-title">Laptop para Estudiante / Trabajo</h4>
-                    <div class="product-price">$480.00</div>
-                    <p class="product-desc">Procesador rápido, 8GB RAM, ideal para clases y teletrabajo.</p>
-                    <a href="#" class="btn-card">Ver Detalles</a>
+                <!-- Adopción de Animales -->
+                <div class="category-group">
+                    <button class="dept-item" onclick="toggleCategoria(this, 'Adopción de Animales')">
+                        🐕 Adopción de Animales <span>▾</span>
+                    </button>
+                    <div class="sub-categories">
+                        <button class="sub-item" onclick="filtrarSub('Perros en Adopción', this)">Perros Rescatados</button>
+                        <button class="sub-item" onclick="filtrarSub('Gatos en Adopción', this)">Gatos Rescatados</button>
+                        <button class="sub-item" onclick="filtrarSub('Suministros de Refugio', this)">Suministros de Refugio</button>
+                    </div>
                 </div>
-            </div>
 
-            <div class="product-card">
-                <div class="product-image">Foto del Artículo</div>
-                <div class="product-info">
-                    <h4 class="product-title">Bicicleta de Montaña Aro 29</h4>
-                    <div class="product-price">$195.00</div>
-                    <p class="product-desc">Lista para rodar, frenos de disco y suspensión delantera ajustable.</p>
-                    <a href="#" class="btn-card">Ver Detalles</a>
+                <!-- Vehículos y Piezas -->
+                <div class="category-group">
+                    <button class="dept-item" onclick="toggleCategoria(this, 'Vehículos y Piezas')">
+                        🚗 Vehículos y Piezas <span>▾</span>
+                    </button>
+                    <div class="sub-categories">
+                        <button class="sub-item" onclick="filtrarSub('Autos', this)">Autos</button>
+                        <button class="sub-item" onclick="filtrarSub('Camionetas', this)">Camionetas</button>
+                        <button class="sub-item" onclick="filtrarSub('Motoras', this)">Motoras</button>
+                        <button class="sub-item" onclick="filtrarSub('ATVs/UTVs', this)">ATVs / UTVs</button>
+                        <button class="sub-item" onclick="filtrarSub('Lanchas', this)">Lanchas</button>
+                        <button class="sub-item" onclick="filtrarSub('Piezas y Accesorios', this)">Piezas y Accesorios</button>
+                    </div>
                 </div>
-            </div>
 
-            <div class="product-card">
-                <div class="product-image">Foto del Artículo</div>
-                <div class="product-info">
-                    <h4 class="product-title">Mueble Modular para Sala</h4>
-                    <div class="product-price">$320.00</div>
-                    <p class="product-desc">Diseño moderno, cómodo y en excelentes condiciones de cuidado.</p>
-                    <a href="#" class="btn-card">Ver Detalles</a>
+                <!-- Electrónica y Tecnología -->
+                <div class="category-group">
+                    <button class="dept-item" onclick="toggleCategoria(this, 'Electrónica y Tecnología')">
+                        💻 Electrónica y Tecnología <span>▾</span>
+                    </button>
+                    <div class="sub-categories">
+                        <button class="sub-item" onclick="filtrarSub('Celulares', this)">Celulares</button>
+                        <button class="sub-item" onclick="filtrarSub('Laptops', this)">Laptops</button>
+                        <button class="sub-item" onclick="filtrarSub('Consolas', this)">Consolas</button>
+                        <button class="sub-item" onclick="filtrarSub('Videojuegos', this)">Videojuegos</button>
+                        <button class="sub-item" onclick="filtrarSub('Televisores y Audio', this)">Televisores y Audio</button>
+                    </div>
                 </div>
+
+                <!-- Hogar y Enseres -->
+                <div class="category-group">
+                    <button class="dept-item" onclick="toggleCategoria(this, 'Hogar y Enseres')">
+                        🏠 Hogar y Enseres <span>▾</span>
+                    </button>
+                    <div class="sub-categories">
+                        <button class="sub-item" onclick="filtrarSub('Muebles', this)">Muebles</button>
+                        <button class="sub-item" onclick="filtrarSub('Electrodomésticos', this)">Electrodomésticos</button>
+                        <button class="sub-item" onclick="filtrarSub('Organización e Iluminación', this)">Organización e Iluminación</button>
+                    </div>
+                </div>
+
+                <!-- Jardín y Exteriores -->
+                <div class="category-group">
+                    <button class="dept-item" onclick="toggleCategoria(this, 'Jardín y Exteriores')">
+                        🌿 Jardín y Exteriores <span>▾</span>
+                    </button>
+                    <div class="sub-categories">
+                        <button class="sub-item" onclick="filtrarSub('Plantas', this)">Plantas</button>
+                        <button class="sub-item" onclick="filtrarSub('Masetas', this)">Masetas</button>
+                        <button class="sub-item" onclick="filtrarSub('Herramientas de Jardín', this)">Herramientas de Jardín</button>
+                        <button class="sub-item" onclick="filtrarSub('Muebles de Patio', this)">Muebles de Patio</button>
+                        <button class="sub-item" onclick="filtrarSub('Piscinas', this)">Piscinas</button>
+                    </div>
+                </div>
+
+                <!-- Bienes Raíces -->
+                <div class="category-group">
+                    <button class="dept-item" onclick="toggleCategoria(this, 'Bienes Raíces')">
+                        🏢 Bienes Raíces <span>▾</span>
+                    </button>
+                    <div class="sub-categories">
+                        <button class="sub-item" onclick="filtrarSub('Alquileres a largo plazo', this)">Alquileres a largo plazo</button>
+                        <button class="sub-item" onclick="filtrarSub('Ventas de Propiedades', this)">Ventas</button>
+                        <button class="sub-item" onclick="filtrarSub('Terrenos', this)">Terrenos</button>
+                        <button class="sub-item" onclick="filtrarSub('Locales Comerciales', this)">Locales Comerciales</button>
+                    </div>
+                </div>
+
+                <!-- Moda y Accesorios -->
+                <div class="category-group">
+                    <button class="dept-item" onclick="toggleCategoria(this, 'Moda y Accesorios')">
+                        👕 Moda y Accesorios <span>▾</span>
+                    </button>
+                    <div class="sub-categories">
+                        <button class="sub-item" onclick="filtrarSub('Ropa', this)">Ropa</button>
+                        <button class="sub-item" onclick="filtrarSub('Calzado', this)">Calzado</button>
+                        <button class="sub-item" onclick="filtrarSub('Joyería y Relojes', this)">Joyería y Relojes</button>
+                        <button class="sub-item" onclick="filtrarSub('Bolsos', this)">Bolsos</button>
+                    </div>
+                </div>
+
+                <!-- Deportes y Recreación -->
+                <div class="category-group">
+                    <button class="dept-item" onclick="toggleCategoria(this, 'Deportes y Recreación')">
+                        ⚽ Deportes y Recreación <span>▾</span>
+                    </button>
+                    <div class="sub-categories">
+                        <button class="sub-item" onclick="filtrarSub('Deportes Acuáticos', this)">Deportes Acuáticos</button>
+                        <button class="sub-item" onclick="filtrarSub('Bicicletas', this)">Bicicletas</button>
+                        <button class="sub-item" onclick="filtrarSub('Fitness', this)">Fitness</button>
+                        <button class="sub-item" onclick="filtrarSub('Equipos al Aire Libre', this)">Equipos al Aire Libre</button>
+                    </div>
+                </div>
+
+                <!-- Bebés y Niños -->
+                <div class="category-group">
+                    <button class="dept-item" onclick="toggleCategoria(this, 'Bebés y Niños')">
+                        👶 Bebés y Niños <span>▾</span>
+                    </button>
+                    <div class="sub-categories">
+                        <button class="sub-item" onclick="filtrarSub('Muebles de Bebé', this)">Muebles de Bebé</button>
+                        <button class="sub-item" onclick="filtrarSub('Coches', this)">Coches</button>
+                        <button class="sub-item" onclick="filtrarSub('Juguetes', this)">Juguetes</button>
+                        <button class="sub-item" onclick="filtrarSub('Ropa Infantil', this)">Ropa</button>
+                    </div>
+                </div>
+
+                <!-- Negocios y Comercial -->
+                <div class="category-group">
+                    <button class="dept-item" onclick="toggleCategoria(this, 'Negocios y Comercial')">
+                        📊 Negocios y Comercial <span>▾</span>
+                    </button>
+                    <div class="sub-categories">
+                        <button class="sub-item" onclick="filtrarSub('Mobiliario de Oficina', this)">Mobiliario de Oficina</button>
+                        <button class="sub-item" onclick="filtrarSub('Equipos Comerciales', this)">Equipos Comerciales</button>
+                        <button class="sub-item" onclick="filtrarSub('Inventario', this)">Inventario</button>
+                    </div>
+                </div>
+
+                <!-- Mascotas y Suministros -->
+                <div class="category-group">
+                    <button class="dept-item" onclick="toggleCategoria(this, 'Mascotas y Suministros')">
+                        🐾 Mascotas y Suministros <span>▾</span>
+                    </button>
+                    <div class="sub-categories">
+                        <button class="sub-item" onclick="filtrarSub('Accesorios de Mascotas', this)">Accesorios</button>
+                        <button class="sub-item" onclick="filtrarSub('Comida para Mascotas', this)">Comida</button>
+                        <button class="sub-item" onclick="filtrarSub('Artículos de Cuidado', this)">Artículos de Cuidado</button>
+                    </div>
+                </div>
+
+                <!-- Servicios Profesionales -->
+                <div class="category-group">
+                    <button class="dept-item" onclick="toggleCategoria(this, 'Servicios Profesionales')">
+                        🛠️ Servicios Profesionales <span>▾</span>
+                    </button>
+                    <div class="sub-categories">
+                        <button class="sub-item" onclick="filtrarSub('Reparaciones', this)">Reparaciones</button>
+                        <button class="sub-item" onclick="filtrarSub('Masajistas', this)">Masajistas</button>
+                        <button class="sub-item" onclick="filtrarSub('Camarógrafos y Fotógrafos', this)">Camarógrafos/Fotógrafos</button>
+                        <button class="sub-item" onclick="filtrarSub('DJs y Música', this)">DJs</button>
+                        <button class="sub-item" onclick="filtrarSub('Clases y Tutorías', this)">Clases</button>
+                    </div>
+                </div>
+
+                <!-- Turismo Interno y Experiencias -->
+                <div class="category-group">
+                    <button class="dept-item" onclick="toggleCategoria(this, 'Turismo Interno y Experiencias')">
+                        🌴 Turismo Interno y Experiencias <span>▾</span>
+                    </button>
+                    <div class="sub-categories">
+                        <button class="sub-item" onclick="filtrarSub('Excursiones', this)">Excursiones</button>
+                        <button class="sub-item" onclick="filtrarSub('Chinchorreos', this)">Chinchorreos</button>
+                        <button class="sub-item" onclick="filtrarSub('Pases de día', this)">Pases de día</button>
+                        <button class="sub-item" onclick="filtrarSub('Alquiler de equipos turísticos', this)">Alquiler de equipos</button>
+                        <button class="sub-item" onclick="filtrarSub('Experiencias de aventura', this)">Experiencias de aventura</button>
+                    </div>
+                </div>
+
+                <!-- Arte, Talleres y Eventos -->
+                <div class="category-group">
+                    <button class="dept-item" onclick="toggleCategoria(this, 'Arte, Talleres y Eventos')">
+                        🎨 Arte, Talleres y Eventos <span>▾</span>
+                    </button>
+                    <div class="sub-categories">
+                        <button class="sub-item" onclick="filtrarSub('Talleres de pintura y artesanías', this)">Talleres de pintura/artesanías</button>
+                        <button class="sub-item" onclick="filtrarSub('Música en vivo', this)">Música</button>
+                        <button class="sub-item" onclick="filtrarSub('Eventos comunitarios', this)">Eventos comunitarios</button>
+                        <button class="sub-item" onclick="filtrarSub('Actividades Gratuitas', this)">Actividades Gratuitas</button>
+                    </div>
+                </div>
+
             </div>
+        </aside>
+
+        <main class="content-area">
+            <h2 id="feedTitle">Explorando Anuncios</h2>
+            <div class="ads-grid" id="cardsGrid">
+                <p>Cargando anuncios...</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal con Formulario de Publicación -->
+    <div class="modal-overlay" id="publishModal">
+        <div class="modal-card">
+            <button class="close-btn" onclick="cerrarModal()">&times;</button>
+            <h2 style="margin-bottom: 1rem; color: var(--primary-color);">Crear Publicación</h2>
+            
+            <form id="formPublicar" onsubmit="guardarAnuncio(event)">
+                <div class="form-group">
+                    <label>Título del Anuncio</label>
+                    <input type="text" id="titulo" required placeholder="Ej. Café de altura, iPhone 13, Adopción...">
+                </div>
+
+                <div class="form-group">
+                    <label>Categoría Principal</label>
+                    <select id="categoria" required onchange="actualizarSubcategoriasForm()">
+                        <option value="De Aquí (Local)">🌱 De Aquí (Local)</option>
+                        <option value="Adopción de Animales">🐕 Adopción de Animales</option>
+                        <option value="Vehículos y Piezas">🚗 Vehículos y Piezas</option>
+                        <option value="Electrónica y Tecnología">💻 Electrónica y Tecnología</option>
+                        <option value="Hogar y Enseres">🏠 Hogar y Enseres</option>
+                        <option value="Jardín y Exteriores">🌿 Jardín y Exteriores</option>
+                        <option value="Bienes Raíces">🏢 Bienes Raíces</option>
+                        <option value="Moda y Accesorios">👕 Moda y Accesorios</option>
+                        <option value="Deportes y Recreación">⚽ Deportes y Recreación</option>
+                        <option value="Bebés y Niños">👶 Bebés y Niños</option>
+                        <option value="Negocios y Comercial">📊 Negocios y Comercial</option>
+                        <option value="Mascotas y Suministros">🐾 Mascotas y Suministros</option>
+                        <option value="Servicios Profesionales">🛠️ Servicios Profesionales</option>
+                        <option value="Turismo Interno y Experiencias">🌴 Turismo Interno y Experiencias</option>
+                        <option value="Arte, Talleres y Eventos">🎨 Arte, Talleres y Eventos</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Subcategoría específica</label>
+                    <input type="text" id="subcategoria" placeholder="Ej. Frutas y Vegetales, Autos, Perros en Adopción...">
+                </div>
+
+                <div class="form-group">
+                    <label>Precio / Salario</label>
+                    <input type="text" id="precio" required placeholder="Ej. $45 o Gratis">
+                </div>
+
+                <div class="form-group">
+                    <label>Pueblo / Ubicación</label>
+                    <input type="text" id="ubicacion" required placeholder="Ej. Jayuya, PR">
+                </div>
+
+                <div class="form-group">
+                    <label>Foto (Selecciona 1 imagen)</label>
+                    <input type="file" id="fotos" accept="image/*">
+                </div>
+
+                <div class="form-group">
+                    <label>Descripción detallada</label>
+                    <textarea id="descripcion" rows="3" placeholder="Detalles del artículo, producto fresco o mascota..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-block" id="btnGuardar">Publicar Anuncio</button>
+            </form>
         </div>
     </div>
 
-    <footer>
-        <p>&copy; 2026 Coqui Ventas. Todos los derechos reservados. Compra • Vende • Confía.</p>
-    </footer>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBjLjNc7EGKXdCwc-VmI",
+            authDomain: "coqui-ventas.firebaseapp.com",
+            projectId: "coqui-ventas",
+            storageBucket: "coqui-ventas.appspot.com",
+            messagingSenderId: "425636251347",
+            appId: "1:425636251347:web:b96972a"
+        };
 
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        let anunciosTotales = [];
+
+        window.onload = function() {
+            cargarAnuncios();
+        };
+
+        function cargarAnuncios() {
+            db.collection("ads").orderBy("createdAt", "desc").onSnapshot(snapshot => {
+                anunciosTotales = [];
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    if (data.titulo) {
+                        anunciosTotales.push({ id: doc.id, ...data });
+                    }
+                });
+                renderizarTarjetas(anunciosTotales);
+            }, error => {
+                console.error("Error al cargar de Firestore:", error);
+                document.getElementById('cardsGrid').innerHTML = '<p>Error al conectar con la base de datos.</p>';
+            });
+        }
+
+        function renderizarTarjetas(lista) {
+            const grid = document.getElementById('cardsGrid');
+            grid.innerHTML = '';
+
+            if (lista.length === 0) {
+                grid.innerHTML = '<p>No hay anuncios publicados en esta categoría todavía.</p>';
+                return;
+            }
+
+            lista.forEach(ad => {
+                const foto = (ad.fotos && ad.fotos.length > 0) 
+                    ? ad.fotos[0] 
+                    : 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=500&q=80';
+
+                const cardHTML = `
+                    <article class="card">
+                        <div class="card-img-wrapper">
+                            <img src="${foto}" class="card-img">
+                        </div>
+                        <div class="card-body">
+                            <h3 class="card-title">${ad.titulo}</h3>
+                            <div class="card-price">${ad.precio}</div>
+                            <div class="card-location">📍 ${ad.ubicacion} ${ad.subcategoria ? '• ' + ad.subcategoria : ''}</div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn-block" onclick='verDetalle("${encodeURIComponent(ad.titulo)}", "${encodeURIComponent(ad.precio)}", "${encodeURIComponent(ad.ubicacion)}", "${encodeURIComponent(ad.categoria)}", "${encodeURIComponent(ad.descripcion || "Sin descripción")}", "${encodeURIComponent(foto)}")'>Ver Detalle</button>
+                        </div>
+                    </article>
+                `;
+                grid.innerHTML += cardHTML;
+            });
+        }
+
+        function toggleCategoria(elemento, catNombre) {
+            // Cierra las demás y abre la actual o viceversa
+            const grupo = elemento.parentElement;
+            const isOpen = grupo.classList.contains('open');
+            
+            document.querySelectorAll('.category-group').forEach(el => el.classList.remove('open'));
+            
+            if (!isOpen) {
+                grupo.classList.add('open');
+            }
+
+            filtrarCategoria(catNombre, elemento);
+        }
+
+        function filtrarCategoria(cat, elemento) {
+            document.querySelectorAll('.dept-item').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.sub-item').forEach(el => el.classList.remove('active'));
+            if(elemento) elemento.classList.add('active');
+            
+            document.getElementById('feedTitle').innerText = cat === 'Todos' ? 'Explorando Anuncios' : cat;
+
+            if (cat === 'Todos') {
+                renderizarTarjetas(anunciosTotales);
+            } else {
+                const filtrados = anunciosTotales.filter(ad => ad.categoria === cat);
+                renderizarTarjetas(filtrados);
+            }
+        }
+
+        function filtrarSub(subcat, elemento) {
+            document.querySelectorAll('.sub-item').forEach(el => el.classList.remove('active'));
+            elemento.classList.add('active');
+            document.getElementById('feedTitle').innerText = subcat;
+
+            const filtrados = anunciosTotales.filter(ad => ad.subcategoria === subcat);
+            renderizarTarjetas(filtrados);
+        }
+
+        async function guardarAnuncio(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnGuardar');
+            btn.innerText = 'Subiendo anuncio...';
+            btn.disabled = true;
+
+            const titulo = document.getElementById('titulo').value;
+            const categoria = document.getElementById('categoria').value;
+            const subcategoria = document.getElementById('subcategoria').value;
+            const precio = document.getElementById('precio').value;
+            const ubicacion = document.getElementById('ubicacion').value;
+            const descripcion = document.getElementById('descripcion').value;
+            const archivoInput = document.getElementById('fotos');
+
+            let fotosURLs = [];
+
+            try {
+                if (archivoInput.files && archivoInput.files[0]) {
+                    const file = archivoInput.files[0];
+                    const base64 = await new Promise((resolve) => {
+                        const reader = new FileReader();
+                        reader.onload = (evt) => resolve(evt.target.result);
+                        reader.readAsDataURL(file);
+                    });
+                    fotosURLs.push(base64);
+                } else {
+                    fotosURLs.push('https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=500&q=80');
+                }
+
+                await db.collection("ads").add({
+                    titulo,
+                    categoria,
+                    subcategoria,
+                    precio,
+                    ubicacion,
+                    descripcion,
+                    fotos: fotosURLs,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                alert("¡Anuncio publicado con éxito!");
+                document.getElementById('formPublicar').reset();
+                cerrarModal();
+            } catch (err) {
+                console.error("Error al publicar:", err);
+                alert("Ocurrió un error al subir el anuncio.");
+            } finally {
+                btn.innerText = 'Publicar Anuncio';
+                btn.disabled = false;
+            }
+        }
+
+        function verDetalle(titulo, precio, ubicacion, categoria, descripcion, foto) {
+            const modalHTML = `
+                <div class="modal-overlay active" id="modalDetalle" onclick="if(event.target === this) cerrarDetalle()">
+                    <div class="modal-card">
+                        <button class="close-btn" onclick="cerrarDetalle()">&times;</button>
+                        <h2 style="margin-bottom: 1rem; color: var(--primary-color);">${decodeURIComponent(titulo)}</h2>
+                        <img src="${decodeURIComponent(foto)}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 6px; margin-bottom: 1rem;">
+                        <p style="font-size: 1.2rem; font-weight: bold; color: var(--primary-color); margin-bottom: 0.5rem;">${decodeURIComponent(precio)}</p>
+                        <p style="color: var(--gray); font-size: 0.9rem; margin-bottom: 0.5rem;">📍 <strong>Ubicación:</strong> ${decodeURIComponent(ubicacion)}</p>
+                        <p style="color: var(--gray); font-size: 0.9rem; margin-bottom: 1rem;">📂 <strong>Categoría:</strong> ${decodeURIComponent(categoria)}</p>
+                        <hr style="border: none; border-top: 1px solid var(--light-gray); margin-bottom: 1rem;">
+                        <p style="white-space: pre-wrap; font-size: 0.95rem;">${decodeURIComponent(descripcion)}</p>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+
+        function cerrarDetalle() {
+            const modal = document.getElementById('modalDetalle');
+            if (modal) modal.remove();
+        }
+
+        function abrirModal() { document.getElementById('publishModal').classList.add('active'); }
+        function cerrarModal() { document.getElementById('publishModal').classList.remove('active'); }
+        function actualizarSubcategoriasForm() { /* Opcional para lógica de autocompletado futura */ }
+    </script>
 </body>
 </html>
