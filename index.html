@@ -13,14 +13,14 @@
       /* Paleta Elegante y Moderna */
       --brand-green: #1b4332;       /* Verde bosque elegante */
       --brand-green-hover: #2d6a4f; /* Verde suave para hover */
-      --brand-accent: #d97706;      /* Ámbar/Terracota sutil para botones de acción */
+      --brand-accent: #d97706;      /* Ámbar/Terracota sutil */
       --brand-gold: #b45309;        /* Dorado sobrio para "De Aquí" */
       --brand-gold-bg: #fef3c7;     /* Fondo suave dorado */
       
       --bg-body: #f8fafc;           /* Fondo gris ultra-limpio */
       --bg-surface: #ffffff;        /* Blanco para tarjetas y sidebar */
       
-      --text-main: #0f172a;         /* Texto principal de alto contraste */
+      --text-main: #0f172a;         /* Texto principal */
       --text-muted: #64748b;        /* Texto secundario */
       --border-color: #e2e8f0;      /* Líneas de división sutiles */
       
@@ -44,7 +44,7 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* SVG Icon Alignment */
+    /* Iconos SVG */
     .icon {
       width: 18px;
       height: 18px;
@@ -99,7 +99,7 @@
       font-weight: 600;
       font-size: 0.88rem;
       cursor: pointer;
-      transition: background 0.2s, transform 0.1s;
+      transition: background 0.2s;
       display: flex;
       align-items: center;
       gap: 6px;
@@ -274,9 +274,6 @@
       font-weight: 600;
       border-radius: 20px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-      display: flex;
-      align-items: center;
-      gap: 4px;
     }
 
     .card-content {
@@ -344,9 +341,7 @@
       z-index: 1000;
     }
 
-    .modal-overlay.active {
-      display: flex;
-    }
+    .modal-overlay.active { display: flex; }
 
     .modal-content, .modal-content-large {
       background: var(--bg-surface);
@@ -369,10 +364,7 @@
       padding-bottom: 12px;
     }
 
-    .modal-header h2 {
-      font-size: 1.15rem;
-      font-weight: 700;
-    }
+    .modal-header h2 { font-size: 1.15rem; font-weight: 700; }
 
     .close-btn {
       background: none;
@@ -382,9 +374,7 @@
       cursor: pointer;
     }
 
-    .form-group {
-      margin-bottom: 14px;
-    }
+    .form-group { margin-bottom: 14px; }
 
     .form-group label {
       display: block;
@@ -421,11 +411,6 @@
       object-fit: cover;
       border-radius: 8px;
       cursor: pointer;
-      transition: opacity 0.2s;
-    }
-
-    .detail-gallery img:hover {
-      opacity: 0.85;
     }
 
     /* Lightbox */
@@ -472,7 +457,7 @@
 
   <div class="app-layout">
     
-    <!-- Sidebar -->
+    <!-- Sidebar con TODOS los departamentos -->
     <aside class="sidebar">
       <div class="sidebar-title">Departamentos</div>
       <ul class="category-list">
@@ -501,6 +486,30 @@
           </button>
         </li>
         <li class="category-item">
+          <button onclick="filtrar('vehiculos', this)">
+            <svg class="icon" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            Autos y Vehículos
+          </button>
+        </li>
+        <li class="category-item">
+          <button onclick="filtrar('electronica', this)">
+            <svg class="icon" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            Electrónica y Equipos
+          </button>
+        </li>
+        <li class="category-item">
+          <button onclick="filtrar('hogar', this)">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M20 9v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V9"/><path d="M9 22V12h6v10"/><path d="M2 10.6L12 2l10 8.6"/></svg>
+            Hogar y Muebles
+          </button>
+        </li>
+        <li class="category-item">
+          <button onclick="filtrar('servicios', this)">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+            Servicios Profesionales
+          </button>
+        </li>
+        <li class="category-item">
           <button onclick="filtrar('mascotas', this)">
             <svg class="icon" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
             Adopción de Mascotas
@@ -518,7 +527,7 @@
       <div class="grid-ads" id="gridAnuncios">
         
         <!-- BIENES RAÍCES -->
-        <div class="card" data-cat="bienes-raices" onclick="abrirDetalleAnuncio('Apartamento Moderno (2 Cuartos / 1 Baño)', '$850 / mes', 'Mayagüez, PR', 'Apartamento remodelado. Incluye agua, estacionamiento privado y estufa. No se permiten mascotas. Requisitos: Fianza y primer mes.', ['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80'], 'bienes-raices', 0)">
+        <div class="card" data-cat="bienes-raices" onclick="abrirDetalleAnuncio('Apartamento Moderno (2 Cuartos / 1 Baño)', '$850 / mes', 'Mayagüez, PR', 'Apartamento remodelado. Incluye agua, estacionamiento privado y estufa. Requisitos: Fianza y primer mes.', ['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80'], 'bienes-raices', 0)">
           <div class="card-img-container">
             <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80" alt="Apartamento" />
           </div>
@@ -543,7 +552,7 @@
           </div>
         </div>
 
-        <!-- PRODUCTO LOCAL -->
+        <!-- PRODUCTO LOCAL DE AQUÍ -->
         <div class="card" data-cat="de-aqui" onclick="abrirDetalleAnuncio('Café Artesanal de Jayuya (1 lb)', '$12.00', 'Jayuya, PR', 'Café 100% puro cosechado en la cordillera central. Tueste medio.', ['https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=800&q=80'], 'de-aqui', 12.00)">
           <div class="card-img-container">
             <span class="badge-de-aqui-floating">100% De Aquí</span>
@@ -553,6 +562,19 @@
             <h3 class="card-title">Café Artesanal de Jayuya (1 lb)</h3>
             <p class="card-price">$12.00</p>
             <p class="card-location"><svg class="icon" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Jayuya, PR</p>
+            <button class="btn-submit">Ver Detalle / Ofertar</button>
+          </div>
+        </div>
+
+        <!-- VEHÍCULOS -->
+        <div class="card" data-cat="vehiculos" onclick="abrirDetalleAnuncio('Toyota Corolla 2021 LE', '$18,500', 'Bayamón, PR', 'Excelentes condiciones, 35,000 millas, único dueño, mantenimiento al día.', ['https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=800&q=80'], 'vehiculos', 18500)">
+          <div class="card-img-container">
+            <img src="https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=600&q=80" alt="Auto" />
+          </div>
+          <div class="card-content">
+            <h3 class="card-title">Toyota Corolla 2021 LE</h3>
+            <p class="card-price">$18,500</p>
+            <p class="card-location"><svg class="icon" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Bayamón, PR</p>
             <button class="btn-submit">Ver Detalle / Ofertar</button>
           </div>
         </div>
@@ -646,7 +668,7 @@
     </div>
   </div>
 
-  <!-- MODAL: Publicar -->
+  <!-- MODAL: Publicar con TODAS las Categorías -->
   <div class="modal-overlay" id="modalPublicar">
     <div class="modal-content">
       <div class="modal-header">
@@ -657,15 +679,19 @@
         <div class="form-group">
           <label for="categoria">Categoría</label>
           <select id="categoria" required>
-            <option value="bienes-raices">Bienes Raíces</option>
             <option value="de-aqui">De Aquí (Productos Locales)</option>
+            <option value="bienes-raices">Bienes Raíces</option>
             <option value="empleos">Empleos Directos</option>
+            <option value="vehiculos">Autos y Vehículos</option>
+            <option value="electronica">Electrónica y Equipos</option>
+            <option value="hogar">Hogar y Muebles</option>
+            <option value="servicios">Servicios Profesionales</option>
             <option value="mascotas">Adopción de Mascotas</option>
           </select>
         </div>
         <div class="form-group">
           <label for="titulo">Título de la Publicación</label>
-          <input type="text" id="titulo" placeholder="Ej. Apartamento / Mascotas" required />
+          <input type="text" id="titulo" placeholder="Ej. Auto / Mueble / Servicio" required />
         </div>
         <button type="submit" class="btn-submit">Publicar Anuncio</button>
       </form>
@@ -720,7 +746,7 @@
       } else if (categoria === 'empleos') {
         btnAccion.innerHTML = `<button class="btn-submit" onclick="cerrarDetalleAnuncio(); abrirModal('modalPerfil')">Postularse a este Empleo</button>`;
       } else {
-        btnAccion.innerHTML = `<button class="btn-submit" onclick="cerrarDetalleAnuncio(); alert('Enviar propuesta de compra...')">Enviar Oferta</button>`;
+        btnAccion.innerHTML = `<button class="btn-submit" onclick="cerrarDetalleAnuncio(); alert('Enviar propuesta de compra...')">Enviar Oferta / Hacer Propuesta</button>`;
       }
 
       document.getElementById('modalDetalle').classList.add('active');
