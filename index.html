@@ -16,6 +16,7 @@
       --brand-sand-gold: #E6A817;
       --brand-klarna-pink: #FFB3C7;
       --brand-ath-orange: #FF6600;
+      --brand-card-blue: #1A1F71;
       --bg-light: #FAFAF7;
       --text-dark: #222222;
       --text-muted: #666666;
@@ -132,6 +133,8 @@
       position: relative;
       box-shadow: 0 2px 5px rgba(0,0,0,0.05);
       transition: transform 0.2s;
+      display: flex;
+      flex-direction: column;
     }
 
     .card:hover {
@@ -143,23 +146,16 @@
     }
 
     .badge-de-aqui {
-      position: absolute;
-      top: 10px;
-      left: 10px;
+      display: inline-block;
+      align-self: flex-start;
       background-color: var(--brand-green-coqui);
       color: white;
       padding: 4px 10px;
       font-size: 0.75rem;
       font-weight: bold;
       border-radius: 12px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    }
-
-    .card-img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      background-color: #eee;
+      margin-bottom: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
     .card-content {
@@ -181,6 +177,37 @@
     .card-location {
       font-size: 0.85rem;
       color: var(--text-muted);
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .btn-secondary {
+      background: #f0f4f1;
+      color: var(--brand-green-coqui);
+      border: 1px solid var(--brand-green-coqui);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      flex: 1;
+      font-size: 0.85rem;
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: var(--brand-green-coqui);
+      color: white;
+      border: none;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: bold;
+      cursor: pointer;
+      flex: 1;
     }
 
     /* Modales */
@@ -213,7 +240,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
     }
 
     .close-btn {
@@ -242,7 +269,7 @@
       font-size: 0.95rem;
     }
 
-    .radio-group, .checkbox-group {
+    .radio-group {
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -259,23 +286,52 @@
       cursor: pointer;
     }
 
-    .btn-submit {
-      width: 100%;
-      background: var(--brand-green-coqui);
-      color: white;
-      border: none;
+    .calculated-box {
+      background: #f8faf8;
+      border: 1px dashed var(--brand-green-coqui);
       padding: 12px;
       border-radius: 8px;
-      font-size: 1rem;
+      margin-top: 8px;
       font-weight: bold;
-      cursor: pointer;
-      margin-top: 10px;
+      color: var(--brand-green-coqui);
     }
 
     .field-hint {
       font-size: 0.8rem;
       color: var(--text-muted);
       margin-top: 4px;
+    }
+
+    /* Badges de métodos de pago */
+    .payment-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .badge-payment {
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 0.8rem;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .badge-card {
+      background: var(--brand-card-blue);
+      color: white;
+    }
+
+    .badge-klarna {
+      background: var(--brand-klarna-pink);
+      color: #111;
+    }
+
+    .badge-ath {
+      background: var(--brand-ath-orange);
+      color: white;
     }
   </style>
 </head>
@@ -302,30 +358,163 @@
 
     <!-- Lista de Anuncios -->
     <div class="grid-ads" id="gridAnuncios">
-      <!-- Ejemplo de Empleo con salario transparente -->
+      <!-- Ejemplo de Empleo -->
       <div class="card">
         <div class="card-content">
-          <h3>Mesero / Mesera</h3>
+          <h3 class="card-title">Mesero / Mesera</h3>
           <p class="card-salary">💵 $3/hr + Propinas y Comisiones</p>
           <p class="card-location">📍 San Juan, PR</p>
-          <button class="btn-submit" style="margin-top:10px;" onclick="abrirModal('modalContacto')">Postularse / Contactar</button>
+          <div class="action-buttons">
+            <button class="btn-secondary" onclick="abrirModal('modalContacto')">💬 Mensaje</button>
+            <button class="btn-submit" onclick="prepararPropuesta('Mesero / Mesera', 0)">📝 Postularse</button>
+          </div>
         </div>
       </div>
 
       <!-- Ejemplo de producto local "De Aquí" -->
       <div class="card badge-de-aqui-border">
-        <span class="badge-de-aqui">🇵🇷 100% De Aquí</span>
         <div class="card-content">
-          <h3>Café Artesanal de Jayuya</h3>
+          <span class="badge-de-aqui">🇵🇷 100% De Aquí</span>
+          <h3 class="card-title">Café Artesanal de Jayuya</h3>
           <p class="card-price">$12.00</p>
           <p class="card-location">📍 Jayuya, PR</p>
-          <button class="btn-submit" style="margin-top:10px;" onclick="abrirModal('modalContacto')">Contactar Vendedor</button>
+          <div class="action-buttons">
+            <button class="btn-secondary" onclick="abrirModal('modalContacto')">💬 Mensaje</button>
+            <button class="btn-submit" onclick="prepararPropuesta('Café Artesanal de Jayuya', 12.00)">🤝 Hacer Propuesta</button>
+          </div>
         </div>
       </div>
     </div>
   </main>
 
-  <!-- MODAL: Publicar Anuncio -->
+  <!-- MODAL 1: Mensaje General -->
+  <div class="modal-overlay" id="modalContacto">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Enviar Mensaje</h2>
+        <button class="close-btn" onclick="cerrarModal('modalContacto')">&times;</button>
+      </div>
+      <p style="font-size:0.85rem; color: var(--text-muted); margin-bottom: 15px;">
+        Haz una pregunta general sobre la publicación. Tu contacto se gestiona de forma segura a través de nuestra plataforma.
+      </p>
+      
+      <form id="formContacto" onsubmit="enviarMensaje(event)">
+        <div class="form-group">
+          <label>¿Cómo deseas recibir las respuestas?</label>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="notificacion" value="whatsapp" checked>
+              <span>📱 WhatsApp (Servicio seguro vía Coquí Ventas)</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="notificacion" value="sms">
+              <span>💬 Mensaje de Texto (SMS)</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="notificacion" value="email">
+              <span>✉️ Correo Electrónico</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="contactoCliente">Tu Teléfono o Email:</label>
+          <input type="text" id="contactoCliente" required placeholder="Ingresa tu número o email">
+        </div>
+
+        <div class="form-group">
+          <label for="mensaje">Consulta o Pregunta:</label>
+          <textarea id="mensaje" rows="3" placeholder="Ej. ¿Todavía está disponible? / ¿En qué horario se puede pasar a buscar?" required></textarea>
+        </div>
+
+        <div class="form-group" style="margin-top:20px; border-top:1px solid var(--border-color); padding-top:15px;">
+          <label>Métodos de Pago Aceptados:</label>
+          <div class="payment-badges">
+            <span class="badge-payment badge-card">💳 Tarjeta Débito / Crédito</span>
+            <span class="badge-payment badge-klarna">Klarna (Paga en 4)</span>
+            <span class="badge-payment badge-ath">ATH Móvil</span>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit">Enviar Mensaje Seguro</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 2: Propuesta / Oferta -->
+  <div class="modal-overlay" id="modalPropuesta">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Enviar Propuesta / Oferta</h2>
+        <button class="close-btn" onclick="cerrarModal('modalPropuesta')">&times;</button>
+      </div>
+      <form id="formPropuesta" onsubmit="enviarPropuesta(event)">
+        <p id="propuestaArticulo" style="font-weight: bold; color: var(--brand-green-coqui); margin-bottom: 12px;"></p>
+        
+        <div class="form-group">
+          <label for="descuentoSelect">Seleccionar Descuento u Oferta Directa</label>
+          <select id="descuentoSelect" onchange="calcularOferta()">
+            <option value="0">Precio original (Sin descuento)</option>
+            <option value="5">-5% de Descuento</option>
+            <option value="10">-10% de Descuento</option>
+            <option value="15">-15% de Descuento</option>
+            <option value="20">-20% de Descuento</option>
+            <option value="personalizado">Monto / Oferta Personalizada</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="grupoOfertaMonto">
+          <label for="montoOferta">Monto Propuesto ($ / salario / pago)</label>
+          <input type="number" id="montoOferta" step="0.01" placeholder="Monto sugerido" oninput="actualizarCalculoDesdeInput()">
+        </div>
+
+        <div class="calculated-box" id="cajaCalculo">
+          Propuesta Total: $<span id="resultadoOferta">0.00</span>
+        </div>
+
+        <div class="form-group" style="margin-top: 15px;">
+          <label for="detallesPropuesta">Detalles o Términos de tu Propuesta</label>
+          <textarea id="detallesPropuesta" rows="3" placeholder="Ej. Te pago hoy mismo en efectivo / Disponible para comenzar de inmediato" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Canal Preferido para Recibir Respuesta:</label>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="notifPropuesta" value="whatsapp" checked>
+              <span>📱 WhatsApp</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="notifPropuesta" value="sms">
+              <span>💬 SMS</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="notifPropuesta" value="email">
+              <span>✉️ Email</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="contactoPropuesta">Tu Contacto:</label>
+          <input type="text" id="contactoPropuesta" required placeholder="Número o correo">
+        </div>
+
+        <div class="form-group" style="margin-top:15px; border-top:1px solid var(--border-color); padding-top:12px;">
+          <label>Métodos de Pago Disponibles:</label>
+          <div class="payment-badges">
+            <span class="badge-payment badge-card">💳 Tarjeta Débito / Crédito</span>
+            <span class="badge-payment badge-klarna">Klarna (Paga en 4)</span>
+            <span class="badge-payment badge-ath">ATH Móvil</span>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit">Enviar Propuesta Formal</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 3: Publicar Anuncio -->
   <div class="modal-overlay" id="modalPublicar">
     <div class="modal-content">
       <div class="modal-header">
@@ -349,14 +538,12 @@
           <input type="text" id="titulo" placeholder="Ej. Mesero para Turno de Noche / Queso Blanco Artesanal" required />
         </div>
 
-        <!-- Campo Dinámico: Salario Requerido (Solo Empleos) -->
         <div class="form-group" id="grupoSalario" style="display: none;">
           <label for="salario">Salario / Compensación (Requerido)</label>
           <input type="text" id="salario" placeholder="Ej. $3/hr + propinas, ó $10.50/hr fijo" />
           <p class="field-hint">Es obligatorio detallar el salario para ir directo al grano y evitar preguntas innecesarias.</p>
         </div>
 
-        <!-- Campo Dinámico: Precio (Para Clasificados, Agrícola, De Aquí) -->
         <div class="form-group" id="grupoPrecio">
           <label for="precio">Precio ($)</label>
           <input type="number" id="precio" step="0.01" placeholder="0.00" />
@@ -377,67 +564,44 @@
     </div>
   </div>
 
-  <!-- MODAL: Contactar / Preferencias de Notificación Segura -->
-  <div class="modal-overlay" id="modalContacto">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>Contactar Anunciante</h2>
-        <button class="close-btn" onclick="cerrarModal('modalContacto')">&times;</button>
-      </div>
-      <p style="font-size:0.9rem; color: var(--text-muted); margin-bottom: 15px;">
-        Para proteger la privacidad y evitar fraudes o spam, las comunicaciones se procesan a través de nuestra plataforma.
-      </p>
-      
-      <form id="formContacto" onsubmit="enviarMensaje(event)">
-        <div class="form-group">
-          <label>¿Cómo deseas recibir las respuestas?</label>
-          <div class="radio-group">
-            <label class="radio-option">
-              <input type="radio" name="notificacion" value="whatsapp" checked>
-              <span>📱 Por WhatsApp (Servicio seguro vía Coquí Ventas)</span>
-            </label>
-            <label class="radio-option">
-              <input type="radio" name="notificacion" value="sms">
-              <span>💬 Mensaje de Texto (SMS)</span>
-            </label>
-            <label class="radio-option">
-              <input type="radio" name="notificacion" value="email">
-              <span>✉️ Correo Electrónico</span>
-            </label>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="contactoCliente">Tu Teléfono o Email (Según tu elección):</label>
-          <input type="text" id="contactoCliente" required placeholder="Ingresa tu número o email">
-        </div>
-
-        <div class="form-group">
-          <label for="mensaje">Mensaje o Propuesta:</label>
-          <textarea id="mensaje" rows="3" placeholder="Escribe tu consulta o propuesta..." required></textarea>
-        </div>
-
-        <!-- Método de Pago / Integración Klarna / ATH -->
-        <div class="form-group" style="margin-top:20px; border-top:1px solid var(--border-color); padding-top:15px;">
-          <label>Opciones de Pago Disponibles:</label>
-          <div style="display:flex; gap:10px; margin-top:8px;">
-            <span style="background:var(--brand-klarna-pink); padding:6px 12px; border-radius:6px; font-weight:bold; font-size:0.85rem;">Klarna (Paga en 4)</span>
-            <span style="background:var(--brand-ath-orange); color:white; padding:6px 12px; border-radius:6px; font-weight:bold; font-size:0.85rem;">ATH Móvil</span>
-          </div>
-        </div>
-
-        <button type="submit" class="btn-submit">Enviar Mensaje Seguro</button>
-      </form>
-    </div>
-  </div>
-
   <script>
+    let precioOriginalGlobal = 0;
+
     function abrirModal(id) {
       document.getElementById(id).classList.add('active');
     }
 
     function cerrarModal(id) {
       document.getElementById(id).classList.remove('active');
+    }
+
+    function prepararPropuesta(titulo, precio) {
+      precioOriginalGlobal = parseFloat(precio) || 0;
+      document.getElementById('propuestaArticulo').innerText = 'Propuesta para: ' + titulo;
+      document.getElementById('descuentoSelect').value = '0';
+      document.getElementById('montoOferta').value = precioOriginalGlobal;
+      document.getElementById('resultadoOferta').innerText = precioOriginalGlobal.toFixed(2);
+      abrirModal('modalPropuesta');
+    }
+
+    function calcularOferta() {
+      const descuento = document.getElementById('descuentoSelect').value;
+      const inputMonto = document.getElementById('montoOferta');
+
+      if (descuento === 'personalizado') {
+        inputMonto.focus();
+        return;
+      }
+
+      const porcentaje = parseFloat(descuento) || 0;
+      const precioFinal = precioOriginalGlobal * (1 - porcentaje / 100);
+      inputMonto.value = precioFinal.toFixed(2);
+      document.getElementById('resultadoOferta').innerText = precioFinal.toFixed(2);
+    }
+
+    function actualizarCalculoDesdeInput() {
+      const valor = parseFloat(document.getElementById('montoOferta').value) || 0;
+      document.getElementById('resultadoOferta').innerText = valor.toFixed(2);
     }
 
     function cambiarFormularioPorCategoria() {
@@ -461,7 +625,6 @@
     }
 
     function filtrar(categoria) {
-      // Lógica para filtrar elementos
       console.log('Filtrando por:', categoria);
     }
 
@@ -473,8 +636,15 @@
 
     function enviarMensaje(e) {
       e.preventDefault();
-      alert('Tu mensaje ha sido enviado. Recibirás las respuestas a través del canal seleccionado sin exponer tu número directo.');
+      alert('Tu consulta ha sido enviada. El vendedor te responderá por el canal seleccionado sin exponer números directos.');
       cerrarModal('modalContacto');
+    }
+
+    function enviarPropuesta(e) {
+      e.preventDefault();
+      const monto = document.getElementById('montoOferta').value;
+      alert('Tu propuesta por $' + monto + ' ha sido enviada al anunciante de forma segura.');
+      cerrarModal('modalPropuesta');
     }
   </script>
 </body>
