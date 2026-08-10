@@ -43,7 +43,6 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* Iconos SVG */
     .icon {
       width: 18px;
       height: 18px;
@@ -126,7 +125,6 @@
       min-height: calc(100vh - 65px);
     }
 
-    /* Sidebar */
     .sidebar {
       width: 270px;
       background-color: var(--bg-surface);
@@ -189,7 +187,6 @@
       font-weight: 600;
     }
 
-    /* Main Content */
     .main-content {
       flex: 1;
       padding: 28px;
@@ -198,7 +195,6 @@
     .section-header { margin-bottom: 24px; }
     .section-header h1 { font-size: 1.35rem; font-weight: 700; }
 
-    /* Cards */
     .grid-ads {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -298,7 +294,6 @@
 
     .btn-call:hover { background: #15803d; }
 
-    /* Modales */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -348,7 +343,6 @@
       outline: none;
     }
 
-    /* Dashboard & Cards */
     .filters-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -415,7 +409,6 @@
   </header>
 
   <div class="app-layout">
-    <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar-title">Departamentos</div>
       <ul class="category-list">
@@ -431,15 +424,12 @@
       </ul>
     </aside>
 
-    <!-- Main Content -->
     <main class="main-content">
       <div class="section-header">
         <h1 id="tituloCategoria">Explorando Anuncios</h1>
       </div>
 
       <div class="grid-ads" id="gridAnuncios">
-        
-        <!-- BIENES RAÍCES -->
         <div class="card" data-cat="bienes-raices" onclick="abrirDetalleAnuncio('Apartamento Moderno (2 Cuartos / 1 Baño)', '$850 / mes', 'Mayagüez, PR', 'Apartamento remodelado. Incluye agua, estacionamiento privado y estufa.', ['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80'], 'bienes-raices')">
           <div class="card-img-container"><img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80" alt="Apartamento" /></div>
           <div class="card-content">
@@ -450,7 +440,6 @@
           </div>
         </div>
 
-        <!-- EMPLEO -->
         <div class="card" data-cat="empleos" onclick="abrirDetalleAnuncio('Mesero / Mesera (Restaurante Metro)', '$3/hr + Propinas y Comisiones', 'San Juan, PR', 'Buscamos meseros con buena presencia y excelente trato al cliente. Turnos rotativos.', ['https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80'], 'empleos')">
           <div class="card-img-container"><img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80" alt="Mesero" /></div>
           <div class="card-content">
@@ -460,17 +449,16 @@
             <button class="btn-submit">Ver Empleo y Postularse</button>
           </div>
         </div>
-
       </div>
     </main>
   </div>
 
-  <!-- MODAL: Vista Detallada del Anuncio -->
+  <!-- MODAL: Detalle del Anuncio -->
   <div class="modal-overlay" id="modalDetalle">
     <div class="modal-content-large">
       <div class="modal-header">
         <h2 id="detalleTitulo">Título</h2>
-        <button class="close-btn" onclick="cerrarDetalleAnuncio()">&times;</button>
+        <button class="close-btn" onclick="cerrarModal('modalDetalle')">&times;</button>
       </div>
       <p id="detallePrecio" style="font-size:1.2rem; font-weight:700; color:var(--brand-green);"></p>
       <p id="detalleUbicacion" style="color:var(--text-muted); font-size:0.85rem; margin-bottom:12px;"></p>
@@ -497,22 +485,21 @@
         <button class="close-btn" onclick="cerrarModal('modalDashboardEmpleador')">&times;</button>
       </div>
 
-      <!-- Filtros Avanzados -->
       <div class="filters-grid">
         <div class="form-group" style="margin-bottom:0;">
           <label>Buscar Candidato</label>
-          <input type="text" id="filtroTexto" oninput="filtrarCandidatos()" placeholder="Nombre o Correo...">
+          <input type="text" id="filtroTexto" oninput="window.filtrarCandidatos()" placeholder="Nombre o Correo...">
         </div>
         <div class="form-group" style="margin-bottom:0;">
           <label>Fecha de Solicitud</label>
-          <select id="filtroFecha" onchange="filtrarCandidatos()">
+          <select id="filtroFecha" onchange="window.filtrarCandidatos()">
             <option value="recientes">Más recientes primero</option>
             <option value="antiguos">Más antiguos primero</option>
           </select>
         </div>
         <div class="form-group" style="margin-bottom:0;">
           <label>Experiencia Mínima</label>
-          <select id="filtroExperiencia" onchange="filtrarCandidatos()">
+          <select id="filtroExperiencia" onchange="window.filtrarCandidatos()">
             <option value="todas">Todas</option>
             <option value="0-1">0 a 1 año</option>
             <option value="2-5">2 a 5 años</option>
@@ -521,7 +508,7 @@
         </div>
         <div class="form-group" style="margin-bottom:0;">
           <label>Tipo de Postulación</label>
-          <select id="filtroTipo" onchange="filtrarCandidatos()">
+          <select id="filtroTipo" onchange="window.filtrarCandidatos()">
             <option value="todos">Todos</option>
             <option value="1-click">1-Click Apply</option>
             <option value="propuesta">Propuesta Custom</option>
@@ -529,11 +516,11 @@
         </div>
       </div>
 
-      <div id="listaCandidatos"></div>
+      <div id="listaCandidatos">Cargando candidatos desde Firebase...</div>
     </div>
   </div>
 
-  <!-- MODAL: Ver Perfil Completo del Candidato (Vista Empleador) -->
+  <!-- MODAL: Ver Perfil Completo del Candidato -->
   <div class="modal-overlay" id="modalPerfilCandidatoDetalle">
     <div class="modal-content-large" style="max-width: 700px;">
       <div class="modal-header">
@@ -544,13 +531,11 @@
         <button class="close-btn" onclick="cerrarModal('modalPerfilCandidatoDetalle')">&times;</button>
       </div>
 
-      <!-- Destrezas / Skills -->
       <div style="margin-bottom: 20px;">
         <h3 style="font-size: 0.95rem; font-weight:700; margin-bottom: 8px;">Habilidades y Destrezas</h3>
         <div id="candSkills" style="display:flex; flex-wrap:wrap; gap:6px;"></div>
       </div>
 
-      <!-- Historial de Experiencia Laboral -->
       <div style="margin-bottom: 20px;">
         <h3 style="font-size: 0.95rem; font-weight:700; margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 6px;">
           Historial Laboral / Experiencia
@@ -566,17 +551,21 @@
     </div>
   </div>
 
-  <!-- MODAL: Mi Perfil / Resume (Para el Candidato) -->
+  <!-- MODAL: Mi Perfil / Resume -->
   <div class="modal-overlay" id="modalPerfil">
     <div class="modal-content">
       <div class="modal-header">
         <h2>Mi Perfil Laboral / Resume</h2>
         <button class="close-btn" onclick="cerrarModal('modalPerfil')">&times;</button>
       </div>
-      <form id="formPerfil" onsubmit="guardarPerfil(event)">
+      <form id="formPerfil" onsubmit="window.guardarPerfil(event)">
         <div class="form-group">
           <label>Nombre Completo</label>
           <input type="text" id="perfilNombre" required placeholder="Ej. Juan Pérez" />
+        </div>
+        <div class="form-group">
+          <label>Correo Electrónico</label>
+          <input type="email" id="perfilEmail" required placeholder="juan@email.com" />
         </div>
         <div class="form-group">
           <label>Teléfono Directo</label>
@@ -591,78 +580,120 @@
           <input type="text" id="perfilSkillsInput" placeholder="Servicio al Cliente, POS, Inventario..." />
         </div>
         <div class="form-group">
-          <label>Resumen / Experiencia previa</label>
-          <textarea id="perfilExperiencia" rows="3" placeholder="Detalla tu historial o empresas donde has trabajado..."></textarea>
+          <label>Resumen / Historial Previo</label>
+          <textarea id="perfilExperiencia" rows="3" placeholder="Detalla tu experiencia previa o lugares de trabajo..."></textarea>
         </div>
-        <button type="submit" class="btn-submit">Guardar Resume</button>
+        <button type="submit" class="btn-submit">Guardar Resume en Firebase</button>
       </form>
     </div>
   </div>
 
-  <script>
-    // Base de datos extendida de candidatos
-    let baseDatosCandidatos = [
-      {
-        id: "1",
-        nombre: "Carlos Rivera Ortiz",
-        telefono: "787-555-0192",
-        email: "carlos.rivera@email.com",
-        tipo: "1-click",
-        fecha: "2026-08-09",
-        experienciaAnos: 17,
-        skills: ["Atención al Cliente", "Caja Registradora", "Inventario", "Manejo de Personal"],
-        historialLaboral: [
-          {
-            empresa: "Supermercados Econo",
-            puesto: "Supervisor de Turno",
-            periodo: "2023 - 2026",
-            descripcion: "Encargado de supervisar líneas de caja, cuadres diarios y atención directa al cliente."
-          },
-          {
-            empresa: "Walmart Puerto Rico",
-            puesto: "Asociado de Ventas y Cajas",
-            periodo: "2009 - 2023",
-            descripcion: "Mantenimiento de góndolas, servicio al cliente y operación de cajas registradoras por 14 años."
-          }
-        ],
-        propuesta: null
-      },
-      {
-        id: "2",
-        nombre: "María Delgado",
-        telefono: "787-444-9821",
-        email: "maria.delgado@email.com",
-        tipo: "propuesta",
-        fecha: "2026-08-08",
-        experienciaAnos: 2,
-        skills: ["POS / Terminal de Pago", "Protocolo de Mesas", "Trabajo en Equipo"],
-        historialLaboral: [
-          {
-            empresa: "Restaurante El Corderito",
-            puesto: "Mesera Principal",
-            periodo: "2024 - 2026",
-            descripcion: "Toma de pedidos, cobro e higiene de área de comedor."
-          }
-        ],
-        propuesta: "Cuento con disponibilidad inmediata para turnos de fin de semana y excelente actitud."
+  <!-- INTEGRACIÓN FIREBASE CON SUS CREDENCIALES DIRECTAS -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBjLJnC7EGKXdCwc-VmI",
+      authDomain: "coqui-ventas.firebaseapp.com",
+      projectId: "coqui-ventas",
+      storageBucket: "coqui-ventas.firebasestorage.app",
+      messagingSenderId: "425636251347",
+      appId: "1:425636251347:web:b96972a",
+      measurementId: "G-BZJ2BZLRMS"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.baseDatosCandidatos = [];
+
+    // Cargar Candidatos desde Firebase Firestore
+    async function cargarCandidatosFirebase() {
+      try {
+        const q = query(collection(db, "candidatos"), orderBy("fecha", "desc"));
+        const querySnapshot = await getDocs(q);
+        
+        window.baseDatosCandidatos = [];
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          window.baseDatosCandidatos.push({
+            id: doc.id,
+            nombre: data.nombre || "Candidato",
+            telefono: data.telefono || "Sin teléfono",
+            email: data.email || "Sin email",
+            tipo: data.tipo || "1-click",
+            fecha: data.fechaFormateada || "Reciente",
+            experienciaAnos: Number(data.experienciaAnos) || 0,
+            skills: data.skills || [],
+            historialLaboral: data.historialLaboral || [],
+            propuesta: data.propuesta || null
+          });
+        });
+
+        window.renderCandidatos(window.baseDatosCandidatos);
+      } catch (e) {
+        console.error("Error al cargar candidatos de Firebase:", e);
       }
-    ];
-
-    function abrirModal(id) {
-      document.getElementById(id).classList.add('active');
-      if(id === 'modalDashboardEmpleador') renderCandidatos(baseDatosCandidatos);
     }
-    function cerrarModal(id) { document.getElementById(id).classList.remove('active'); }
 
-    function filtrar(cat, el) {
+    // Guardar nuevo Perfil de Candidato en Firebase
+    window.guardarPerfil = async function(e) {
+      e.preventDefault();
+      const skillsArr = document.getElementById('perfilSkillsInput').value
+        .split(',')
+        .map(s => s.trim())
+        .filter(s => s.length > 0);
+
+      const nuevoCandidato = {
+        nombre: document.getElementById('perfilNombre').value,
+        email: document.getElementById('perfilEmail').value,
+        telefono: document.getElementById('perfilTelefono').value,
+        experienciaAnos: parseInt(document.getElementById('perfilExperienciaAnos').value) || 0,
+        skills: skillsArr,
+        tipo: "1-click",
+        fecha: serverTimestamp(),
+        fechaFormateada: new Date().toISOString().split('T')[0],
+        historialLaboral: [
+          {
+            empresa: "Experiencia Principal",
+            puesto: "Resumen de Experiencia",
+            periodo: "Historial Registrado",
+            descripcion: document.getElementById('perfilExperiencia').value || "Sin descripción."
+          }
+        ]
+      };
+
+      try {
+        await addDoc(collection(db, "candidatos"), nuevoCandidato);
+        alert("¡Tu Resume ha sido guardado con éxito en Firebase!");
+        window.cerrarModal('modalPerfil');
+        cargarCandidatosFirebase();
+      } catch (err) {
+        console.error("Error al guardar perfil:", err);
+        alert("Hubo un error al guardar el resumen.");
+      }
+    };
+
+    // Funciones Globales para UI
+    window.abrirModal = function(id) {
+      document.getElementById(id).classList.add('active');
+      if(id === 'modalDashboardEmpleador') cargarCandidatosFirebase();
+    };
+
+    window.cerrarModal = function(id) {
+      document.getElementById(id).classList.remove('active');
+    };
+
+    window.filtrar = function(cat, el) {
       document.querySelectorAll('.category-item button').forEach(b => b.classList.remove('active'));
       el.classList.add('active');
       document.querySelectorAll('.card').forEach(c => {
         c.style.display = (cat === 'todos' || c.dataset.cat === cat) ? 'flex' : 'none';
       });
-    }
+    };
 
-    function abrirDetalleAnuncio(titulo, precio, ubicacion, descripcion, fotos, categoria) {
+    window.abrirDetalleAnuncio = function(titulo, precio, ubicacion, descripcion, fotos, categoria) {
       document.getElementById('detalleTitulo').innerText = titulo;
       document.getElementById('detallePrecio').innerText = precio;
       document.getElementById('detalleUbicacion').innerText = ubicacion;
@@ -674,10 +705,10 @@
       if (categoria === 'empleos') {
         btnAccion.innerHTML = `
           <div style="display:flex; gap:10px; flex-wrap:wrap;">
-            <button class="btn-submit" style="flex:1;" onclick="aplicarUnClick()">
+            <button class="btn-submit" style="flex:1;" onclick="window.aplicarUnClick()">
               ⚡ Aplicar con 1-Click
             </button>
-            <button class="btn-secondary" style="flex:1;" onclick="mostrarFormPropuesta()">
+            <button class="btn-secondary" style="flex:1;" onclick="window.mostrarFormPropuesta()">
               📝 Enviar Propuesta
             </button>
           </div>
@@ -687,30 +718,28 @@
       }
 
       document.getElementById('modalDetalle').classList.add('active');
-    }
+    };
 
-    function cerrarDetalleAnuncio() { document.getElementById('modalDetalle').classList.remove('active'); }
-    function aplicarUnClick() { alert("¡Postulación enviada exitosamente mediante 1-Click con tu perfil de Coquí Ventas!"); cerrarDetalleAnuncio(); }
-    function mostrarFormPropuesta() { document.getElementById('formPropuestaContainer').style.display = 'block'; }
-    
-    function enviarPropuestaPersonalizada() {
+    window.aplicarUnClick = function() {
+      alert("¡Postulación enviada exitosamente mediante 1-Click con tu perfil!");
+      window.cerrarModal('modalDetalle');
+    };
+
+    window.mostrarFormPropuesta = function() {
+      document.getElementById('formPropuestaContainer').style.display = 'block';
+    };
+
+    window.enviarPropuestaPersonalizada = function() {
       const texto = document.getElementById('propuestaTexto').value.trim();
       if(!texto) return alert("Por favor escribe un mensaje.");
       alert("¡Propuesta personalizada enviada al empleador!");
-      cerrarDetalleAnuncio();
-    }
+      window.cerrarModal('modalDetalle');
+    };
 
-    function guardarPerfil(e) {
-      e.preventDefault();
-      alert("¡Perfil/Resume guardado con éxito!");
-      cerrarModal('modalPerfil');
-    }
-
-    // Lógica del Dashboard para Empleadores
-    function renderCandidatos(lista) {
+    window.renderCandidatos = function(lista) {
       const contenedor = document.getElementById('listaCandidatos');
       if(lista.length === 0) {
-        contenedor.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding:20px;">No se encontraron candidatos.</p>';
+        contenedor.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding:20px;">No se encontraron candidatos registrados en la base de datos.</p>';
         return;
       }
 
@@ -734,7 +763,7 @@
             </div>
 
             <div style="display:flex; flex-direction:column; gap:6px; min-width:140px;">
-              <button onclick="verPerfilCompleto('${c.id}')" class="btn-secondary">
+              <button onclick="window.verPerfilCompleto('${c.id}')" class="btn-secondary">
                 👤 Ver Perfil
               </button>
               <a href="tel:${telLimpio}" class="btn-call" style="justify-content:center;">
@@ -745,21 +774,19 @@
         `;
       });
       contenedor.innerHTML = html;
-    }
+    };
 
-    function verPerfilCompleto(candidatoId) {
-      const candidato = baseDatosCandidatos.find(c => c.id === candidatoId);
+    window.verPerfilCompleto = function(candidatoId) {
+      const candidato = window.baseDatosCandidatos.find(c => c.id === candidatoId);
       if (!candidato) return;
 
       document.getElementById('candNombre').innerText = candidato.nombre;
       document.getElementById('candContacto').innerText = `📞 ${candidato.telefono} | ✉️ ${candidato.email}`;
       document.getElementById('candLinkLlamar').href = `tel:${candidato.telefono.replace(/\D/g, '')}`;
 
-      // Renderizar Skills
       const skillsContainer = document.getElementById('candSkills');
       skillsContainer.innerHTML = (candidato.skills || []).map(s => `<span class="skill-badge">${s}</span>`).join('');
 
-      // Renderizar Historial Laboral
       const historialContainer = document.getElementById('candHistorial');
       if (candidato.historialLaboral && candidato.historialLaboral.length > 0) {
         historialContainer.innerHTML = candidato.historialLaboral.map(h => `
@@ -778,16 +805,15 @@
         historialContainer.innerHTML = `<p style="font-size:0.85rem; color:var(--text-muted);">No hay historial detallado registrado.</p>`;
       }
 
-      abrirModal('modalPerfilCandidatoDetalle');
-    }
+      window.abrirModal('modalPerfilCandidatoDetalle');
+    };
 
-    function filtrarCandidatos() {
+    window.filtrarCandidatos = function() {
       const texto = document.getElementById('filtroTexto').value.toLowerCase();
-      const fecha = document.getElementById('filtroFecha').value;
       const exp = document.getElementById('filtroExperiencia').value;
       const tipo = document.getElementById('filtroTipo').value;
 
-      let resultado = baseDatosCandidatos.filter(c => {
+      let resultado = window.baseDatosCandidatos.filter(c => {
         const coincideTexto = c.nombre.toLowerCase().includes(texto) || c.email.toLowerCase().includes(texto);
         const coincideTipo = (tipo === 'todos') || (c.tipo === tipo);
         
@@ -799,12 +825,8 @@
         return coincideTexto && coincideTipo && coincideExp;
       });
 
-      resultado.sort((a,b) => {
-        return fecha === 'recientes' ? new Date(b.fecha) - new Date(a.fecha) : new Date(a.fecha) - new Date(b.fecha);
-      });
-
-      renderCandidatos(resultado);
-    }
+      window.renderCandidatos(resultado);
+    };
   </script>
 </body>
 </html>
