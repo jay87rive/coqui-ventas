@@ -196,6 +196,38 @@ export default function JobsApplicationWorkflow() {
     job: normalize(application.job_title || "Empleo"),
   })), [employerApplications]);
 
+  const openApplication = useCallback(async (application: EmployerApplication) => {
+    if (!session) return;
+    setSelected(application);
+    setContact(null);
+    setMessage("");
+    setNotice("");
+    try {
+      let currentApplication = application;
+      if (application.status === "submitted") {
+        await rpc<boolean>(session.access_token, "update_job_application_status", {
+          p_application_id: application.id,
+          p_status: "viewed",
+        });
+        currentApplication = { ...application, status: "viewed" };
+        setSelected(currentApplication);
+        setEmployerApplications((rows) => rows.map((row) => row.id === application.id ? currentApplication : row));
+      }
+      await rpc<null>(session.access_token, "record_job_profile_view", {
+        p_application_id: application.id,
+      });
+      const rows = await rpc<ApplicationContact[]>(session.access_token, "get_employer_job_application_contact", {
+        p_application_id: application.id,
+      });
+      setContact(rows[0] || null);
+      if (application.status === "submitted") {
+        setNotice("Solicitud abierta. El candidato ahora ve “En revisión” y recibió una notificación.");
+      }
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : "No pudimos cargar los datos de la solicitud.");
+    }
+  }, [session]);
+
   useEffect(() => {
     if (!session) return;
 
@@ -267,39 +299,7 @@ export default function JobsApplicationWorkflow() {
       document.removeEventListener("click", openFromEmployerCard, true);
       observer.disconnect();
     };
-  }, [candidateApplications, employerByIdentity, jobNotifications, session]);
-
-  async function openApplication(application: EmployerApplication) {
-    if (!session) return;
-    setSelected(application);
-    setContact(null);
-    setMessage("");
-    setNotice("");
-    try {
-      let currentApplication = application;
-      if (application.status === "submitted") {
-        await rpc<boolean>(session.access_token, "update_job_application_status", {
-          p_application_id: application.id,
-          p_status: "viewed",
-        });
-        currentApplication = { ...application, status: "viewed" };
-        setSelected(currentApplication);
-        setEmployerApplications((rows) => rows.map((row) => row.id === application.id ? currentApplication : row));
-      }
-      await rpc<null>(session.access_token, "record_job_profile_view", {
-        p_application_id: application.id,
-      });
-      const rows = await rpc<ApplicationContact[]>(session.access_token, "get_employer_job_application_contact", {
-        p_application_id: application.id,
-      });
-      setContact(rows[0] || null);
-      if (application.status === "submitted") {
-        setNotice("Solicitud abierta. El candidato ahora ve “En revisión” y recibió una notificación.");
-      }
-    } catch (error) {
-      setNotice(error instanceof Error ? error.message : "No pudimos cargar los datos de la solicitud.");
-    }
-  }
+  }, [candidateApplications, employerByIdentity, jobNotifications, openApplication, session]);
 
   async function changeStatus(status: Exclude<JobApplicationStatus, "submitted" | "withdrawn">) {
     if (!session || !selected) return;
