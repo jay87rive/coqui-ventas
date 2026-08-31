@@ -6,7 +6,11 @@ const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
   {
-    files: ["app/jobs-application-workflow.tsx", "app/candidate-job-tracker-controls.tsx"],
+    files: [
+      "app/jobs-application-workflow.tsx",
+      "app/candidate-job-tracker-controls.tsx",
+      "app/candidate-job-messages.tsx",
+    ],
     rules: {
       "react-hooks/set-state-in-effect": "off",
     },
