@@ -1,46 +1,20 @@
-.coqui-job-tracker-meta {
-  margin-top: 10px;
-  font-size: 0.8rem;
-  color: #667085;
-}
-
-.coqui-job-tracker-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.coqui-job-tracker-actions button {
-  border-radius: 999px;
-  padding: 8px 12px;
-  font: inherit;
-  font-size: 0.84rem;
-  cursor: pointer;
-}
-
-.coqui-job-withdraw-button {
-  border: 1px solid #d0d5dd;
-  background: #fff;
-  color: #475467;
-}
-
-.coqui-job-withdraw-button:hover:not(:disabled) {
-  background: #f9fafb;
-}
-
-.coqui-job-unread-button {
-  border: 1px solid rgba(13, 148, 136, 0.28);
-  background: rgba(13, 148, 136, 0.08);
-  color: #0f766e;
-  font-weight: 700;
-}
-
-.coqui-job-unread-button:hover {
-  background: rgba(13, 148, 136, 0.14);
-}
-
-.coqui-job-tracker-actions button:disabled {
-  cursor: wait;
-  opacity: 0.65;
-}
+.coqui-job-tracker-meta { margin-top: 10px; font-size: 0.8rem; color: #667085; }
+.coqui-job-status-flow { display: flex; align-items: flex-start; gap: 4px; margin-top: 14px; overflow-x: auto; padding: 2px 0 4px; }
+.coqui-job-status-step { position: relative; display: flex; flex: 1 0 88px; min-width: 88px; flex-direction: column; align-items: center; gap: 5px; color: #98a2b3; font-size: .72rem; text-align: center; }
+.coqui-job-status-step:not(:last-child)::after { content: ""; position: absolute; top: 7px; left: calc(50% + 9px); right: calc(-50% + 9px); height: 2px; background: #e4e7ec; }
+.coqui-job-status-dot { position: relative; z-index: 1; width: 16px; height: 16px; border-radius: 999px; border: 2px solid #d0d5dd; background: #fff; }
+.coqui-job-status-step.is-complete, .coqui-job-status-step.is-current { color: #0f766e; font-weight: 700; }
+.coqui-job-status-step.is-complete .coqui-job-status-dot { border-color: #0f766e; background: #0f766e; }
+.coqui-job-status-step.is-complete:not(:last-child)::after { background: #0f766e; }
+.coqui-job-status-step.is-current .coqui-job-status-dot { border-color: #0f766e; box-shadow: 0 0 0 4px rgba(13,148,136,.12); }
+.coqui-job-terminal { margin-top: 14px; border-radius: 10px; padding: 9px 12px; font-size: .82rem; font-weight: 700; }
+.coqui-job-terminal--rejected { background: #fff1f2; color: #be123c; border: 1px solid #fecdd3; }
+.coqui-job-terminal--withdrawn { background: #f2f4f7; color: #475467; border: 1px solid #e4e7ec; }
+.coqui-job-tracker-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.coqui-job-tracker-actions button { border-radius: 999px; padding: 8px 12px; font: inherit; font-size: 0.84rem; cursor: pointer; }
+.coqui-job-withdraw-button { border: 1px solid #d0d5dd; background: #fff; color: #475467; }
+.coqui-job-withdraw-button:hover:not(:disabled) { background: #f9fafb; }
+.coqui-job-unread-button { border: 1px solid rgba(13,148,136,.28); background: rgba(13,148,136,.08); color: #0f766e; font-weight: 700; }
+.coqui-job-unread-button:hover { background: rgba(13,148,136,.14); }
+.coqui-job-tracker-actions button:disabled { cursor: wait; opacity: .65; }
+@media (max-width: 640px) { .coqui-job-status-step { flex-basis: 76px; min-width: 76px; } }
