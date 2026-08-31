@@ -1,0 +1,33 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+
+const page = readFileSync(new URL("../app/page.tsx", import.meta.url), "utf8");
+const api = readFileSync(new URL("../lib/supabase-rest.ts", import.meta.url), "utf8");
+const css = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
+const migration = readFileSync(new URL("../supabase/migrations/20260825021500_huellitas_organization_portal.sql", import.meta.url), "utf8");
+
+const nav = page.slice(page.indexOf('<nav className={menuOpen'), page.indexOf('</nav>', page.indexOf('<nav className={menuOpen')));
+const order = ["Explorar", "Descubre", "Seguridad", "Soy patrono", "Avisos", "Mi Coquí", "Publicar"];
+test("barra conserva la navegación simplificada", () => { let cursor = -1; for (const label of order) { const next = nav.indexOf(label, cursor + 1); assert.ok(next > cursor, `Orden incorrecto: ${label}`); cursor = next; } });
+test("barra no contiene el perfil de demostración", () => assert.equal(nav.includes("Probar comprador"), false));
+test("botones usan una base uniforme", () => assert.ok((nav.match(/nav-item/g) || []).length >= 7));
+test("barra elimina accesos repetidos", () => assert.equal(["Categorías", "Gratis", "Favoritos", "Mensajes", "Salir"].some((label) => nav.includes(label)), false));
+test("idioma está junto a la marca", () => assert.ok(page.includes('className="brand-column"')));
+test("CSS mantiene navegación compacta", () => assert.ok(css.includes(".nav-links")));
+test("portal institucional existe", () => assert.ok(page.includes("Portal de organizaciones")));
+test("registro institucional existe", () => assert.ok(page.includes("Registrar organización")));
+test("estado de verificación es visible", () => assert.ok(page.includes("Estado institucional")));
+test("documentos privados no son públicos", () => assert.ok(page.includes("Documentos, EIN y notas internas nunca se mostrarán al público")));
+test("foto real es obligatoria", () => assert.ok(page.includes("Foto real obligatoria")));
+test("salud aparece en formulario", () => assert.ok(page.includes('name="vaccinated"') && page.includes('name="sterilized"')));
+test("cuota depende de autorización", () => assert.ok(page.includes("institutional_fee_allowed")));
+test("portal administra estados", () => assert.ok(page.includes("changeManagedAnimalStatus")));
+test("portal administra solicitudes", () => assert.ok(page.includes("changeAdoptionInterest")));
+test("API carga espacio institucional", () => assert.ok(api.includes("getMyRescueWorkspace")));
+test("API registra organización", () => assert.ok(api.includes("registerRescueOrganization")));
+test("API publica animal", () => assert.ok(api.includes("createOrganizationAnimal")));
+test("RLS limita inserción propia", () => assert.ok(migration.includes("rescue_profiles_insert_own_safe")));
+test("RLS impide autoverificación inicial", () => assert.ok(migration.includes("institutional_fee_allowed = false") && migration.includes("donation_enabled = false")));
+test("RPC verifica dueño e institución", () => assert.ok(migration.includes("rp.owner_user_id = auth.uid()") && migration.includes("rp.verification_status = 'verified'")));
+test("RPC no queda disponible anónimamente", () => assert.ok(migration.includes("revoke all") && migration.includes("from public, anon")));

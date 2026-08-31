@@ -1,296 +1,108 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Coquí Ventas - Mercado y Empleos en Puerto Rico</title>
-  <style>
-    :root {
-      --brand-green-coqui: #2D5A27;
-      --brand-green-light: #4A8539;
-      --brand-terracotta:  #C85A32;
-      --brand-sand-gold:   #E6A817;
-      --bg-light:          #FAFAF7;
-      --text-primary:      #1A201C;
-      --text-muted:        #5A655D;
-      --border-color:      #E2E8E4;
-    }
+# vinext-starter
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg-light); color: var(--text-primary); }
+A clean full-stack starter running on
+[vinext](https://github.com/cloudflare/vinext), with optional Cloudflare D1 and
+Drizzle support.
 
-    /* Encabezado Arreglado */
-    .navbar { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 2rem; background: #fff; border-bottom: 1px solid var(--border-color); gap: 1rem; }
-    .logo { display: flex; align-items: center; }
-    .logo img { height: 50px; width: auto; object-fit: contain; }
-    .nav-links { display: flex; gap: 1.5rem; }
-    .nav-links a { text-decoration: none; color: var(--text-muted); font-weight: 500; white-space: nowrap; }
-    .nav-links a:hover { color: var(--brand-green-coqui); }
-    .nav-actions { display: flex; align-items: center; white-space: nowrap; }
-    
-    /* Botones */
-    .btn-primary { background: var(--brand-green-coqui); color: #fff; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
-    .btn-primary:hover { background: var(--brand-green-light); }
-    .btn-secondary { background: transparent; border: 1px solid var(--border-color); padding: 0.6rem 1.2rem; border-radius: 8px; margin-right: 0.5rem; cursor: pointer; }
+## Prerequisites
 
-    /* Hero Search */
-    .hero { text-align: center; padding: 4rem 1rem 3rem 1rem; background: linear-gradient(180deg, #FFFFFF 0%, var(--bg-light) 100%); }
-    .hero h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
-    .hero p { color: var(--text-muted); margin-bottom: 2rem; }
-    .text-terracotta { color: var(--brand-terracotta); }
+- Node.js `>=22.13.0`
+- Linux with `flock`, `curl`, and GNU `timeout`
 
-    .search-bar { display: flex; justify-content: center; gap: 0.5rem; max-width: 650px; margin: 0 auto; }
-    .search-bar input, .search-bar select { padding: 0.8rem 1rem; border: 1px solid var(--border-color); border-radius: 8px; outline: none; }
-    .search-bar input { flex: 1; }
-    .btn-search { background: var(--brand-terracotta); color: #fff; border: none; padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: bold; cursor: pointer; }
+## Sites Lifecycle
 
-    /* Contenedor Principal */
-    .container { max-width: 1100px; margin: 0 auto; padding: 0 1rem 4rem 1rem; }
+The Sites lifecycle CLI runs the locked dependency install before returning this checkout. Edit the source under `app/`, then checkpoint when a coherent milestone is ready to inspect or share. The remote Sites builder runs `npm run build` against the pushed commit. Do not repeat install or build as a normal pre-checkpoint step.
 
-    /* Categorías */
-    .categories-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 3rem; }
-    .card-cat { background: #fff; padding: 1.2rem; border-radius: 12px; border: 1px solid var(--border-color); text-align: center; font-weight: 600; cursor: pointer; transition: transform 0.2s; }
-    .card-cat:hover { transform: translateY(-3px); border-color: var(--brand-green-light); }
+This starter does not use `wrangler.jsonc`.
 
-    /* Anuncios Destacados */
-    .section-title { font-size: 1.5rem; margin-bottom: 1.5rem; color: var(--brand-green-coqui); }
-    .listings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
-    
-    .card-item { background: #fff; border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden; display: flex; flex-direction: column; }
-    .card-img { height: 160px; background: #e2e8e4; display: flex; align-items: center; justify-content: center; font-size: 3rem; }
-    .card-body { padding: 1rem; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
-    .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.75rem; font-weight: bold; margin-bottom: 0.5rem; }
-    .badge-agricola { background: #E8F5E9; color: var(--brand-green-coqui); }
-    .badge-mascotas { background: #FFEBEE; color: var(--brand-terracotta); }
-    .badge-empleo { background: #FFF8E1; color: #B78103; }
-    .badge-clasificado { background: #F3E5F5; color: #7B1FA2; }
-    
-    .card-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 0.4rem; }
-    .card-price { font-size: 1.2rem; font-weight: bold; color: var(--brand-terracotta); margin-bottom: 0.4rem; }
-    .card-location { font-size: 0.85rem; color: var(--text-muted); }
+`install:ci` is intentionally a single, non-retrying `npm ci`. It refuses a concurrent install for the same project, consumes a matching image-seeded npm cache with `--prefer-offline` while retaining registry fallback for a missing cache object, otherwise downloads and verifies the complete vinext tarball recorded in `package-lock.json`, limits npm to one socket, and terminates a stalled install. `build` applies a short timeout and then validates the Sites artifact. These helpers target Linux and use GNU `timeout`; they are not native macOS scripts.
 
-    /* Modal Flotante (Publicar Anuncio) */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      padding: 1rem;
-    }
-    .modal-overlay.active { display: flex; }
-    
-    .modal-content {
-      background: #fff;
-      width: 100%;
-      max-width: 500px;
-      border-radius: 16px;
-      padding: 2rem;
-      position: relative;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-    .modal-header h3 { color: var(--brand-green-coqui); font-size: 1.4rem; }
-    .close-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); }
-    
-    .form-group { margin-bottom: 1.2rem; }
-    .form-group label { display: block; font-weight: 600; margin-bottom: 0.4rem; font-size: 0.9rem; }
-    .form-group input, .form-group select, .form-group textarea {
-      width: 100%;
-      padding: 0.8rem;
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      outline: none;
-      font-family: inherit;
-    }
-    .form-group textarea { resize: vertical; min-height: 80px; }
-    .btn-submit { width: 100%; background: var(--brand-green-coqui); color: #fff; border: none; padding: 0.9rem; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; margin-top: 0.5rem; }
-    .btn-submit:hover { background: var(--brand-green-light); }
-  </style>
-</head>
-<body>
+Scripts that need writable project-scoped home, npm, XDG, and temporary paths use `scripts/sites-env.sh`. The `dev` and `start` scripts honor the caller's runtime environment and keep Wrangler logs inside the checkout. The generated `.sites-runtime/` directory is disposable and ignored by Git.
 
-  <header class="navbar">
-    <div class="logo">
-      <img src="Coquiventas Logo.png" alt="Coquí Ventas Logo">
-    </div>
-    <nav class="nav-links">
-      <a href="#clasificados">Clasificados</a>
-      <a href="#empleos">Empleos</a>
-      <a href="#agricola">Agrícola Local</a>
-      <a href="#mascotas">Mascotas</a>
-    </nav>
-    <div class="nav-actions">
-      <button class="btn-secondary">Iniciar Sesión</button>
-      <button class="btn-primary" id="btnOpenModal">+ Publicar Anuncio</button>
-    </div>
-  </header>
+## Included Shape
 
-  <section class="hero">
-    <h1>El mercado digital de <span class="text-terracotta">Puerto Rico</span></h1>
-    <p>Encuentra productos, empleos, cosechas locales y mascotas en adopción.</p>
-    
-    <div class="search-bar">
-      <input type="text" placeholder="¿Qué estás buscando hoy?" />
-      <select>
-        <option value="">Cualquier pueblo</option>
-        <option value="san-juan">San Juan</option>
-        <option value="ponce">Ponce</option>
-        <option value="mayaguez">Mayagüez</option>
-        <option value="caguas">Caguas</option>
-        <option value="arecibo">Arecibo</option>
-      </select>
-      <button class="btn-search">Buscar</button>
-    </div>
-  </section>
+- edit site code under `app/`
+- `app/chatgpt-auth.ts` provides optional dispatch-owned ChatGPT sign-in helpers
+- `.openai/hosting.json` declares optional Sites D1 and R2 bindings
+- `vite.config.ts` simulates declared bindings for local development
+- `db/index.ts` reads the D1 binding from the Cloudflare Worker environment
+- `db/schema.ts` starts intentionally empty
+- `examples/d1/` contains an optional D1 example surface
+- `drizzle.config.ts` supports local migration generation when needed
 
-  <main class="container">
-    <section class="categories-grid">
-      <div class="card-cat">📦 Clasificados</div>
-      <div class="card-cat">💼 Empleos</div>
-      <div class="card-cat">🌾 Mercado Agrícola</div>
-      <div class="card-cat">🐾 Adopción Responsable</div>
-    </section>
+## Workspace Auth Headers
 
-    <h2 class="section-title">Publicaciones Recientes</h2>
-    
-    <section class="listings-grid">
-      <article class="card-item">
-        <div class="card-img">🍌</div>
-        <div class="card-body">
-          <div>
-            <span class="badge badge-agricola">Agrícola Local</span>
-            <div class="card-title">Plátanos Verdes por Ciento</div>
-            <div class="card-price">$25.00</div>
-          </div>
-          <div class="card-location">📍 Arecibo, PR</div>
-        </div>
-      </article>
+OpenAI workspace sites can read the current user's email from
+`oai-authenticated-user-email`.
 
-      <article class="card-item">
-        <div class="card-img">🐶</div>
-        <div class="card-body">
-          <div>
-            <span class="badge badge-mascotas">Adopción Gratis</span>
-            <div class="card-title">Perrita Sato en Adopción</div>
-            <div class="card-price" style="color: var(--brand-green-coqui);">Gratis</div>
-          </div>
-          <div class="card-location">📍 Ponce, PR</div>
-        </div>
-      </article>
+SIWC-authenticated workspace sites may also receive
+`oai-authenticated-user-full-name` when the user's SIWC profile has a non-empty
+`name` claim. The full-name value is percent-encoded UTF-8 and is accompanied by
+`oai-authenticated-user-full-name-encoding: percent-encoded-utf-8`.
 
-      <article class="card-item">
-        <div class="card-img">💼</div>
-        <div class="card-body">
-          <div>
-            <span class="badge badge-empleo">Empleo</span>
-            <div class="card-title">Técnico de Electricidad</div>
-            <div class="card-price">$18 - $22 / hr</div>
-          </div>
-          <div class="card-location">📍 San Juan, PR</div>
-        </div>
-      </article>
+Treat the full name as optional and fall back to email when it is absent:
 
-      <article class="card-item">
-        <div class="card-img">⚡</div>
-        <div class="card-body">
-          <div>
-            <span class="badge badge-clasificado">Clasificados</span>
-            <div class="card-title">Generador Inverter 3500W</div>
-            <div class="card-price">$450.00</div>
-          </div>
-          <div class="card-location">📍 Caguas, PR</div>
-        </div>
-      </article>
-    </section>
-  </main>
+```tsx
+import { headers } from "next/headers";
 
-  <!-- Modal para Publicar -->
-  <div class="modal-overlay" id="modalPublish">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3>Publicar Nuevo Anuncio</h3>
-        <button class="close-btn" id="btnCloseModal">&times;</button>
-      </div>
-      <form id="publishForm">
-        <div class="form-group">
-          <label for="category">Categoría</label>
-          <select id="category" required>
-            <option value="">Selecciona una categoría</option>
-            <option value="agricola">🌾 Mercado Agrícola</option>
-            <option value="mascotas">🐾 Mascotas en Adopción (Gratis)</option>
-            <option value="empleos">💼 Empleo / Trabajo</option>
-            <option value="clasificados">📦 Clasificados Generales</option>
-          </select>
-        </div>
+export default async function Home() {
+  const requestHeaders = await headers();
+  const email = requestHeaders.get("oai-authenticated-user-email");
+  const encodedFullName = requestHeaders.get("oai-authenticated-user-full-name");
+  const fullName =
+    encodedFullName &&
+    requestHeaders.get("oai-authenticated-user-full-name-encoding") ===
+      "percent-encoded-utf-8"
+      ? decodeURIComponent(encodedFullName)
+      : null;
 
-        <div class="form-group">
-          <label for="title">Título del Anuncio</label>
-          <input type="text" id="title" placeholder="Ej. Plátanos verdes, Oferta de empleo..." required />
-        </div>
+  const displayName = fullName ?? email;
+  // ...
+}
+```
 
-        <div class="form-group">
-          <label for="price">Precio ($) o Salario / Estado</label>
-          <input type="text" id="price" placeholder="Ej. 25.00, Gratis, $18/hr" required />
-        </div>
+## Optional Dispatch-Owned ChatGPT Sign-In
 
-        <div class="form-group">
-          <label for="town">Pueblo</label>
-          <select id="town" required>
-            <option value="">Selecciona tu pueblo</option>
-            <option value="Arecibo">Arecibo</option>
-            <option value="Caguas">Caguas</option>
-            <option value="Mayagüez">Mayagüez</option>
-            <option value="Ponce">Ponce</option>
-            <option value="San Juan">San Juan</option>
-          </select>
-        </div>
+Import the ready-to-use helpers from `app/chatgpt-auth.ts` when the site needs
+optional or required ChatGPT sign-in:
 
-        <div class="form-group">
-          <label for="description">Descripción</label>
-          <textarea id="description" placeholder="Escribe los detalles de tu anuncio o información de contacto..."></textarea>
-        </div>
+- Use `getChatGPTUser()` for optional signed-in UI.
+- Use `requireChatGPTUser(returnTo)` for server-rendered pages that should send
+  anonymous visitors through Sign in with ChatGPT.
+- Use `chatGPTSignInPath(returnTo)` and `chatGPTSignOutPath(returnTo)` for
+  browser links or actions.
+- Pass a same-origin relative `returnTo` path for the destination after sign-in
+  or sign-out. The helper validates and safely encodes it.
+- Mark protected pages with `export const dynamic = "force-dynamic"` because
+  they depend on per-request identity headers.
 
-        <button type="submit" class="btn-submit">Publicar Anuncio</button>
-      </form>
-    </div>
-  </div>
+Dispatch owns `/signin-with-chatgpt`, `/signout-with-chatgpt`, `/callback`, the
+OAuth cookies, and identity header injection. Do not implement app routes for
+those reserved paths. Routes that do not import and call the helper remain
+anonymous-compatible.
 
-  <script>
-    const modal = document.getElementById('modalPublish');
-    const btnOpen = document.getElementById('btnOpenModal');
-    const btnClose = document.getElementById('btnCloseModal');
-    const form = document.getElementById('publishForm');
+SIWC establishes identity only; it does not prove workspace membership. Use the
+Sites hosting platform's access policy controls for workspace-wide restrictions,
+or enforce explicit server-side membership or allowlist checks.
 
-    // Abrir modal
-    btnOpen.addEventListener('click', () => {
-      modal.classList.add('active');
-    });
+Use SIWC for account pages, user-specific dashboards, saved records, and write
+actions tied to the current ChatGPT user. Leave public content anonymous.
 
-    // Cerrar modal
-    btnClose.addEventListener('click', () => {
-      modal.classList.remove('active');
-    });
+## Diagnostic Commands
 
-    // Cerrar si hace clic fuera del cuadro
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        modal.classList.remove('active');
-      }
-    });
+- `npm run install:ci`: perform the one bounded lockfile install
+- `npm run dev`: start the Vite/Vinext development server
+- `npm run build`: build and validate the deployable Sites artifact
+- `npm run start`: start the built Vinext application
+- `npm test`: build, validate, and verify the rendered development-preview metadata
+- `npm run validate:artifact`: recheck an existing artifact's manifest and ESM `default.fetch` export
+- `npm run db:generate`: generate Drizzle migrations after schema changes
 
-    // Evento al enviar formulario
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      alert('¡Anuncio enviado con éxito!');
-      modal.classList.remove('active');
-      form.reset();
-    });
-  </script>
+Use build and validation commands for targeted diagnosis after a remote failure, not as part of the normal checkpoint path.
 
-</body>
-</html>
+The timeout defaults can be overridden for a controlled canary with `SITES_INSTALL_TIMEOUT`, `SITES_INSTALL_KILL_AFTER`, `SITES_BUILD_TIMEOUT`, and `SITES_BUILD_KILL_AFTER`. A timeout fails the command; the helpers never retry an unchanged install or build.
+
+## Learn More
+
+- [vinext Documentation](https://github.com/cloudflare/vinext)
+- [Drizzle D1 Guide](https://orm.drizzle.team/docs/get-started/d1-new)

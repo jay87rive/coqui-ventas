@@ -1,0 +1,127 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+
+const page = readFileSync(new URL("../app/page.tsx", import.meta.url), "utf8");
+const api = readFileSync(new URL("../lib/supabase-rest.ts", import.meta.url), "utf8");
+const css = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
+
+const pageSnippets = [
+  "markListingSoldNonverified",
+  "soldMethod, setSoldMethod",
+  'useState<"coqui" | "external" | "undisclosed">("coqui")',
+  "soldBuyerId, setSoldBuyerId",
+  "soldListing =",
+  'pendingStatusChange?.status === "sold"',
+  "myListings.find",
+  "soldBuyerCandidates",
+  "new Map(myConversations.filter",
+  "conversation.listing_id === pendingStatusChange.listingId",
+  "conversation.other_user_id",
+  "openListingStatusChange",
+  'status: "available" | "pending" | "sold" | "paused"',
+  'if (status === "sold")',
+  'setSoldMethod("coqui")',
+  'setSoldBuyerId("")',
+  "completeSoldFlow",
+  'pendingStatusChange.status !== "sold"',
+  'soldMethod === "coqui" && !soldBuyerId',
+  "Escoge al comprador de Coquí Ventas",
+  "submitSaleConfirmation",
+  "listingId: soldListing.id",
+  "buyerId: soldBuyerId",
+  "soldListing.is_free ? 0",
+  "Number(soldListing.price || 0)",
+  "offerId: null",
+  'updateListingStatus(session.access_token, session.user.id, soldListing.id, "pending")',
+  "getMySaleActivity",
+  "setSaleConfirmations",
+  "setMyTransactions",
+  'status: "pending"',
+  'setAccountTab("sales")',
+  "Le preguntamos al comprador",
+  "El anuncio queda Pendiente",
+  "markListingSoldNonverified(session.access_token",
+  "soldListing.id, soldMethod",
+  'status: "sold"',
+  "sold_at: new Date().toISOString()",
+  "Venta externa registrada",
+  "Venta registrada sin identificar comprador",
+  "No generará una reseña verificada",
+  "getPublicListings().then(setLiveListings)",
+  "No pudimos completar el registro de la venta",
+  '"¿A quién se vendió?"',
+  "Solo una compra confirmada por ambas personas",
+  "sold-methods",
+  "Usuario de Coquí Ventas",
+  "Se vendió fuera de Coquí Ventas",
+  "Prefiero no identificar al comprador",
+  "sold-buyer-picker",
+  "Escoge entre las personas que escribieron",
+  "soldBuyerCandidates.map",
+  "conversation.other_person",
+  "Solo aparecen usuarios que conversaron contigo",
+  "Nadie te ha escrito por este anuncio",
+  "sale-flow-preview",
+  "El comprador responde",
+  "Visible como Vendido por 24 h",
+  'disabled={busy || (soldMethod === "coqui" && !soldBuyerId)}',
+  'soldMethod === "coqui" ? "Enviar confirmación" : "Marcar Vendido"',
+];
+
+const apiSnippets = [
+  "other_user_id: string",
+  "other?.user_id || \"\"",
+  "getMyConversations",
+  "conversation_members(user_id",
+  "member.user_id !== userId",
+  "otherProfile?.display_name",
+  "markListingSoldNonverified",
+  'saleChannel: "external" | "undisclosed"',
+  'saleRpc(token, "mark_listing_sold_nonverified"',
+  "p_listing_id: listingId",
+  "p_sale_channel: saleChannel",
+  "submitSaleConfirmation",
+  'saleRpc(token, "submit_sale_confirmation"',
+  "p_buyer_id: payload.buyerId",
+  "p_agreed_price: payload.agreedPrice",
+  "p_offer_id: payload.offerId",
+  "confirmPurchase",
+  'saleRpc(token, "confirm_purchase"',
+  "getMySaleActivity",
+  "sale_confirmations?select=",
+];
+
+const cssSnippets = [
+  ".sold-flow-modal{width:min(100%,620px)",
+  ".sold-methods{display:grid",
+  ".sold-methods legend",
+  ".sold-methods>label{display:grid",
+  "grid-template-columns:auto 1fr",
+  ".sold-methods>label.selected",
+  "box-shadow:inset 0 0 0 1px var(--teal)",
+  ".sold-methods input",
+  "accent-color:var(--teal)",
+  ".sold-methods label span{display:grid",
+  ".sold-methods label small",
+  ".sold-buyer-picker{display:grid",
+  "border:1px solid #b8ddd5",
+  ".sold-buyer-picker select",
+  ".sold-no-buyers",
+  ".sale-flow-preview{display:grid",
+  "grid-template-columns:repeat(3,1fr)",
+  ".sale-flow-preview span",
+  ".sold-flow-modal .confirm-actions",
+  "@media(max-width:520px){.sale-flow-preview{grid-template-columns:1fr}",
+];
+
+const checks = [
+  ...pageSnippets.map((snippet) => [snippet, page.includes(snippet)]),
+  ...apiSnippets.map((snippet) => [snippet, api.includes(snippet)]),
+  ...cssSnippets.map((snippet) => [snippet, css.includes(snippet)]),
+];
+
+assert.equal(checks.length, 100);
+for (const [index, [name, condition]] of checks.entries()) {
+  test(`${String(index + 1).padStart(3, "0")} ${name}`, () => assert.equal(condition, true));
+}
