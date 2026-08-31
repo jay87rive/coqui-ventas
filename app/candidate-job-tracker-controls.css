@@ -1,0 +1,46 @@
+.coqui-job-tracker-meta {
+  margin-top: 10px;
+  font-size: 0.8rem;
+  color: #667085;
+}
+
+.coqui-job-tracker-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.coqui-job-tracker-actions button {
+  border-radius: 999px;
+  padding: 8px 12px;
+  font: inherit;
+  font-size: 0.84rem;
+  cursor: pointer;
+}
+
+.coqui-job-withdraw-button {
+  border: 1px solid #d0d5dd;
+  background: #fff;
+  color: #475467;
+}
+
+.coqui-job-withdraw-button:hover:not(:disabled) {
+  background: #f9fafb;
+}
+
+.coqui-job-unread-button {
+  border: 1px solid rgba(13, 148, 136, 0.28);
+  background: rgba(13, 148, 136, 0.08);
+  color: #0f766e;
+  font-weight: 700;
+}
+
+.coqui-job-unread-button:hover {
+  background: rgba(13, 148, 136, 0.14);
+}
+
+.coqui-job-tracker-actions button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
