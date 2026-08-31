@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://sexbivrfdpbhvdgsvgwv.supabase.co";
 const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || "sb_publishable_wvAe2A3-XQoQDUzI7ylDUg_qj3yNv6s";
@@ -130,6 +130,11 @@ function normalize(value: string) {
   return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
 }
 
+function isApplicationButton(text: string) {
+  const value = normalize(text);
+  return value === normalize("Ver perfil y resumé") || value === normalize("View profile and resume");
+}
+
 export default function JobsApplicationWorkflow() {
   const [session, setSession] = useState<StoredSession | null>(null);
   const [employerApplications, setEmployerApplications] = useState<EmployerApplication[]>([]);
@@ -141,7 +146,7 @@ export default function JobsApplicationWorkflow() {
   const [notice, setNotice] = useState("");
   const [busy, setBusy] = useState(false);
 
-  async function refreshData(currentSession = getSession()) {
+  const refreshData = useCallback(async (currentSession = getSession()) => {
     setSession(currentSession);
     if (!currentSession) {
       setEmployerApplications([]);
@@ -152,15 +157,15 @@ export default function JobsApplicationWorkflow() {
 
     const employerPromise = rpc<EmployerApplication[]>(currentSession.access_token, "get_employer_job_applications").catch(() => []);
     const candidateQuery = `select=id,job_id,status,submitted_at,jobs(title,employers(public_name))&applicant_id=eq.${encodeURIComponent(currentSession.user.id)}&order=submitted_at.desc`;
-    const candidatePromise = parseResponse<CandidateApplication[]>(await fetch(`${SUPABASE_URL}/rest/v1/job_applications?${candidateQuery}`, {
+    const candidatePromise = fetch(`${SUPABASE_URL}/rest/v1/job_applications?${candidateQuery}`, {
       headers: authHeaders(currentSession.access_token),
       cache: "no-store",
-    })).catch(() => []);
+    }).then((response) => parseResponse<CandidateApplication[]>(response)).catch(() => []);
     const notificationQuery = "select=id,title,body,related_content_id,status,read_at,created_at&module=eq.jobs&order=created_at.desc&limit=10";
-    const notificationsPromise = parseResponse<JobNotification[]>(await fetch(`${SUPABASE_URL}/rest/v1/notifications?${notificationQuery}`, {
+    const notificationsPromise = fetch(`${SUPABASE_URL}/rest/v1/notifications?${notificationQuery}`, {
       headers: authHeaders(currentSession.access_token),
       cache: "no-store",
-    })).catch(() => []);
+    }).then((response) => parseResponse<JobNotification[]>(response)).catch(() => []);
 
     const [employerRows, candidateRows, notificationRows] = await Promise.all([
       employerPromise,
@@ -170,20 +175,20 @@ export default function JobsApplicationWorkflow() {
     setEmployerApplications(employerRows);
     setCandidateApplications(candidateRows);
     setJobNotifications(notificationRows);
-  }
+  }, []);
 
   useEffect(() => {
-    refreshData();
+    void refreshData();
     const onStorage = (event: StorageEvent) => {
-      if (event.key === "coqui-session") refreshData();
+      if (event.key === "coqui-session") void refreshData();
     };
     window.addEventListener("storage", onStorage);
-    const interval = window.setInterval(() => refreshData(), 30000);
+    const interval = window.setInterval(() => void refreshData(), 10000);
     return () => {
       window.removeEventListener("storage", onStorage);
       window.clearInterval(interval);
     };
-  }, []);
+  }, [refreshData]);
 
   const employerByIdentity = useMemo(() => employerApplications.map((application) => ({
     application,
@@ -231,14 +236,19 @@ export default function JobsApplicationWorkflow() {
       panel.dataset.coquiJobUpdates = "true";
       panel.className = "coqui-job-update-strip";
       const latest = unread[0];
-      panel.innerHTML = `<strong>💼 ${unread.length} actualización${unread.length === 1 ? "" : "es"} de empleo</strong><span>${latest.body}</span>`;
+      panel.replaceChildren();
+      const heading = document.createElement("strong");
+      heading.textContent = `💼 ${unread.length} actualización${unread.length === 1 ? "" : "es"} de empleo`;
+      const detail = document.createElement("span");
+      detail.textContent = latest.body;
+      panel.append(heading, detail);
       if (!existing) tracker.prepend(panel);
     }
 
     function openFromEmployerCard(event: Event) {
       const target = event.target as HTMLElement | null;
       const button = target?.closest("button");
-      if (!button || normalize(button.textContent || "") !== normalize("Ver perfil y resumé")) return;
+      if (!button || !isApplicationButton(button.textContent || "")) return;
       const card = button.closest<HTMLElement>(".candidate-inbox article");
       if (!card) return;
       const text = normalize(card.innerText);
@@ -246,7 +256,7 @@ export default function JobsApplicationWorkflow() {
       if (!match) return;
       event.preventDefault();
       event.stopPropagation();
-      openApplication(match.application);
+      void openApplication(match.application);
     }
 
     patchCandidateTracker();
@@ -266,12 +276,28 @@ export default function JobsApplicationWorkflow() {
     setMessage("");
     setNotice("");
     try {
+      let currentApplication = application;
+      if (application.status === "submitted") {
+        await rpc<boolean>(session.access_token, "update_job_application_status", {
+          p_application_id: application.id,
+          p_status: "viewed",
+        });
+        currentApplication = { ...application, status: "viewed" };
+        setSelected(currentApplication);
+        setEmployerApplications((rows) => rows.map((row) => row.id === application.id ? currentApplication : row));
+      }
+      await rpc<null>(session.access_token, "record_job_profile_view", {
+        p_application_id: application.id,
+      });
       const rows = await rpc<ApplicationContact[]>(session.access_token, "get_employer_job_application_contact", {
         p_application_id: application.id,
       });
       setContact(rows[0] || null);
+      if (application.status === "submitted") {
+        setNotice("Solicitud abierta. El candidato ahora ve “En revisión” y recibió una notificación.");
+      }
     } catch (error) {
-      setNotice(error instanceof Error ? error.message : "No pudimos cargar los datos de contacto.");
+      setNotice(error instanceof Error ? error.message : "No pudimos cargar los datos de la solicitud.");
     }
   }
 
