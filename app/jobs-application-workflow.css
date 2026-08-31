@@ -1,0 +1,249 @@
+.job-application-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(8, 25, 39, 0.62);
+  backdrop-filter: blur(8px);
+}
+
+.job-application-modal {
+  width: min(1040px, 96vw);
+  max-height: 92vh;
+  overflow: auto;
+  border: 1px solid rgba(20, 92, 111, 0.18);
+  border-radius: 24px;
+  background: #fff;
+  color: #17333f;
+  box-shadow: 0 28px 80px rgba(5, 26, 40, 0.3);
+}
+
+.job-application-modal > header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 26px 30px 22px;
+  border-bottom: 1px solid #e5eef1;
+  background: rgba(255,255,255,.97);
+}
+
+.job-application-modal header span,
+.job-application-context small {
+  color: #167c88;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.job-application-modal h2 {
+  margin: 4px 0 3px;
+  font-size: clamp(25px, 4vw, 36px);
+}
+
+.job-application-modal header p,
+.job-application-modal p {
+  margin: 0;
+  color: #60757d;
+  line-height: 1.55;
+}
+
+.job-application-close {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  border: 0;
+  border-radius: 50%;
+  background: #eef5f6;
+  color: #17333f;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.job-application-context {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  padding: 20px 30px;
+  background: #f6fbfb;
+}
+
+.job-application-context > div {
+  display: grid;
+  gap: 4px;
+  padding: 14px 16px;
+  border: 1px solid #dcebed;
+  border-radius: 15px;
+  background: #fff;
+}
+
+.job-application-context strong { font-size: 17px; }
+.job-application-context span { color: #647b84; font-size: 13px; }
+
+.job-application-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(290px, .75fr);
+  gap: 28px;
+  padding: 28px 30px 30px;
+}
+
+.job-application-body main,
+.job-application-body aside {
+  display: grid;
+  align-content: start;
+  gap: 22px;
+}
+
+.job-application-body section,
+.job-application-body form {
+  padding: 20px;
+  border: 1px solid #e1eaed;
+  border-radius: 18px;
+}
+
+.job-application-body h3 {
+  margin: 0 0 10px;
+  font-size: 17px;
+}
+
+.job-application-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.job-application-skills span {
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: #e8f6f5;
+  color: #176f78;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.job-application-contact-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.job-application-contact-actions a,
+.job-application-contact-actions button,
+.job-application-statuses button,
+.job-application-body form > button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 10px 14px;
+  border: 1px solid #bfd7dc;
+  border-radius: 12px;
+  background: #fff;
+  color: #155e69;
+  font: inherit;
+  font-weight: 750;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.job-application-contact-actions a:hover,
+.job-application-contact-actions button:hover,
+.job-application-statuses button:hover { background: #eff9f9; }
+
+.job-application-contact-actions button:disabled,
+.job-application-statuses button:disabled,
+.job-application-body form > button:disabled {
+  cursor: not-allowed;
+  opacity: .55;
+}
+
+.job-application-email {
+  display: block;
+  margin-top: 9px;
+  overflow-wrap: anywhere;
+  color: #6a7e85;
+}
+
+.job-application-statuses {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.job-application-statuses button {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.job-application-statuses button.active {
+  border-color: #178892;
+  background: #daf2f0;
+  color: #0f626a;
+}
+
+.job-application-body form textarea {
+  width: 100%;
+  min-height: 125px;
+  margin: 14px 0 10px;
+  padding: 12px 14px;
+  resize: vertical;
+  border: 1px solid #cbdcdf;
+  border-radius: 12px;
+  background: #fbfdfd;
+  color: #17333f;
+  font: inherit;
+}
+
+.job-application-body form > button {
+  width: 100%;
+  border-color: #147b86;
+  background: #147b86;
+  color: #fff;
+}
+
+.job-application-notice {
+  margin: 0 30px 28px;
+  padding: 13px 16px;
+  border-radius: 12px;
+  background: #edf8f3;
+  color: #245d4a;
+  font-weight: 650;
+}
+
+.coqui-job-update-strip {
+  display: grid;
+  gap: 3px;
+  margin: 0 0 18px;
+  padding: 13px 16px;
+  border: 1px solid #bfe1df;
+  border-radius: 13px;
+  background: #eef9f8;
+  color: #255e65;
+}
+
+.coqui-job-update-strip strong { color: #126f78; }
+.coqui-job-update-strip span { font-size: 13px; line-height: 1.45; }
+
+.tracker-status[data-job-status="shortlisted"] { background: #fff4d9 !important; color: #885d05 !important; }
+.tracker-status[data-job-status="interview"] { background: #e8ecff !important; color: #3949a0 !important; }
+.tracker-status[data-job-status="rejected"] { background: #f7e8e8 !important; color: #8b3d3d !important; }
+.tracker-status[data-job-status="hired"] { background: #e0f4e6 !important; color: #23723d !important; }
+.tracker-status[data-job-status="withdrawn"] { background: #ededed !important; color: #606060 !important; }
+
+@media (max-width: 760px) {
+  .job-application-modal-backdrop { padding: 10px; }
+  .job-application-modal { max-height: 96vh; border-radius: 18px; }
+  .job-application-modal > header { padding: 20px; }
+  .job-application-context { grid-template-columns: 1fr; padding: 16px 20px; }
+  .job-application-body { grid-template-columns: 1fr; padding: 20px; }
+  .job-application-contact-actions { grid-template-columns: 1fr; }
+  .job-application-notice { margin: 0 20px 20px; }
+}
